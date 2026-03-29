@@ -1,0 +1,4 @@
+{
+  "name": "minimal",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu"
+}
