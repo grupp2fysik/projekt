@@ -1,5 +1,5 @@
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
-from thermodynamics import entropy_at_endpoint
+from berakningsfysik.subsystem1.thermodynamics import entropy_at_endpoint
 import numpy as np 
 import matplotlib.pyplot as plt
 
