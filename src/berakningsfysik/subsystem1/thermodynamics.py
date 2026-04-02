@@ -8,7 +8,7 @@ def entropy_at_endpoint(x: float) -> float:
         return 0.0
     return 1.0
 
-def entropy_per_metalspace(x, n):
+def entropy_per_atom(x, n):
     """Returnerar entropin per metallplats (eV/(atom*K))
     x = komposition
     n = antal metallplatser (2 för TiAlN)"""
