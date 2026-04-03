@@ -25,3 +25,4 @@ plt.xlabel("x")
 plt.ylabel("delta_G_mix")
 plt.savefig("convex_hull_G")
 
+
