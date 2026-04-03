@@ -12,4 +12,7 @@ def test_entropy_second_derivative_invalid_input():
         entropy_second_derivative(1.2)
     with pytest.raises(Exception):
         entropy_second_derivative(-0.2)
-
+    with pytest.raises(Exception):
+        entropy_second_derivative(0)
+    with pytest.raises(Exception):
+        entropy_second_derivative(1)
