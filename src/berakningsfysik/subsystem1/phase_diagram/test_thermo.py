@@ -31,7 +31,7 @@ class TestThermodynamics(unittest.TestCase):
 
     def test_negative_mole_fractions(self):
         with self.assertRaises(ValueError):
-            calculate_delta_s_mix([-0.1, 1.1], moles=1.0, R=8.314462618) #Sum != 1
+            calculate_delta_s_mix([-0.1, 1.1], moles=1.0, R=8.314462618) #There is a negative number
 
 if __name__ == '__main__':
     unittest.main()
