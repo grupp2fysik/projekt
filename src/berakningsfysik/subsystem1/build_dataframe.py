@@ -54,6 +54,10 @@ def write_file():
     write_data("deltaH", H_grid)
     write_data("deltaS", find_deltaS(2, x_grid))
 
+    for i in range(len(temps)):
+        write_data("deltaG_T"+str(i), find_deltaG(temps[i]))
+        
+
 def write_data(column, data_array):
     """column = sträng från columns (t.ex deltaH)
     data = vektor med data till kolumnen"""
@@ -69,7 +73,13 @@ def find_deltaS(n, x_grid):
         deltaS.append(entropy_per_atom(x, n))
     print(deltaS)
     return np.array(deltaS)
-    
+
+def find_deltaG(T):
+    df = pd.read_csv("dataframe.csv")
+    delta_S = df["deltaS"]
+    delta_H = df["deltaH"]
+    deltaG = delta_H - T*delta_S
+    return deltaG
 
 if __name__ == "__main__":
     write_file()
