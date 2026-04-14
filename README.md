@@ -21,3 +21,13 @@ Installera allt med:
 Kör tester med
 
 > uv run pytest
+
+## Kodkvalitet och testtäckning
+
+> uv run ruff check .
+
+Kör `ruff` för att hitta stilproblem och enkla fel i koden.
+
+> uv run pytest --cov=src
+
+Kör tester med `pytest` och visar code coverage för koden i `src/`.
