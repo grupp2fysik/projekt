@@ -3,6 +3,8 @@ from scipy.spatial import ConvexHull, convex_hull_plot_2d
 import numpy as np 
 import matplotlib.pyplot as plt
 
+
+
 x_values = [0, 0.05, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]
 G_mix_T1 = [1, 0.9, 0.8, 0.9, 1.1, 1.2, 1.3, 1.21, 1.11, 2]
 T_values = [0, 100, 200, 300]

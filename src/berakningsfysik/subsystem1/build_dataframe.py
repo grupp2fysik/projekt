@@ -10,7 +10,7 @@ from thermodynamics import entropy_per_atom
 from spinodal_functions import entropy_second_derivative
 
 columns = ["x", "deltaH", "deltaS"]
-temps = [50, 150, 250, 350]
+temps = [300, 400, 500, 6060, 8000, 10000]
 num_of_inter_points = 500
 n = 2
 
@@ -40,10 +40,11 @@ def write_file():
 
     write_data("deltaH", H_interpolated)
     write_data("deltaS", find_deltaS(2, x_interpolation))
-    write_data("d2deltaG", find_d2G(model, x_interpolation, 300, n))
+    
 
     for i in range(len(temps)):
         write_data("deltaG_T"+str(i), find_deltaG(temps[i]))
+        write_data("d2deltaG_T"+str(i), find_d2G(model, x_interpolation, temps[i], n))
         
 
 def write_data(column, data_array):

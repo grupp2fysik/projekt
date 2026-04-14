@@ -40,6 +40,9 @@ def main() -> None:
     x_grid = np.linspace(0.0, 1.0, 500)
     y_grid = model.hmix(x_grid)
 
+    H_derivative = model.d1(x_grid)
+    H_second_derivative = model.d2(x_grid)
+
     out_dir = Path(args.data_dir)
     csv_path = out_dir / "enthalpy_dataset.csv"
     fig_path = out_dir / "interpolated_hmix.png"
@@ -49,6 +52,8 @@ def main() -> None:
     plt.figure(figsize=(7, 4.5))
     plt.plot(x, y, "o", label="Datapunkter")
     plt.plot(x_grid, y_grid, "-", label=f"Redlich–Kister-fit (ordning {args.order})")
+    plt.plot(x_grid, H_second_derivative, "-", label=f"Andraderivata av Redlich–Kister-fit (ordning {args.order})")
+    plt.plot(x_grid, H_derivative, "-", label=f"Derivata av Redlich–Kister-fit (ordning {args.order})")
     plt.xlabel("Al-sammansättning x")
     plt.ylabel(r"Blandningsentalpi $\Delta H_{mix}$ (eV/atom)")
     plt.title("Interpolerad blandningsentalpi")
