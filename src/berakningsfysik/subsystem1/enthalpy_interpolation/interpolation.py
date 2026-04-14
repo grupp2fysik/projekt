@@ -220,6 +220,7 @@ def rk_basis(x: np.ndarray, order: int) -> np.ndarray:
     A = np.empty((x.size, order + 1), dtype=float)
     for i in range(order + 1):
         A[:, i] = g * z**i
+    
     return A
 
 
@@ -301,7 +302,8 @@ class RedlichKisterModel:
     def d1(self, x: Iterable[float]) -> np.ndarray:
         """Beräknar första koncentrationsderivatan från modellen av ΔH_mix"""
         x = np.asarray(list(np.atleast_1d(x)), dtype=float)
-        return rk_basis_d1(x, self.order) @ self.coeffs
+        B = rk_basis_d1(x, self.order) @ self.coeffs
+        return B #rk_basis_d1(x, self.order) @ self.coeffs
 
     def d2(self, x: Iterable[float]) -> np.ndarray:
         """Andra koncentrationsderivatan från modellen av ΔH_mix map"""
