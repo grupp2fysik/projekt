@@ -5,7 +5,6 @@ temperaturer. Resultaten läggs i plots/delta_G_mix"""
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.spatial import ConvexHull, convex_hull_plot_2d
 from build_dataframe import temps
 
 
@@ -24,8 +23,6 @@ def print_deltaG_mix():
 
         points = np.array(list(zip(x_interpolated, deltaG)))
         d2points = np.array(list(zip(x_interpolated, d2deltaG)))
-
-        hull = ConvexHull(points)
 
         plt.plot(points[:,0], points[:,1], 'k-')
        

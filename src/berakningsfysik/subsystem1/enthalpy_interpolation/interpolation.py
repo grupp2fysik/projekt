@@ -303,8 +303,6 @@ class RedlichKisterModel:
         """Beräknar första koncentrationsderivatan från modellen av ΔH_mix"""
         x = np.asarray(list(np.atleast_1d(x)), dtype=float)
         B = rk_basis_d1(x, self.order) @ self.coeffs
-        print(B)
-        print(B.shape)
         return B #rk_basis_d1(x, self.order) @ self.coeffs
 
     def d2(self, x: Iterable[float]) -> np.ndarray:

@@ -14,9 +14,10 @@ points = np.array(list(zip(x_values, G_mix_T1)))  # punkter i G-x-planet
 hull = ConvexHull(points)  # det konvexa höljet till delta_G_mix(x)
 
 plt.plot(points[:,0], points[:,1], 'o')
-print(points)
+#print(points)
 print(hull.simplices)
 print(hull.vertices)
+print(points[0][0])
 # "simplices" är en vektor av index till par av
 # punkter som utgör ändpunkter till höljets fasetter
 for simplex in hull.simplices:
