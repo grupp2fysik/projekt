@@ -29,3 +29,11 @@ def calculate_delta_g_mix(mole_fractions, T, n, R):
     
     delta_g_mix = - calculate_delta_s_mix(mole_fractions, n, R) * T
     return delta_g_mix
+
+def calculate_delta_g_mix_with_h(mole_fractions, T, n, R, h):
+    if T < 0:
+        raise ValueError("Temperaturen kan inte vara negativ")
+    
+    delta_s_mix = calculate_delta_s_mix(mole_fractions, n, R)
+    delta_g_mix = h - T * delta_s_mix
+    return delta_g_mix
