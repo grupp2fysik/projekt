@@ -3,7 +3,7 @@ R = 8.314462618
 n = 1.0
 
 def calculate_delta_s_mix(mole_fractions, n, R):
-    if not math.isclose(sum(mole_fractions), 1.0, rel_tol=1e-99):
+    if not math.isclose(sum(mole_fractions), 1.0, rel_tol=1e-999):
         raise ValueError("Summan av molbråken måste vara 1.0")
     
     if type(mole_fractions) != list:
@@ -35,5 +35,5 @@ def calculate_delta_g_mix_with_h(mole_fractions, T, n, R, h):
         raise ValueError("Temperaturen kan inte vara negativ")
     
     delta_s_mix = calculate_delta_s_mix(mole_fractions, n, R)
-    delta_g_mix = h - T * delta_s_mix
-    return delta_g_mix
+    delta_g_mix_with_h = h - T * delta_s_mix
+    return delta_g_mix_with_h
