@@ -1,4 +1,5 @@
 from __future__ import annotations
+from dataclasses import dataclass
 
 from pathlib import Path
 import textwrap
@@ -33,7 +34,7 @@ def total_energy_ry(x: float) -> float:
     return energy_per_atom_eV(x) * NATOMS / RY_TO_EV
 
 
-def composition_counts(x: float, metal_sites: int = 4) -> tuple[int, int, int]:
+def composition_counts(x: float, metal_sites: int = 8) -> tuple[int, int, int]:
     n_al = int(round(x * metal_sites))
     n_ti = metal_sites - n_al
     n_n = 4
