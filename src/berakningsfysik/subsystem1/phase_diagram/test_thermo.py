@@ -12,6 +12,14 @@ class TestDeltaSMix(unittest.TestCase):
         calculated_s = calculate_delta_s_mix(x, n=n, R=R) #Assert that the calculated entropy change is approximately equal to the expected value, with a very high precision
         self.assertAlmostEqual(calculated_s, expected_s, places=100) #The places=100 argument allows for a very high precision in the comparison, which is important for testing the correctness of the function with very small differences in the expected and calculated values.
 
+    def test_delta_s_bigger_than_zero(self):
+        x = [0.5, 0.5]
+        R = 8.314462618
+        n = 1.0
+
+        calculated_s = calculate_delta_s_mix(x, n=n, R=R)
+        self.assertGreater(calculated_s, 0) #Assert that the calculated entropy change is greater than zero, which is expected for a mixing process that increases disorder.
+
     def test_different_mole_count(self):
         x = [0.5, 0.5]
         R = 8.314462618
@@ -194,50 +202,50 @@ class TestDeltaGMix(unittest.TestCase):
         self.assertAlmostEqual(g2, 2 * g1, places=100)
 
 class TestDeltaGMixWithH(unittest.TestCase):
-    def test_delta_g_mix_with_h(self):
+    def test_delta_g_mix_with_delta_h(self):
         x = [0.5, 0.5]
         R = 8.314462618
         n = 1.0
         T = 300
-        h = 1000 #Enthalpy change for mixing
+        delta_h = 1000 #Enthalpy change for mixing
 
-        expected_g = h - T * calculate_delta_s_mix(x, n=n, R=R)
-        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, h=h)
+        expected_g = delta_h - T * calculate_delta_s_mix(x, n=n, R=R)
+        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, delta_h=delta_h)
         self.assertAlmostEqual(calculated_g, expected_g, places=100)
 
-    def test_delta_g_mix_with_h_pure_substance(self):
+    def test_delta_g_mix_with_delta_h_pure_substance(self):
         x = [1.0, 0.0]
         R = 8.314462618
         n = 1.0
         T = 300
-        h = 1000 #Even with an enthalpy change, there should be no Gibbs free energy change for a pure substance
+        delta_h = 1000 #Even with an enthalpy change, there should be no Gibbs free energy change for a pure substance
        
-        expected_g = h #Since there is no mixing, the Gibbs free energy change should be equal to the enthalpy change
-        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, h=h)
+        expected_g = delta_h #Since there is no mixing, the Gibbs free energy change should be equal to the enthalpy change
+        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, delta_h=delta_h)
         self.assertAlmostEqual(calculated_g, expected_g, places=100)
     
-    def test_delta_g_mix_with_h_zero_enthalpy(self):
+    def test_delta_g_mix_with_delta_h_zero_enthalpy(self):
         x = [0.5, 0.5]
         R = 8.314462618
         n = 1.0
         T = 300
-        h = 0 #No enthalpy change, so it should reduce to the ideal case
+        delta_h = 0 #No enthalpy change, so it should reduce to the ideal case
 
         S = calculate_delta_s_mix(x, n=n, R=R)
         expected_g = -T * S
-        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, h=h)
+        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, delta_h=delta_h)
         self.assertAlmostEqual(calculated_g, expected_g, places=100)
     
-    def test_delta_g_mix_with_h_negative_enthalpy(self):
+    def test_delta_g_mix_with_delta_h_negative_enthalpy(self):
         x = [0.5, 0.5]
         R = 8.314462618
         n = 1.0
         T = 300
-        h = -1000 #Negative enthalpy change for mixing
+        delta_h = -1000 #Negative enthalpy change for mixing
 
         S = calculate_delta_s_mix(x, n=n, R=R)
-        expected_g = h - T * S
-        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, h=h)
+        expected_g = delta_h - T * S
+        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, delta_h=delta_h)
         self.assertAlmostEqual(calculated_g, expected_g, places=100)
     
     def test_delta_g_mix_with_very_low_enthalpy(self):
@@ -245,11 +253,11 @@ class TestDeltaGMixWithH(unittest.TestCase):
         R = 8.314462618
         n=1.0
         T = 300
-        h = -1e6 #Very low enthalpy change for mixing
+        delta_h = -1e6 #Very low enthalpy change for mixing
 
         S = calculate_delta_s_mix(x, n=n, R=R)
-        expected_g = h - T * S
-        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, h=h)
+        expected_g = delta_h - T * S
+        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, delta_h=delta_h)
         self.assertAlmostEqual(calculated_g, expected_g, places=100)
 
     def test_delta_g_mix_with_very_high_enthalpy(self):
@@ -257,54 +265,54 @@ class TestDeltaGMixWithH(unittest.TestCase):
         R = 8.314462618
         n = 1.0
         T = 300
-        h = 1e6 #Very high enthalpy change for mixing
+        delta_h = 1e6 #Very high enthalpy change for mixing
 
         S = calculate_delta_s_mix(x, n=n, R=R)
-        expected_g = h - T * S
-        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, h=h)
+        expected_g = delta_h - T * S
+        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, delta_h=delta_h)
         self.assertAlmostEqual(calculated_g, expected_g, places=100)
 
-    def test_negative_temperature_with_h(self):
+    def test_negative_temperature_with_delta_h(self):
         x = [0.5, 0.5]
         R = 8.314462618
         n = 1.0
         T = -50 #Negative temperature is not valid
-        h = 1000
+        delta_h = 1000
 
         with self.assertRaises(ValueError):
-            calculate_delta_g_mix_with_h(x, T, n=n, R=R, h=h)
-    
-    def test_zero_temperature_with_h(self):
+            calculate_delta_g_mix_with_h(x, T, n=n, R=R, delta_h=delta_h)
+
+    def test_zero_temperature_with_delta_h(self):
         x = [0.5, 0.5]
         R = 8.314462618
         n = 1.0
         T = 0 #At absolute zero, the Gibbs free energy change should be equal to the enthalpy change
-        h = 1000
+        delta_h = 1000
 
-        expected_g = h
-        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, h=h)
+        expected_g = delta_h
+        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, delta_h=delta_h)
         self.assertAlmostEqual(calculated_g, expected_g, places=100)
     
-    def test_very_low_temperature_with_h(self):
+    def test_very_low_temperature_with_delta_h(self):
         x = [0.5, 0.5]
         R = 8.314462618
         n = 1.0
         T = 1e-6
-        h = 1000
+        delta_h = 1000
 
-        expected_g = h - T * calculate_delta_s_mix(x, n=n, R=R)
-        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, h=h)
+        expected_g = delta_h - T * calculate_delta_s_mix(x, n=n, R=R)
+        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, delta_h=delta_h)
         self.assertAlmostEqual(calculated_g, expected_g, places=100)
 
-    def test_very_high_temperature_with_h(self):
+    def test_very_high_temperature_with_delta_h(self):
         x = [0.5, 0.5]
         R = 8.314462618
         n = 1.0
         T = 1e6
-        h = 1000
+        delta_h = 1000
 
-        expected_g = h - T * calculate_delta_s_mix(x, n=n, R=R)
-        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, h=h)
+        expected_g = delta_h - T * calculate_delta_s_mix(x, n=n, R=R)
+        calculated_g = calculate_delta_g_mix_with_h(x, T, n=n, R=R, delta_h=delta_h)
         self.assertAlmostEqual(calculated_g, expected_g, places=100)
 
 class TestOtherCases(unittest.TestCase):
