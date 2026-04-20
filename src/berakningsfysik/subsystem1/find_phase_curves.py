@@ -12,6 +12,7 @@ columns = ["T", "xa", "xb", "spinodal_xa", "spinodal_xb"]
 
 def main():
 
+    print("Letar efter binodal- och spinodalkurvor.")
 
     df = pd.read_csv("dataframe.csv")
     
@@ -38,14 +39,12 @@ def main():
         comps_list = list(find_comps_at_temp(T, df))
         
         xa_list.append(comps_list[0])
-        print("T=", T, xa_list)
         xb_list.append(comps_list[1])
         spinodal_xa_list.append(comps_list[2])
         spinodal_xb_list.append(comps_list[3])
 
     df_curves = pd.read_csv("curves.csv")
 
-    print(xa_list)
     df_curves["xa"] = xa_list
     df_curves["xb"] = xb_list
     df_curves["spinodal_xa"] = spinodal_xa_list
@@ -53,17 +52,10 @@ def main():
 
     df_curves.to_csv("curves.csv", index=False)
 
-    plt.savefig("convex_hull")    
-
-    plt.clf()
-
-    plt.xlim(0, 1)  
-
-    plt.savefig("plots/phase_diagram") 
 
 def find_comps_at_temp(T, df):
     """Returnerar kompositioner for binodal
-    och spinodal-kurvor vid temp T(som flyttal)
+    och spinodal-kurvor vid temp T(som lista med np.float)
     df = dataframe med data läst från 
     dataframe.csv
     """
@@ -80,8 +72,6 @@ def find_comps_at_temp(T, df):
     spinodal_xb_list = []
 
     for simplex in hull.simplices:
-
-        plt.plot(points[simplex, 0], points[simplex, 1], 'k-')
 
         start = simplex[0]  # ger index till startpunkten i simplex
         end = simplex[1]  # ger index till slutpunkten i simplex
@@ -110,7 +100,6 @@ def find_comps_at_temp(T, df):
 
             else:
                 if recent_sign == -1:
-                    print("inflektionspunkt: ", x)
                     num_inflection_points += 1
                     spinodal_comps.append(x)
                 recent_sign = 1
