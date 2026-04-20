@@ -1,29 +1,90 @@
 """Denna fil hittar kompositioner som gäller vid binodal- och
-spinodal-kurvorna, och skriver dessa till en csv-fil"""
+spinodal-kurvorna, och skriver dessa till en csv-fil, curves.csv"""
 
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from build_dataframe import temps
+from build_dataframe import temps
+
+columns = ["T", "xa", "xb", "spinodal_xa", "spinodal_xb"]
 
 def main():
 
+
     df = pd.read_csv("dataframe.csv")
+    
+
+    with open("curves.csv", "w", newline="") as file:
+
+        file.write(columns[0])
+
+        for column in columns[1:]:
+            file.write(","+column)
+        file.write("\n")
+
+        for T in temps:
+            file.write(str(T)+",\n")
+
+    file.close()
+
+    xa_list = []
+    xb_list = []
+    spinodal_xa_list = []
+    spinodal_xb_list = []
+
+    for T in temps:
+        comps_list = list(find_comps_at_temp(T, df))
+        
+        xa_list.append(comps_list[0])
+        print("T=", T, xa_list)
+        xb_list.append(comps_list[1])
+        spinodal_xa_list.append(comps_list[2])
+        spinodal_xb_list.append(comps_list[3])
+
+    df_curves = pd.read_csv("curves.csv")
+
+    print(xa_list)
+    df_curves["xa"] = xa_list
+    df_curves["xb"] = xb_list
+    df_curves["spinodal_xa"] = spinodal_xa_list
+    df_curves["spinodal_xb"] = spinodal_xb_list
+
+    df_curves.to_csv("curves.csv", index=False)
+
+    plt.savefig("convex_hull")    
+
+    plt.clf()
+
+    plt.xlim(0, 1)  
+
+    plt.savefig("plots/phase_diagram") 
+
+def find_comps_at_temp(T, df):
+    """Returnerar kompositioner for binodal
+    och spinodal-kurvor vid temp T(som flyttal)
+    df = dataframe med data läst från 
+    dataframe.csv
+    """
+
     x_interpolated = df["x"]
     deltaG = df["deltaG_T"+str(4)]
     d2deltaG = df["d2deltaG_T"+str(4)]
     points = np.array(list(zip(x_interpolated, deltaG)))
-
     hull = ConvexHull(points)
-    print("längd d2G = ", d2deltaG.size)
+
+    xa_list = []
+    xb_list = []
+    spinodal_xa_list = []
+    spinodal_xb_list = []
 
     for simplex in hull.simplices:
 
         plt.plot(points[simplex, 0], points[simplex, 1], 'k-')
 
-        start = simplex[0]  # ger index till startpunkten
-        end = simplex[1]  # ger index till slutpunkten
+        start = simplex[0]  # ger index till startpunkten i simplex
+        end = simplex[1]  # ger index till slutpunkten i simplex
 
         x_start = points[start][0]
 
@@ -55,10 +116,12 @@ def main():
                 recent_sign = 1
         
         if num_inflection_points == 2:
-            print("xa_s = ", spinodal_comps[0], "\nxb_s = ", spinodal_comps[1])   
-            print("xa = ", x_start, "xb =", x_end) 
-
-    plt.savefig("convex_hull")       
+            xa_list.append(x_start)
+            xb_list.append(x_end)
+            spinodal_xa_list.append(spinodal_comps[0])
+            spinodal_xb_list.append(spinodal_comps[1])
+        
+    return xa_list, xb_list, spinodal_xa_list, spinodal_xb_list
 
 
 
