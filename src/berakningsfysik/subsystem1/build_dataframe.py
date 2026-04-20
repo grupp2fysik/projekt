@@ -1,4 +1,5 @@
-"""Denna fil sparar interpolerad deltaH, deltaS och deltaG (för alla temp)
+"""Denna fil sparar interpolerad deltaH, deltaS och deltaG samt
+andraderivatan av deltaG (för alla temp)
 i en csv-fil som enkelt kan läsas till en pandas dataframe med kommando
 pd.read_csv("dataframe.csv")"""
 

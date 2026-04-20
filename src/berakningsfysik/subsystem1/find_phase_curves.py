@@ -16,7 +16,6 @@ def main():
 
     df = pd.read_csv("dataframe.csv")
     
-
     with open("curves.csv", "w", newline="") as file:
 
         file.write(columns[0])
