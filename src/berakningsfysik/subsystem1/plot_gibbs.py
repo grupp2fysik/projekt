@@ -43,6 +43,11 @@ def print_deltaG_mix():
         plt.ylabel("andraderivata av delta_G_mix")
         plt.savefig("plots/delta_G_mix/d2delta_G_mix_T="+str(T)+"K")
 
+def return_points(filename):
+    df = pd.read_csv(filename)
+    x_interpolated = df["x"]
+
+    
 
 if __name__ == "__main__":
     print_deltaG_mix()
