@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from build_dataframe import temps
-from build_dataframe import temps
+
 
 columns = ["T", "xa", "xb", "spinodal_xa", "spinodal_xb"]
 
