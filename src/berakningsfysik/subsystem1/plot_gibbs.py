@@ -7,7 +7,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from build_dataframe import temps
 
-
 def print_deltaG_mix():
 
     df = pd.read_csv("dataframe.csv")
@@ -25,7 +24,8 @@ def print_deltaG_mix():
         d2points = np.array(list(zip(x_interpolated, d2deltaG)))
 
         plt.plot(points[:,0], points[:,1], 'k-')
-       
+        plt.plot(points[:,0], np.zeros(points[:,1].size), 'k--')
+        
     #for simplex in hull.simplices:
       #  plt.plot(points[simplex, 0], points[simplex, 1], 'k-') # hämta kolumn 0/1 för värdena som ingår i simplex
 
@@ -46,8 +46,6 @@ def print_deltaG_mix():
 def return_points(filename):
     df = pd.read_csv(filename)
     x_interpolated = df["x"]
-
-    
 
 if __name__ == "__main__":
     print_deltaG_mix()
