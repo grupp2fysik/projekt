@@ -54,7 +54,7 @@ def main():
 
 def find_comps_at_temp(T, df, index):
     """Returnerar kompositioner for binodal
-    och spinodal-kurvor vid temp T(som lista med np.float)
+    och spinodal-kurvor vid temp T(som lista med floats)
     df = dataframe med data läst från 
     dataframe.csv
     """
@@ -71,13 +71,12 @@ def find_comps_at_temp(T, df, index):
     spinodal_xb_list = []
 
     plt.clf()
-
+    spinodals = []
     for simplex in hull.simplices:
         
-        
         plt.plot(points[simplex, 0], points[simplex, 1], 'k-')
+
         start = simplex[0]  # ger index till startpunkten i simplex
-        #print("start: ", start)
         end = simplex[1]  # ger index till slutpunkten i simplex
         
         if start < end:
@@ -89,13 +88,8 @@ def find_comps_at_temp(T, df, index):
             x_start = points[end][0]
             x_end = points[start][0]
             x_hull = np.array(x_interpolated[end: start + 1])
-        start_interpolated_index = np.where(x_interpolated == x_start)[0][0]
-        #print("start index:", start_interpolated_index)
-        
-        #print("ny simplex:", x_start, x_end)
+
         print("nu simplex: ", x_start, x_end)
-        
-        
 
         num_inflection_points = 0
         
@@ -109,6 +103,7 @@ def find_comps_at_temp(T, df, index):
         print("recent sign:", recent_sign)
 
         spinodal_comps = []
+
         for x_index, x in enumerate(x_hull):
             if x == 0.3186372745490982:
                 print("******recent ", recent_sign)
@@ -119,6 +114,7 @@ def find_comps_at_temp(T, df, index):
                     print("inflektionspunkt: ", x)
                     num_inflection_points += 1
                     spinodal_comps.append(x)
+                    spinodals.append(x)
                 recent_sign = -1
 
             else:
@@ -126,6 +122,7 @@ def find_comps_at_temp(T, df, index):
                     print("inflektionspunkt: ", x)
                     num_inflection_points += 1
                     spinodal_comps.append(x)
+                    spinodals.append(x)
                 recent_sign = 1
         
         if num_inflection_points == 2:
@@ -135,18 +132,37 @@ def find_comps_at_temp(T, df, index):
             if T == 6060:
                 print("##### ", deltaG_start)
             if deltaG_start < 0:
-                xa_list.append(x_start)
-                xb_list.append(x_end)
-                spinodal_xa_list.append(spinodal_comps[0])
-                spinodal_xb_list.append(spinodal_comps[1])
-            else:
-                xa_list.append(0)
-                xb_list.append(1)
-                spinodal_xa_list.append(0)
-                spinodal_xb_list.append(0)
+                xa_list.append(float(x_start))
+                xb_list.append(float(x_end))
+                spinodal_xa_list.append(float(spinodals[0]))
+                spinodal_xb_list.append(float(spinodals[1]))
+
+    
+    if not xa_list and np.any(deltaG > 0) and np.any(d2deltaG < 0):
+    # gäller dessa villkor vet vi att ingen gemensam tangent finns
+    # men spinodalkurvan finns ändå här 
+    # detta gäller för låga temperaturer
+        xa_list.append(0)
+        xb_list.append(1)
+        spinodal_xa_list.append(float(spinodals[0]))
+        spinodal_xb_list.append(float(spinodals[1]))
+
+
+    elif not xa_list:
+    # gäller dessa villkor betyder det att ingen fasseparation sker
+    # ingen binodal- eller spinodalkurva
+        xa_list.append(np.nan)
+        xb_list.append(np.nan)
+        spinodal_xa_list.append(np.nan)
+        spinodal_xb_list.append(np.nan)
     plt.savefig("plots/hull_deltaG_T="+str(T))
     return xa_list, xb_list, spinodal_xa_list, spinodal_xb_list
 
+def find_spinodals(d2deltaG, x_interpolated):
+    spinodals = []
+
+    for index, value in d2deltaG:
+        pass
 
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@ from thermodynamics import entropy_per_atom
 from spinodal_functions import entropy_second_derivative
 
 columns = ["x", "deltaH", "deltaS"]
-temps = [300, 400, 500, 6060, 8000, 10000]
+temps = [300, 400, 500, 6060, 8000, 10000, 100000]
 num_of_inter_points = 500
 n = 2
 
