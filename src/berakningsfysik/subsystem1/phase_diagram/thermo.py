@@ -1,3 +1,11 @@
+"""Denna fil beräknar delta_S_mix, delta_G_mix och delta_G_mix_with_h
+för en blandning av två komponenter. Funktionerna tar hänsyn 
+till molbråk, temperatur, antal mol och gas konstanten. 
+
+Resultaten kan användas för att analysera termodynamiska 
+egenskaper hos blandningen och för att förstå hur olika faktorer p
+åverkar entropi och Gibbs fria energi i systemet."""
+
 import math
 R = 8.314462618
 n = 1.0

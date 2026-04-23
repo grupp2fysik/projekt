@@ -1,3 +1,10 @@
+"""Denna fil innehåller enhetstester för funktionerna calculate_delta_s_mix, calculate_delta_g_mix
+och calculate_delta_g_mix_with_h i thermo.py. Testerna täcker olika scenarier, 
+inklusive ideal blandning, olika temperaturer, olika antal mol, ogiltiga indata och mer. 
+
+Syftet är att säkerställa att funktionerna fungerar korrekt under olika 
+förhållanden och hanterar ogiltiga indata på ett lämpligt sätt."""
+
 import unittest
 import math
 from thermo import calculate_delta_s_mix, calculate_delta_g_mix, calculate_delta_g_mix_with_h
