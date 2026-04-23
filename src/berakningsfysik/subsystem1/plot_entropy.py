@@ -13,7 +13,7 @@ def print_deltaS_mix():
     x_interpolated = df["x"]
     figure = plt.figure()
 
-    for index, T in enumerate(temps):
+    for T in temps:
 
         plt.clf()
         deltaS = df["deltaS"]
