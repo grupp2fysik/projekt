@@ -45,29 +45,28 @@ def plot_enthalpy_d1_d2(x_data, y_data, x_grid, y_grid, d1, d2, order, save_path
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Plotta interpolerad blandningsentalpi och dess derivator från QE .out-filer."
+    description="Plotta interpolerad blandningsentalpi och dess derivator från QE .out-filer."
     )
     parser.add_argument(
-        "data_dir",
-        nargs="?",
-        default="qe_outputs",
-        help="Katalog med .out-filer. Standard: qe_outputs",
+    "data_dir",
+    nargs="?",
+    default="qe_outputs",
+    help="Katalog med .out-filer. Standard: qe_outputs",
     )
     parser.add_argument(
-        "--glob",
-        default="*x=*.out",
-        help="Glob-mönster för filnamn. Standard: *x=*.out",
+    "--glob",
+    default="*x=*.out",
+    help="Glob-mönster för filnamn. Standard: *x=*.out",
     )
     parser.add_argument(
-        "--order",
-        type=int,
-        default=3,
-        help="Ordning på Redlich-Kister-polynomet. Standard: 3",
+    "--order",
+    type=int,
+    default=3,
+    help="Ordning på Redlich-Kister-polynomet. Standard: 3",
     )
     args = parser.parse_args()
 
     # Läs data och anpassa modell
-
     df = build_enthalpy_dataframe(args.data_dir, glob_pattern=args.glob)
     x = df["x"].to_numpy()
     y = df["H_mix_eV_per_atom"].to_numpy()

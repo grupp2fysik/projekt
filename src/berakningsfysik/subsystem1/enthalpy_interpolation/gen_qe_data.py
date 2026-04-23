@@ -10,8 +10,8 @@ RY_TO_EV = 13.60593
 xs = [0.0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.75, 0.875, 1.0]
 
 # Syntetiska referensenergier i eV/atom
-E_TIN = -9.80
-E_ALN = -9.30
+E_TIN = -3.80
+E_ALN = -3.30
 
 NATOMS = 8
 

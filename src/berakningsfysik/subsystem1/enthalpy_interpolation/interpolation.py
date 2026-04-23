@@ -211,7 +211,7 @@ def build_enthalpy_dataframe(
 def rk_basis(x: np.ndarray, order: int) -> np.ndarray:
     """
     Bygger designmatrisen A för Redlich-Kister-basen ϕ_i(x) = x(1-x)*(2x-1)^i.
-    Returnerar en array med dimension ( len(x), order+1).
+    Returnerar en array med dimension (len(x), order+1).
     """
     x = np.asarray(x, dtype=float)
     z = 2.0 * x - 1.0
@@ -220,6 +220,7 @@ def rk_basis(x: np.ndarray, order: int) -> np.ndarray:
     A = np.empty((x.size, order + 1), dtype=float)
     for i in range(order + 1):
         A[:, i] = g * z**i
+    
     return A
 
 
@@ -246,6 +247,7 @@ def rk_basis_d2(x: np.ndarray, order: int) -> np.ndarray:
     gp = 1.0 - 2.0 * x
     gpp = -2.0
 
+    # Varje rad i A blir den deriverade serieutvecklingen för rk-utvecklingen
     A = np.empty((x.size, order + 1), dtype=float)
     for i in range(order + 1):
         h = z**i
@@ -301,45 +303,13 @@ class RedlichKisterModel:
     def d1(self, x: Iterable[float]) -> np.ndarray:
         """Beräknar första koncentrationsderivatan från modellen av ΔH_mix"""
         x = np.asarray(list(np.atleast_1d(x)), dtype=float)
-        return rk_basis_d1(x, self.order) @ self.coeffs
+        B = rk_basis_d1(x, self.order) @ self.coeffs
+        return B #rk_basis_d1(x, self.order) @ self.coeffs
 
     def d2(self, x: Iterable[float]) -> np.ndarray:
-        """Andra koncentrationsderivatan från modellen av ΔH_mix map"""
+        """Andra koncentrationsderivatan från modellen av ΔH_mix"""
         x = np.asarray(list(np.atleast_1d(x)), dtype=float)
         return rk_basis_d2(x, self.order) @ self.coeffs
-
-
-def smix_per_atom(x: Iterable[float]) -> np.ndarray:
-    """Beräknar ideal konfigurationell blandningsentropi per atom som funktion av sammansättningen x."""
-    x = np.asarray(list(np.atleast_1d(x)), dtype=float)
-    s = np.zeros_like(x)
-    mask = (x > 0.0) & (x < 1.0)
-    xm = x[mask]
-    s[mask] = -0.5 * K_B_EV_PER_K * (xm * np.log(xm) + (1.0 - xm) * np.log(1.0 - xm))
-    return s
-
-
-def smix_d2_per_atom(x: Iterable[float]) -> np.ndarray:
-    """Beräknar konfigurationella blandningsentropins andra koncentrationsderivata."""
-    x = np.asarray(list(np.atleast_1d(x)), dtype=float)
-    d2s = np.full_like(x, np.nan)
-    mask = (x > 0.0) & (x < 1.0)
-    xm = x[mask]
-    d2s[mask] = -0.5 * K_B_EV_PER_K * (1.0 / xm + 1.0 / (1.0 - xm))
-    return d2s
-
-
-def gmix_per_atom(model: RedlichKisterModel, x: Iterable[float], T: float) -> np.ndarray:
-    """Beräknar Gibbs fria blandningsenergi per atom, G_mix = ΔH_mix - T * S_mix."""
-    x = np.asarray(list(np.atleast_1d(x)), dtype=float)
-    return model.hmix(x) - T * smix_per_atom(x)
-
-
-def gmix_d2_per_atom(model: RedlichKisterModel, x: Iterable[float], T: float) -> np.ndarray:
-    """Beräknar andra kooncentrationsderivatan av Gibbs fria blandningsenergi."""
-    x = np.asarray(list(np.atleast_1d(x)), dtype=float)
-    return model.d2(x) - T * smix_d2_per_atom(x)
-
 
 def main() -> None:
     """Gränssnitt för terminal. Läser QE-filer, anpassar RK_modell och sparar resultat."""
