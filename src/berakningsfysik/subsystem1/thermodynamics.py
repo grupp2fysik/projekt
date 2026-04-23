@@ -2,7 +2,6 @@
 
 import math
 
-
 def check_if_valid_x(x):
     """Kastar undantag om x är större än 1,
     eller mindre än 0."""
@@ -35,5 +34,3 @@ def entropy_per_atom(x, n):
         return (-KB*(x*math.log(x) + (1-x)*math.log(1-x))/n)
     else: 
         return entropy_at_endpoint(x)
-
-

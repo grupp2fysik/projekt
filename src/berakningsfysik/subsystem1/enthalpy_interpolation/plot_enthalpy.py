@@ -8,7 +8,6 @@ import numpy as np
 
 from interpolation import build_enthalpy_dataframe, RedlichKisterModel
 
-
 def save_dataset(df, csv_path: Path) -> None:
     """Sparar dataframe till CSV."""
     df.to_csv(csv_path, index=False)
