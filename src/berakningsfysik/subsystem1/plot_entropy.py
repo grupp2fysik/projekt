@@ -13,18 +13,16 @@ def print_deltaS_mix():
     x_interpolated = df["x"]
     figure = plt.figure()
 
-    for T in temps:
+    plt.clf()
+    deltaS = df["deltaS"]
+    points = np.array(list(zip(x_interpolated, deltaS)))
+    plt.plot(points[:,0], points[:,1], 'k-')
+    plt.plot(points[:,0], np.zeros(points[:,1].size), 'k--')
 
-        plt.clf()
-        deltaS = df["deltaS"]
-        points = np.array(list(zip(x_interpolated, deltaS)))
-        plt.plot(points[:,0], points[:,1], 'k-')
-        plt.plot(points[:,0], np.zeros(points[:,1].size), 'k--')
-
-        plt.title("delta_S_mix för T = "+str(T)+"K")
-        plt.xlabel("x")
-        plt.ylabel("delta_S_mix")
-        plt.savefig("delta_S_mix/delta_S_mix_T="+str(T)+"K")
+    plt.title("delta_S_mix (oberoende av temperatur)")
+    plt.xlabel("x")
+    plt.ylabel("delta_S_mix")
+    plt.savefig("delta_S_mix/delta_S_mix")
 
 def return_points(filename):
     df = pd.read_csv(filename)
