@@ -1,0 +1,50 @@
+TiN körningar på Sigma
+
+
+Mappstruktur:
+- pseudo/     - pseudopotentialer
+- TiN/input/  - inputfiler (med kommentarer som förklarar vad raderna gör)
+- TiN/relax/  - vc-relax
+- TiN/scf/    - SCF
+- TiN/convergence/ecutwfc/ - cutoff-konvergens
+- TiN/convergence/kpoints/ - k-point-konvergens
+
+Kopiera allt till din home:
+cd /proj/liu-compute-2026-1/users/<din-användare>/projekt-dft
+cp -rf /proj/liu-compute-2026-1/users/x_chano/projekt-dft .
+
+Köra TiN relax:
+cd ~/projekt-dft/TiN/relax
+sbatch job_qe
+
+Kolla status:
+squeue -u <ditt-användarnamn>
+
+När jobbet är klart, kolla energi:
+grep "!" TiN_vc_relax.out
+
+Köra TiN SCF:
+cd ~/projekt-dft/TiN/scf
+sbatch job_qe
+
+När jobbet är klart, kolla energi:
+grep "!" TiN_scf.out
+
+Köra ecutwfc-konvergens:
+cd ~/projekt-dft/TiN/convergence/ecutwfc
+sbatch job_qe
+
+När klart:
+grep "!" results/*
+
+Köra k-point-konvergens:
+cd ~/projekt-dft/TiN/convergence/kpoints
+sbatch job_qe
+
+När klart:
+grep "!" results/*
+
+Nuvarande valda TiN-parametrar:
+- ecutwfc = 200
+- ecutrho = 800
+- K_POINTS = 16 16 16 0 0 0

@@ -1,0 +1,68 @@
+&control
+   calculation = 'vc-relax',      ! Performs a variable-cell relaxation
+   prefix = 'TiN',                ! Prefix for output files
+   outdir = '../output/',         ! Directory where output data is stored
+   pseudo_dir = '../../pseudo/',  ! Path to the folder containing pseudo-potentials
+   restart_mode = 'from_scratch', ! Determines whether to start from scratch or use saved data - here it forces a completely new run
+   etot_conv_thr = 1E-7,          ! Energy convergence threshold - tells QE when the total energy is converged enough
+   forc_conv_thr = 1E-5,          ! Force convergence threshold - tells QE when atomic forces are small enough
+   tstress = .true.,              ! Print output stress
+   tprnfor = .true.,              ! Print output forces
+/
+
+&system
+   ibrav = 2,                     ! Bravais lattice index for cubic FCC
+   celldm(1) = 8.5,               ! Lattice parameter in bohr - initial guess before relaxation
+   nat = 2,                       ! Number of atoms in the unit cell
+   ntyp = 2,                      ! Number of atomic species
+   ecutwfc = 200,                 ! Plane-wave cutoff for wavefunctions
+   ecutrho = 800,                 ! Plane-wave cutoff for charge density
+   occupations = 'smearing',      ! Specifies smearing for metallic systems
+   smearing = 'gaussian',         ! Type of smearing
+   degauss = 0.005,               ! Width of the smearing
+/
+
+! Structure source:
+! - Materials Project: TiN is cubic, space group Fm-3m
+! - Quantum ESPRESSO INPUT_PW: for ibrav = 2 (cubic F / fcc),
+!   v1 = (a/2)(-1,0,1), v2 = (a/2)(0,1,1), v3 = (a/2)(-1,1,0)
+!
+! Materials Project lattice parameter:
+! a = 4.24 A
+! 1 A = 1.889726 bohr
+! a = 4.24 * 1.889726 = 8.012437 bohr
+!
+! In this vc-relax file we use:
+! celldm(1) = 8.5
+! This is an initial guess for the relaxation, not copied directly from Materials Project
+!
+! Atomic positions used in the primitive rocksalt cell:
+! Ti (0,0,0)
+! N  (1/2,1/2,1/2)
+
+&electrons
+   diagonalization = 'david',   ! Method for matrix diagonalization - algorithm used to solve the electronic problem
+   conv_thr = 1E-8,             ! The convergence threshold for the electronic density
+   mixing_mode = 'local-TF',    ! Mixing mode for the charge density - how new and old densities are combined
+   mixing_beta = 0.2,           ! Mixing parameter for the charge density - controls how much of the new density is used
+/
+
+&ions
+   ion_dynamics = 'bfgs',         ! Method used to relax the atomic positions
+/
+
+&cell
+   cell_dynamics = 'bfgs',        ! Method used to relax the cell
+   press = 0.0,                   ! Target pressure
+/
+
+ATOMIC_SPECIES
+Ti 47.867 Ti.pbe-spn-kjpaw_psl.1.0.0.UPF
+N  14.007 N.pbe-n-kjpaw_psl.1.0.0.UPF
+
+ATOMIC_POSITIONS (alat)
+Ti 0.0 0.0 0.0
+N  0.5 0.5 0.5
+
+K_POINTS automatic
+16 16 16 0 0 0

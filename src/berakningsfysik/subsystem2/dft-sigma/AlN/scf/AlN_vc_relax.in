@@ -1,0 +1,65 @@
+&control
+   calculation = 'vc-relax',      ! Performs a variable-cell relaxation
+   prefix = 'AlN',                ! Prefix for output files
+   outdir = '../output/',         ! Directory where output data is stored
+   pseudo_dir = '../../pseudo/',  ! Path to the folder containing pseudo-potentials
+   restart_mode = 'from_scratch', ! Determines whether to start from scratch or use saved data - here it forces a completely new run
+   etot_conv_thr = 1E-7,          ! Energy convergence threshold - tells QE when the total energy is converged enough
+   forc_conv_thr = 1E-5,          ! Force convergence threshold - tells QE when atomic forces are small enough
+   tstress = .true.,              ! Print output stress
+   tprnfor = .true.,              ! Print output forces
+/
+
+&system
+   ibrav = 4,                     ! Hexagonal and trigonal P
+   celldm(1) = 5.91484238,        ! a = 3.13 A converted to bohr
+   celldm(3) = 1.60383387,        ! c/a = 5.02 / 3.13
+   nat = 4,                       ! Number of atoms in the unit cell - taken from Materials Project
+   ntyp = 2,                      ! Number of atomic species - Al and N
+   ecutwfc = 200,                 ! Plane-wave cutoff for wavefunctions
+   ecutrho = 800,                 ! Plane-wave cutoff for charge density
+   occupations = 'smearing',      ! Specifies smearing for metallic systems - kept from lab setup
+   smearing = 'gaussian',         ! Type of smearing - kept from lab setup
+   degauss = 0.005,               ! Width of the smearing - kept from lab setup
+/
+
+! Structure source:
+! - Materials Project: AlN is hexagonal, space group P63mc (No. 186)
+! - Materials Project lattice parameters:
+!   a = 3.13 A, c = 5.02 A
+! - Converted for QE:
+!   celldm(1) = 5.91484238 bohr
+!   celldm(3) = c/a = 1.60383387
+! - Materials Project shows inequivalent 2b positions:
+!   Al 2/3 1/3 0.499287
+!   N  2/3 1/3 0.880713
+! - Below these are expanded to the full 4-atom hexagonal cell using P63mc symmetry
+
+&electrons
+   diagonalization = 'david',   ! Method for matrix diagonalization - algorithm used to solve the electronic problem
+   conv_thr = 1E-8,             ! The convergence threshold for the electronic density
+   mixing_mode = 'local-TF',    ! Mixing mode for the charge density - how new and old densities are combined
+   mixing_beta = 0.2,           ! Mixing parameter for the charge density - controls how much of the new density is used
+/
+
+&ions
+   ion_dynamics = 'bfgs',         ! Method used to relax the atomic positions
+/
+
+&cell
+   cell_dynamics = 'bfgs',        ! Method used to relax the cell
+   press = 0.0,                   ! Target pressure
+/
+
+ATOMIC_SPECIES
+Al 26.9815 Al.pbe-n-kjpaw_psl.1.0.0.UPF
+N  14.0070 N.pbe-n-kjpaw_psl.1.0.0.UPF
+
+ATOMIC_POSITIONS (crystal)
+Al 0.666666667 0.333333333 0.499287
+Al 0.333333333 0.666666667 0.999287
+N  0.666666667 0.333333333 0.880713
+N  0.333333333 0.666666667 0.380713
+
+K_POINTS automatic
+6 6 6 0 0 0
