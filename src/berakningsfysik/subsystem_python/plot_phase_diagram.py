@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from build_dataframe import temps
 
 def main():
+    "Plottar fasdiagram."
     df = pd.read_csv("curves.csv")
 
     fig = plt.figure()
@@ -36,7 +37,7 @@ def main():
         max_num_comps = 1
         for index, element in enumerate(comps_dataframe):
             element_list = turn_string_to_list(element)
-            for comps in element_list:
+            #for comps in element_list:
                 
             if len(element_list) > max_num_comps:
                 max_num_comps = len(element_list)

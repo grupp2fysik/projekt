@@ -58,7 +58,6 @@ def find_comps_at_temp(T, df, index):
     df = dataframe med data läst från 
     dataframe.csv
     """
-    print("undersöker T=", T)
     x_interpolated = df["x"]
     deltaG = df["deltaG_T"+str(index)]
     d2deltaG = df["d2deltaG_T"+str(index)]
@@ -89,29 +88,19 @@ def find_comps_at_temp(T, df, index):
             x_end = points[start][0]
             x_hull = np.array(x_interpolated[end: start + 1])
 
-        print("nu simplex: ", x_start, x_end)
-
         num_inflection_points = 0
         
-        if x_start == 0.1322645290581162:
-            print("¨¨¨¨¨", x_hull)
-            print(start, end +1)
         if x_start == 0 or x_start == 1:
             recent_sign = 1
         else:
             recent_sign = d2deltaG[min(start, end)-1]/abs(d2deltaG[min(start, end)-1])
-        print("recent sign:", recent_sign)
+       
 
         spinodal_comps = []
 
         for x_index, x in enumerate(x_hull):
-            if x == 0.3186372745490982:
-                print("******recent ", recent_sign)
-                print("d2", d2deltaG[x_index+min(start, end)])
-                print("d2 -1", d2deltaG[x_index+min(start, end)-1])
             if d2deltaG[x_index+min(start, end)] < 0:
                 if recent_sign == 1:
-                    print("inflektionspunkt: ", x)
                     num_inflection_points += 1
                     spinodal_comps.append(x)
                     spinodals.append(x)
@@ -119,19 +108,17 @@ def find_comps_at_temp(T, df, index):
 
             else:
                 if recent_sign == -1:
-                    print("inflektionspunkt: ", x)
                     num_inflection_points += 1
                     spinodal_comps.append(x)
                     spinodals.append(x)
                 recent_sign = 1
         
         if num_inflection_points == 2:
-            print("x_start: ", x_start)
-            print("x_end", x_end)
+
             deltaG_start = points[min(start,end)][1]
-            if T == 6060:
-                print("##### ", deltaG_start)
+    
             if deltaG_start < 0:
+
                 xa_list.append(float(x_start))
                 xb_list.append(float(x_end))
                 spinodal_xa_list.append(float(spinodals[0]))
@@ -157,7 +144,7 @@ def find_comps_at_temp(T, df, index):
         spinodal_xa_list.append(np.nan)
         spinodal_xb_list.append(np.nan)
 
-    plt.savefig("plots/hull_deltaG_T="+str(T))
+    plt.savefig("plots/delta_G_mix/hull/hull_deltaG_T="+str(T))
     return xa_list, xb_list, spinodal_xa_list, spinodal_xb_list
 
 

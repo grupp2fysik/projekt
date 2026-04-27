@@ -17,6 +17,7 @@ n = 2
 
 def write_file():
 
+    print("Räknar ut termodynamiska storheter. \nSkriver data till dataframe.csv")
     x_interpolation = np.linspace(0.0, 1.0, num_of_inter_points)
     model = find_model()
     H_interpolated = find_deltaH(model, x_interpolation)
