@@ -11,12 +11,13 @@ from thermodynamics import entropy_per_atom
 from spinodal_functions import entropy_second_derivative
 
 columns = ["x", "deltaH", "deltaS"]
-temps = [300, 400, 500, 6060, 8000, 10000]
+temps = [300, 400, 500, 6060, 8000, 10000, 100000]
 num_of_inter_points = 500
 n = 2
 
 def write_file():
 
+    print("Räknar ut termodynamiska storheter. \nSkriver data till dataframe.csv")
     x_interpolation = np.linspace(0.0, 1.0, num_of_inter_points)
     model = find_model()
     H_interpolated = find_deltaH(model, x_interpolation)
