@@ -24,7 +24,7 @@ def main():
             file.write(","+column)
         file.write("\n")
 
-        for T in temps:
+        for index, T in enumerate(temps):
             file.write(str(T)+",\n")
 
     file.close()
@@ -34,8 +34,8 @@ def main():
     spinodal_xa_list = []
     spinodal_xb_list = []
 
-    for T in temps:
-        comps_list = list(find_comps_at_temp(T, df))
+    for index, T in enumerate(temps):
+        comps_list = list(find_comps_at_temp(T, df, index))
         
         xa_list.append(comps_list[0])
         xb_list.append(comps_list[1])
@@ -52,7 +52,7 @@ def main():
     df_curves.to_csv("curves.csv", index=False)
 
 
-def find_comps_at_temp(T, df):
+def find_comps_at_temp(T, df, index):
     """Returnerar kompositioner for binodal
     och spinodal-kurvor vid temp T(som lista med np.float)
     df = dataframe med data läst från 
@@ -60,8 +60,8 @@ def find_comps_at_temp(T, df):
     """
 
     x_interpolated = df["x"]
-    deltaG = df["deltaG_T"+str(4)]
-    d2deltaG = df["d2deltaG_T"+str(4)]
+    deltaG = df["deltaG_T"+str(index)]
+    d2deltaG = df["d2deltaG_T"+str(index)]
     points = np.array(list(zip(x_interpolated, deltaG)))
     hull = ConvexHull(points)
 

@@ -151,18 +151,14 @@ def find_comps_at_temp(T, df, index):
     elif not xa_list:
     # gäller dessa villkor betyder det att ingen fasseparation sker
     # ingen binodal- eller spinodalkurva
+    # i regel sker detta vid temperaturer över smältpunkten
         xa_list.append(np.nan)
         xb_list.append(np.nan)
         spinodal_xa_list.append(np.nan)
         spinodal_xb_list.append(np.nan)
+
     plt.savefig("plots/hull_deltaG_T="+str(T))
     return xa_list, xb_list, spinodal_xa_list, spinodal_xb_list
-
-def find_spinodals(d2deltaG, x_interpolated):
-    spinodals = []
-
-    for index, value in d2deltaG:
-        pass
 
 
 if __name__ == "__main__":
