@@ -1,5 +1,5 @@
 """Denna fil hittar kompositioner som gäller vid binodal- och
-spinodal-kurvorna, och skriver dessa till en csv-fil, curves.csv"""
+spinodal-kurvorna, och skriver dessa till en csv-fil, curves.csv."""
 
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
 import pandas as pd
@@ -41,6 +41,7 @@ def main():
         xb_list.append(comps_list[1])
         spinodal_xa_list.append(comps_list[2])
         spinodal_xb_list.append(comps_list[3])
+
 
     df_curves = pd.read_csv("curves.csv")
 
