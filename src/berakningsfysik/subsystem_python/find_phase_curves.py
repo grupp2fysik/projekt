@@ -71,7 +71,7 @@ def find_comps_at_temp(T, df, index):
     spinodal_xb_list = []
 
     plt.clf()
-    spinodals = []
+    all_spinodals = []
     for simplex in hull.simplices:
         
         plt.plot(points[simplex, 0], points[simplex, 1], 'k-')
@@ -104,14 +104,18 @@ def find_comps_at_temp(T, df, index):
                 if recent_sign == 1:
                     num_inflection_points += 1
                     spinodal_comps.append(x)
-                    spinodals.append(x)
+                    if float(x) not in all_spinodals:
+                        all_spinodals.append(float(x))
+                    
                 recent_sign = -1
 
             else:
                 if recent_sign == -1:
                     num_inflection_points += 1
                     spinodal_comps.append(x)
-                    spinodals.append(x)
+                    if float(x) not in all_spinodals:
+                        all_spinodals.append(float(x))
+                    
                 recent_sign = 1
         
         if num_inflection_points == 2:
@@ -122,9 +126,10 @@ def find_comps_at_temp(T, df, index):
 
                 xa_list.append(float(x_start))
                 xb_list.append(float(x_end))
-                spinodal_xa_list.append(float(spinodals[0]))
-                spinodal_xb_list.append(float(spinodals[1]))
+                spinodal_xa_list.append(float(spinodal_comps[0]))
+                spinodal_xb_list.append(float(spinodal_comps[1]))
 
+    
     
     if not xa_list and np.any(deltaG > 0) and np.any(d2deltaG < 0):
     # gäller dessa villkor vet vi att ingen gemensam tangent finns
@@ -132,8 +137,11 @@ def find_comps_at_temp(T, df, index):
     # detta gäller för låga temperaturer
         xa_list.append(0)
         xb_list.append(1)
-        spinodal_xa_list.append(float(spinodals[0]))
-        spinodal_xb_list.append(float(spinodals[1]))
+
+        all_spinodals.sort()
+        
+        spinodal_xa_list += all_spinodals[0::2]
+        spinodal_xb_list += all_spinodals[1::2]
 
 
     elif not xa_list:
