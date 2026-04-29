@@ -14,8 +14,8 @@
    ibrav = 0,                     ! Chosen to match the Materials Project crystal structure
    nat = 2,                       ! Number of atoms in the unit cell - taken from our primitive TiN cell
    ntyp = 2,                      ! Number of atomic species - Ti and N
-   ecutwfc = 200,                 ! Plane-wave cutoff for wavefunctions
-   ecutrho = 800,                 ! Plane-wave cutoff for charge density
+   ecutwfc = 40,                 ! Plane-wave cutoff for wavefunctions
+   ecutrho = 160,                 ! Plane-wave cutoff for charge density
    occupations = 'smearing',      ! Specifies smearing for metallic systems - kept from lab setup
    smearing = 'gaussian',         ! Type of smearing - kept from lab setup
    degauss = 0.005,               ! Width of the smearing - kept from lab setup
@@ -85,4 +85,4 @@ Ti 0.0 0.0 0.0
 N  0.5 0.5 0.5
 
 K_POINTS automatic
-6 6 6 0 0 0
+16 16 16 0 0 0

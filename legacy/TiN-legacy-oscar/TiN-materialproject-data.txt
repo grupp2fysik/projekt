@@ -1,0 +1,135 @@
+{
+  "crystal_structure": {
+    "atomic_positions": [
+      {
+        "wyckoff": "4a",
+        "element": "Ti",
+        "x": "0",
+        "y": "0",
+        "z": "0"
+      },
+      {
+        "wyckoff": "4b",
+        "element": "N",
+        "x": "0",
+        "y": "1/2",
+        "z": "0"
+      }
+    ],
+    "symmetry": {
+      "crystal_system": "Cubic",
+      "lattice_system": "Cubic",
+      "hall_number": "-F 4 2 3",
+      "international_number": 225,
+      "symbol": "Fm3̅m",
+      "point_group": "m3̅m"
+    },
+    "structure_meta": {
+      "number_of_atoms": 8,
+      "density": "5.39 g·cm⁻³",
+      "dimensionality": "",
+      "possible_oxidation_states": "Ti³⁺, N³⁻"
+    }
+  }
+}
+
+
+Lattice (Conventional)
+a
+	4.24 Å
+b
+	4.24 Å
+c
+	4.24 Å
+α
+	90.00 º
+β
+	90.00 º
+ɣ
+	90.00 º
+Volume
+	76.29 Å³
+Lattice is given in its
+conventional
+crystallographic setting.
+Atomic Positions
+Wyckoff	Element	x	y	z
+4a	Ti	0	0	0
+4b	N	0	1/2	0
+Symmetry
+Crystal System
+	Cubic
+Lattice System
+	Cubic
+Hall Number
+	-F 4 2 3
+International Number
+	225
+Symbol
+	Fm3̅m
+Point Group
+	m3̅m
+Number of Atoms
+	8
+Density
+	5.39 g·cm⁻³
+Dimensionality
+	
+3D
+Possible Oxidation States
+	Ti³⁺, N³⁻
+Chemical Environment
+Wyckoff	Species
+	Environment
+	IUPAC
+	CSM
+1a	Ti³⁺	Octahedron	OC-6	0.000Lattice (Conventional)
+a
+	4.24 Å
+b
+	4.24 Å
+c
+	4.24 Å
+α
+	90.00 º
+β
+	90.00 º
+ɣ
+	90.00 º
+Volume
+	76.29 Å³
+Lattice is given in its
+conventional
+crystallographic setting.
+Atomic Positions
+Wyckoff	Element	x	y	z
+4a	Ti	0	0	0
+4b	N	0	1/2	0
+Symmetry
+Crystal System
+	Cubic
+Lattice System
+	Cubic
+Hall Number
+	-F 4 2 3
+International Number
+	225
+Symbol
+	Fm3̅m
+Point Group
+	m3̅m
+Number of Atoms
+	8
+Density
+	5.39 g·cm⁻³
+Dimensionality
+	
+3D
+Possible Oxidation States
+	Ti³⁺, N³⁻
+Chemical Environment
+Wyckoff	Species
+	Environment
+	IUPAC
+	CSM
+1a	Ti³⁺	Octahedron	OC-6	0.000

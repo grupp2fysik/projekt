@@ -2,7 +2,7 @@
    calculation = 'scf',           ! Performs a self-consistent field calculation - the electronic ground state and total energy for the given structure
    prefix = 'TiN',                ! Prefix for output files - used as the base name for files Quantum ESPRESSO writes
    outdir = '../output/',         ! Directory where output data is stored - this is where QE saves temporary calculation data
-   pseudo_dir = '../../pseudo/',  ! Path to the folder containing pseudo-potentials - QE looks here for the .UPF files
+   pseudo_dir = '../../../pseudo/',  ! Path to the folder containing pseudo-potentials - QE looks here for the .UPF files
    restart_mode = 'from_scratch', ! Determines whether to start from scratch or use saved data - here it forces a completely new run
    etot_conv_thr = 1E-7,          ! Energy convergence threshold - mainly relevant for relaxation, tells QE when the total energy is converged enough
    forc_conv_thr = 1E-5,          ! Force convergence threshold - tells QE when atomic forces are small enough
@@ -85,4 +85,4 @@ Ti 0.0 0.0 0.0
 N  0.5 0.5 0.5
 
 K_POINTS automatic
-6 6 6 0 0 0
+18 18 18 0 0 0

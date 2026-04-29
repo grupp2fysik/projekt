@@ -1,0 +1,15 @@
+#!/bin/bash
+#SBATCH -A liu-compute-2026-1
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=4
+#SBATCH --time=00:20:00
+#SBATCH --job-name=TiN_ecut
+
+module load QuantumESPRESSO/7.1
+export OMP_NUM_THREADS=1
+
+mpprun pw.x -nk 2 -in ecut_100.in > results/ecut_100.out
+mpprun pw.x -nk 2 -in ecut_150.in > results/ecut_150.out
+mpprun pw.x -nk 2 -in ecut_200.in > results/ecut_200.out
+mpprun pw.x -nk 2 -in ecut_250.in > results/ecut_250.out
+mpprun pw.x -nk 2 -in ecut_300.in > results/ecut_300.out

@@ -2,7 +2,7 @@
    calculation = 'scf',           ! Performs a self-consistent field calculation - the electronic ground state and total energy for the given structure
    prefix = 'TiN',                ! Prefix for output files - used as the base name for files Quantum ESPRESSO writes
    outdir = '../output/',         ! Directory where output data is stored - this is where QE saves temporary calculation data
-   pseudo_dir = '../../pseudo/',  ! Path to the folder containing pseudo-potentials - QE looks here for the .UPF files
+   pseudo_dir = '../../../pseudo/',  ! Path to the folder containing pseudo-potentials - QE looks here for the .UPF files
    restart_mode = 'from_scratch', ! Determines whether to start from scratch or use saved data - here it forces a completely new run
    etot_conv_thr = 1E-7,          ! Energy convergence threshold - mainly relevant for relaxation, tells QE when the total energy is converged enough
    forc_conv_thr = 1E-5,          ! Force convergence threshold - tells QE when atomic forces are small enough
@@ -14,8 +14,8 @@
    ibrav = 0,                     ! Chosen to match the Materials Project crystal structure
    nat = 2,                       ! Number of atoms in the unit cell - taken from our primitive TiN cell
    ntyp = 2,                      ! Number of atomic species - Ti and N
-   ecutwfc = 200,                 ! Plane-wave cutoff for wavefunctions
-   ecutrho = 800,                 ! Plane-wave cutoff for charge density
+   ecutwfc = 150,                 ! Plane-wave cutoff for wavefunctions
+   ecutrho = 600,                 ! Plane-wave cutoff for charge density
    occupations = 'smearing',      ! Specifies smearing for metallic systems - kept from lab setup
    smearing = 'gaussian',         ! Type of smearing - kept from lab setup
    degauss = 0.005,               ! Width of the smearing - kept from lab setup

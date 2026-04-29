@@ -1,0 +1,21 @@
+#!/bin/bash
+#SBATCH -A liu-compute-2026-1
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=4
+#SBATCH --time=00:20:00
+#SBATCH --job-name=TiN_kpts
+
+module load QuantumESPRESSO/7.1
+export OMP_NUM_THREADS=1
+
+mpprun pw.x -nk 2 -in 4_k_TiN_scf.in > results/4_k_TiN_scf.out
+mpprun pw.x -nk 2 -in 6_k_TiN_scf.in > results/6_k_TiN_scf.out
+mpprun pw.x -nk 2 -in 8_k_TiN_scf.in > results/8_k_TiN_scf.out
+mpprun pw.x -nk 2 -in 10_k_TiN_scf.in > results/10_k_TiN_scf.out
+mpprun pw.x -nk 2 -in 12_k_TiN_scf.in > results/12_k_TiN_scf.out
+mpprun pw.x -nk 2 -in 14_k_TiN_scf.in > results/14_k_TiN_scf.out
+mpprun pw.x -nk 2 -in 16_k_TiN_scf.in > results/16_k_TiN_scf.out
+mpprun pw.x -nk 2 -in 18_k_TiN_scf.in > results/18_k_TiN_scf.out
+mpprun pw.x -nk 2 -in 20_k_TiN_scf.in > results/20_k_TiN_scf.out
+mpprun pw.x -nk 2 -in 22_k_TiN_scf.in > results/22_k_TiN_scf.out
+mpprun pw.x -nk 2 -in 24_k_TiN_scf.in > results/24_k_TiN_scf.out
