@@ -1,0 +1,73 @@
+
+results/4_k_TiN_scf.out:!    total energy              =    -212.16907898 Ry
+results/6_k_TiN_scf.out:!    total energy              =    -212.17241210 Ry
+results/8_k_TiN_scf.out:!    total energy              =    -212.17075589 Ry
+results/10_k_TiN_scf.out:!    total energy              =    -212.17181979 Ry
+results/12_k_TiN_scf.out:!    total energy              =    -212.17175694 Ry
+results/14_k_TiN_scf.out:!    total energy              =    -212.17148554 Ry
+results/16_k_TiN_scf.out:!    total energy              =    -212.17165928 Ry
+results/18_k_TiN_scf.out:!    total energy              =    -212.17164131 Ry
+results/20_k_TiN_scf.out:!    total energy              =    -212.17175605 Ry
+results/22_k_TiN_scf.out:!    total energy              =    -212.17164084 Ry
+results/24_k_TiN_scf.out:!    total energy              =    -212.17165708 Ry
+
+1 rydberg-constant = 13.605698066819 eV
+
+further increases change the energy by less than 1 meV per
+atom.
+
+K-point convergence analysis (TiN, 2 atoms per cell)
+
+Conversion:
+1 Ry = 13.605698 eV
+1 eV = 1000 meV
+=>
+1Ry = 13605.698 meV
+
+Requirement is per per atom. We have two atoms per cell
+=> 1 Ry = 6802.849 meV/atom
+
+
+
+Energy differences:
+
+4 to 6: -212.16907898 -(-212.17241210) = 0.00333312 Ry
+deta E = 0.00333312 Ry
+0.00333312*6802.849 = 22.67 meV/atom
+
+6 to 8:
+11.27 meV/atom
+
+8 to 10:
+7.24 meV/atom
+
+10 to 12:
+0.43 meV/atom
+
+12 to 14:
+1.85 meV/atom
+
+14 to 16:
+1.18 meV/atom
+
+16 to 18:
+0.12 meV/atom
+
+18 to 20:
+0.78 meV/atom
+
+20 to 22:
+0.78 meV/atom
+
+22 to 24:
+0.11 meV/atom
+
+
+Conclusion:
+The total energy varies significantly for coarse k-point meshes, but stabilizes for denser meshes.
+From about 16×16×16 and higher, the energy change is below 1 meV per atom.
+
+Chosen k-point mesh:
+K_POINTS automatic
+16 16 16 0 0 0
+

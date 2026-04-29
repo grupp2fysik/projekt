@@ -1,0 +1,68 @@
+&control
+   calculation = 'scf',           ! Performs a self-consistent field calculation - the electronic ground state and total energy for the given structure
+   prefix = 'TiN',                ! Prefix for output files - used as the base name for files Quantum ESPRESSO writes
+   outdir = '../output/',         ! Directory where output data is stored - this is where QE saves temporary calculation data
+   pseudo_dir = '../../pseudo/',  ! Path to the folder containing pseudo-potentials - QE looks here for the .UPF files
+   restart_mode = 'from_scratch', ! Determines whether to start from scratch or use saved data - here it forces a completely new run
+   etot_conv_thr = 1E-7,          ! Energy convergence threshold - mainly relevant for relaxation, tells QE when the total energy is converged enough
+   forc_conv_thr = 1E-5,          ! Force convergence threshold - tells QE when atomic forces are small enough
+   tstress = .true.,              ! Print output stress - prints the calculated stress/pressure tensor in the output file
+   tprnfor = .true.,              ! Print output forces - prints the forces acting on each atom in the output file
+/
+
+&system
+   ibrav = 0,                     ! Chosen to match the Materials Project crystal structure
+   nat = 2,                       ! Number of atoms in the unit cell - taken from our primitive TiN cell
+   ntyp = 2,                      ! Number of atomic species - Ti and N
+   ecutwfc = 200,                 ! Plane-wave cutoff for wavefunctions
+   ecutrho = 800,                 ! Plane-wave cutoff for charge density
+   occupations = 'smearing',      ! Specifies smearing for metallic systems - kept from lab setup
+   smearing = 'gaussian',         ! Type of smearing - kept from lab setup
+   degauss = 0.005,               ! Width of the smearing - kept from lab setup
+/
+
+! Structure source:
+! - Materials Project: TiN is cubic, space group Fm-3m
+! - Quantum ESPRESSO INPUT_PW: for ibrav = 2 (cubic F / fcc),
+!   v1 = (a/2)(-1,0,1), v2 = (a/2)(0,1,1), v3 = (a/2)(-1,1,0)
+! - Here we use the equivalent primitive cell explicitly with ibrav = 0
+!
+! Materials Project lattice parameter:
+! a = 4.24 A
+! 1 A = 1.889726 bohr
+! a = 4.24 * 1.889726 = 8.012437 bohr
+! a/2 = 4.006219 bohr
+!
+! The cell values below come from the relaxed TiN structure used in the project:
+! a/2 = 4.009903764 bohr
+! Therefore the primitive cell vectors are:
+! v1 = (-4.009903764, 0.000000000, 4.009903764)
+! v2 = ( 0.000000000, 4.009903764, 4.009903764)
+! v3 = (-4.009903764, 4.009903764, 0.000000000)
+!
+! Atomic positions in the primitive rocksalt cell:
+! Ti (0,0,0)
+! N  (1/2,1/2,1/2)
+
+&electrons
+   diagonalization = 'david',   ! Method for matrix diagonalization - algorithm used to solve the electronic problem
+   conv_thr = 1E-8,             ! The convergence threshold for the electronic density
+   mixing_mode = 'local-TF',    ! Mixing mode for the charge density - how new and old densities are combined
+   mixing_beta = 0.2,           ! Mixing parameter for the charge density - controls how much of the new density is used
+/
+
+ATOMIC_SPECIES
+Ti 47.867 Ti.pbe-spn-kjpaw_psl.1.0.0.UPF
+N  14.007 N.pbe-n-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS (bohr)
+ -4.009903764   0.000000000   4.009903764
+  0.000000000   4.009903764   4.009903764
+ -4.009903764   4.009903764   0.000000000
+
+ATOMIC_POSITIONS (crystal)
+Ti 0.0 0.0 0.0
+N  0.5 0.5 0.5
+
+K_POINTS automatic
+6 6 6 0 0 0

@@ -1,0 +1,28 @@
+
+           ####### NSC informational message #######
+
+This is an OpenMP capable MPI-parallel application. By default we are setting
+OMP_NUM_THREADS=1 when loading this module to avoid accidental oversubscription
+of CPU resources in your job.
+
+If you want to run this installation of Quantum ESPRESSO in MPI + OpenMP mode,
+you will need to adjust the OMP_NUM_THREADS value to agree with your SLURM
+allocation '-c' value *after* you load this module.
+
+For instance, if your SLURM allocation was made with '-n 32 -c 2', you need to
+put
+
+	module load QuantumESPRESSO/7.1-nsc1-intel-2018b-eb
+	export OMP_NUM_THREADS=2
+
+in your batch job script. You can go one step further with
+
+	module load QuantumESPRESSO/7.1-nsc1-intel-2018b-eb
+	export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:=1}
+
+This will set OMP_NUM_THREADS correctly in a SLURM allocation whether you use
+the '-c' flag or not (provided you use the bash shell).
+
+HPC_NOTE: hpc_container_exec running container el7 with the following executable:
+HPC_NOTE:   /software/sse/manual/QuantumESPRESSO/7.1/nsc1/bin/pw.x -nk 2 -in AlN_scf.in
+

@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH -A liu-compute-2026-1
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=16
+#SBATCH --time=00:10:00
+#SBATCH --job-name=TiAlN_scf
+
+module load QuantumESPRESSO/7.1
+export OMP_NUM_THREADS=1
+
+srun -n 12 pw.x -nk 2 -in TiAlN_scf.in > ../output/scf/TiAlN_scf10k2.out
