@@ -1,0 +1,29 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Quantum ESPRESSO heavy output
+out/
+results/
+*.save/
+*.wfc*
+*.mix*
+*.hub*
+*.xml*
+*.dat*
+*.dos*
+*.pdos*
+*.out
+
+# Slurm
+slurm-*.out
+*.err
+*.log
+
+# Temporary files
+*.swp
+*~
+.DS_Store
+
+# Consider wether pseudos should be in Git.
