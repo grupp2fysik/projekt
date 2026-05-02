@@ -3,14 +3,12 @@ import re
 import csv
 
 RY_TO_EV = 13.605693122994
-NAT = 8							# Antalet atomer i enhetscellen för TiN (4 Ti + 4 N).
+NAT = 8
 
-rows = []						# Lagra resultat för varje fil i listan rows.
+rows = []
 
-# Loopa över alla filer i mappen results.
-for path in Path("results").glob("scf_AlN_ecut*.out"):		# .glob(...) hittar alla filer vars namn börjar med scf_TiN_ecut och slutar med .out
-    # Extrahera cutoff-värdet från filnam
-	m_ecut = re.search(r"ecut(\d+)", path.name)
+for path in Path("results").glob("scf_AlN_ecut*.out"):
+    m_ecut = re.search(r"ecut(\d+)", path.name)
     if not m_ecut:
         continue
 
@@ -29,9 +27,8 @@ for path in Path("results").glob("scf_AlN_ecut*.out"):		# .glob(...) hittar alla
         })
         continue
 
-	# Beräkna energi per atom i eV.
     E_Ry = float(energies[-1])
-    E_eV_per_atom = E_Ry * RY_TO_EV / NAT		# Multiplicera med RY_TO_EV för att få eV per enhetscell, dividera med NAT för att få eV/atom.
+    E_eV_per_atom = E_Ry * RY_TO_EV / NAT
 
     rows.append({
         "ecutwfc_Ry": ecut,
@@ -40,26 +37,20 @@ for path in Path("results").glob("scf_AlN_ecut*.out"):		# .glob(...) hittar alla
         "job_done": job_done,
     })
 
-# Sortera efter stigande cutoff-energi.
 rows.sort(key=lambda r: r["ecutwfc_Ry"])
 
-# Hitta referensvärdet för convergensanalys.
-valid = [r for r in rows if r["E_eV_per_atom"] is not None]		# valid innehåller bara rader där energin lyckades läsas
+valid = [r for r in rows if r["E_eV_per_atom"] is not None]
 if not valid:
     raise RuntimeError("No valid energies found.")
 
-# Den sista raden i den sortrade listan motsvarar den högsta cutoff-energin. Den antas vara den mest exakta.
-E_ref = valid[-1]["E_eV_per_atom"]		# E_ref används sedan som en referens för att beräkna avvikelser.
+E_ref = valid[-1]["E_eV_per_atom"]
 
-# Beräkna skillnad från referensen.
-# Absolut skillnad i eV/atom multipliceras med 1000 för att få millielektronvolt (meV).
 for r in rows:
     if r["E_eV_per_atom"] is None:
         r["delta_meV_per_atom_vs_highest"] = None
     else:
         r["delta_meV_per_atom_vs_highest"] = abs(r["E_eV_per_atom"] - E_ref) * 1000
 
-# Skapar en CSV-fil med kolumnrubrikerna i angiven ordning.
 out_csv = "AlN_cutoff_convergence.csv"
 with open(out_csv, "w", newline="") as f:
     writer = csv.DictWriter(
