@@ -1,0 +1,15 @@
+#!/bin/bash
+#SBATCH -A liu-compute-2026-1
+#SBATCH --nodes=3
+#SBATCH --tasks-per-node=32
+#SBATCH --time=20:00:00
+#SBATCH --job-name=TiAlN_222_relax
+
+set -e
+
+module load QuantumESPRESSO/7.1
+export OMP_NUM_THREADS=1
+
+mkdir -p ../output/relax
+
+srun pw.x -nk 4 -in TiAlN_relax-2-2-2.in > ../output/relax/TiAlN_relax-2-2-2.out

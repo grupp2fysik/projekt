@@ -1,0 +1,16 @@
+#!/bin/bash
+#SBATCH -A liu-compute-2026-1
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=32
+#SBATCH --time=06:00:00
+#SBATCH --job-name=TiAlN_gamma
+
+set -e
+
+module load QuantumESPRESSO/7.1
+export OMP_NUM_THREADS=1
+
+mkdir -p ../output/relax
+
+srun pw.x -nk 1 -in TiAlN_relax-gamma.in > ../output/relax/TiAlN_relax-gamma.out
+[x_chano@sigma relax]$ 
