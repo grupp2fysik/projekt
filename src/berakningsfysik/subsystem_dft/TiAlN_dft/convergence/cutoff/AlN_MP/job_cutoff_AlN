@@ -1,0 +1,21 @@
+#!/bin/bash
+#SBATCH -A liu-compute-2026-1
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=4
+#SBATCH --time=02:00:00
+#SBATCH --job-name=AlN_ecut
+
+module load QuantumESPRESSO/7.1-nsc1-intel-2018b-eb
+export OMP_NUM_THREADS=1
+
+mkdir -p out results
+
+for ecut in 50 60 70 80 90 100; do
+    echo "=========================================="
+    echo "Running AlN cutoff test: ecutwfc = ${ecut} Ry"
+    echo "=========================================="
+
+    mpprun pw.x -nk 2 \
+        -in scf_AlN_ecut${ecut}.in \
+        > results/scf_AlN_ecut${ecut}.out
+done
