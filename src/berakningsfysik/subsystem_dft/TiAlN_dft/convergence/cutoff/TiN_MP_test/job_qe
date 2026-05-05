@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH -A liu-compute-2026-1
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=4
+#SBATCH --time=00:30:00
+#SBATCH --job-name=TiN_MP_test
+
+module load QuantumESPRESSO/7.1-nsc1-intel-2018b-eb
+export OMP_NUM_THREADS=1
+
+mkdir -p out results
+
+mpprun pw.x -nk 2 -in scf_TiN_MP_test.in > results/scf_TiN_MP_test.out

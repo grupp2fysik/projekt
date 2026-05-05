@@ -1,0 +1,48 @@
+&CONTROL
+    calculation = 'scf'
+    prefix = 'AlN_MP_ecut90'
+    outdir = './out'
+    pseudo_dir = '../../../pseudos/pseudos_pslib'
+    restart_mode = 'from_scratch'
+    tstress = .true.
+    tprnfor = .true.
+/
+
+&SYSTEM
+    ibrav = 0
+    nat = 8
+    ntyp = 2
+    ecutwfc = 90
+    ecutrho = 1080
+    occupations = 'smearing'
+    smearing = 'gaussian'
+    degauss = 0.005
+/
+
+&ELECTRONS
+    conv_thr = 1.0d-8
+    mixing_beta = 0.2
+    diagonalization = 'david'
+/
+
+ATOMIC_SPECIES
+Al   26.982 Al.pbe-n-kjpaw_psl.1.0.0.UPF
+N    14.007 N.pbe-n-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS angstrom
+ 4.069036000000  0.000000000000  0.000000000000
+ 0.000000000000  4.069036000000  0.000000000000
+ 0.000000000000  0.000000000000  4.069036000000
+
+ATOMIC_POSITIONS crystal
+Al  0.500000000000  0.000000000000  0.000000000000
+Al  0.500000000000  0.500000000000  0.500000000000
+Al  0.000000000000  0.000000000000  0.500000000000
+Al  0.000000000000  0.500000000000  0.000000000000
+N   0.000000000000  0.000000000000  0.000000000000
+N   0.000000000000  0.500000000000  0.500000000000
+N   0.500000000000  0.000000000000  0.500000000000
+N   0.500000000000  0.500000000000  0.000000000000
+
+K_POINTS automatic
+10 10 10 0 0 0
