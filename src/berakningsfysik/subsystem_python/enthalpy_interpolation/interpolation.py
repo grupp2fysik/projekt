@@ -317,7 +317,7 @@ def main() -> None:
     parser.add_argument(
         "data_dir",
         nargs="?",
-        default="qe_outputs",
+        default="qe_outputs/qe_outputs1",
         help="Katalog med .out-filer. Standard: qe_outputs",
     )
     parser.add_argument(
