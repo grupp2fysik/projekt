@@ -98,6 +98,9 @@ def _extract_last_total_energy_ry(text: str) -> float:
     matches = TOTAL_ENERGY_RE.findall(text)
     if not matches:
         raise ValueError("Ingen konvergerad totalenergi ('! total energy = ... Ry') hittades.")
+    for value in matches:
+        if float(value) >= 0:
+            raise ValueError("Totala energin kan inte vara större än eller lika med 0.")
     return float(matches[-1])
 
 
@@ -214,31 +217,35 @@ def build_enthalpy_dataframe(
     tin_row = df.loc[np.isclose(df["x"].to_numpy(), 0.0)]
     aln_row = df.loc[np.isclose(df["x"].to_numpy(), 1.0)]
     
-    for tin_element, aln_element in tin_row, aln_row:
-        if tin_element < 0 or aln_element < 0:
+    """for aln_element in aln_row:
+        if int(aln_element) < 0:
             continue
-        if tin_element == 0 or aln_element == 0:
+        if int(aln_element) == 0:
             raise ValueError("För att beräkna ΔH_mix behövs referensfiler för både x=0 (TiN) och x=1 (AlN).")
         else:
-            raise ValueError ("Energin får inte vara större än 0.")
+            raise ValueError ("Energin får inte vara större än 0.")"""
+
+    """for tin_element in tin_row:
+        if int(tin_element) < 0:
+            continue
+        if int(tin_element) == 0:
+            raise ValueError("För att beräkna ΔH_mix behövs referensfiler för både x=0 (TiN) och x=1 (AlN).")
+        else:
+            raise ValueError ("Energin får inte vara större än 0.")"""
 
     e_tin = float(tin_row["energy_eV_per_atom"].iloc[0])
+    print(e_tin)
     e_aln = float(aln_row["energy_eV_per_atom"].iloc[0])
-
-    for tin_energy, aln_energy in e_tin, e_aln:
-        if tin_energy < 0 or aln_energy < 0:
-            raise ValueError()
-        elif tin_energy == 0 or aln_energy == 0:
-            raise ValueError("cannot 0 fuck off")
-        else:
-            raise ValueError("Energin får inte vara större än 0.")
+    print(e_aln)
 
     x = df["x"].to_numpy()
     e = df["energy_eV_per_atom"].to_numpy()
+    print(e)
     hmix = e - ((1.0 - x) * e_tin + x * e_aln)
 
-    if e >= 0:
-        raise ValueError("Energin kan inte vara större än eller lika med 0.")
+    for total_energy in e:
+        if total_energy >= 0:
+            raise ValueError("Energin kan inte vara större än eller lika med 0.")
 
     df["H_mix_eV_per_atom"] = hmix
     return df
@@ -283,7 +290,7 @@ def rk_basis_d2(x: np.ndarray, order: int) -> np.ndarray:
     """
     Beräknar blandningsentalpins andra koncentrationsderivata.
     """
-    
+
     x = np.asarray(x, dtype=float)
     z = 2.0 * x - 1.0
     g = x * (1.0 - x)
