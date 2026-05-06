@@ -49,7 +49,10 @@ X_FROM_FILENAME_RE = re.compile(
 
 @dataclass
 class ParsedQEOutput:
-    """Hämtad data från en Quantum ESPRESSO .out-fil."""
+    """
+    Hämtad data från en Quantum ESPRESSO .out-fil.
+    """
+
     path: Path
     x: float
     total_energy_ry: float
@@ -60,7 +63,10 @@ class ParsedQEOutput:
 
 
 def _parse_vec(line: str) -> np.ndarray:
-    """Omvandlar avlästa värden för en cellvektor från .out-fil till en numpy-vektor."""
+    """
+    Omvandlar avlästa värden för en cellvektor från .out-fil till en numpy-vektor.
+    """
+
     vals = [float(v) for v in line.split()]
     if len(vals) != 3:
         raise ValueError(f"Kunde inte tolka cellvektor från rad: {line!r}")
@@ -68,7 +74,10 @@ def _parse_vec(line: str) -> np.ndarray:
 
 
 def _parse_x_from_filename(path: Path) -> float:
-    """Läser ut sammansättningen x från filnamnet."""
+    """
+    Läser ut sammansättningen x från filnamnet.
+    """
+
     match = X_FROM_FILENAME_RE.search(path.name)
     if not match:
         raise ValueError(
@@ -82,7 +91,10 @@ def _parse_x_from_filename(path: Path) -> float:
 
 
 def _extract_last_total_energy_ry(text: str) -> float:
-    """Hittar sista förekomsten av '!total energy = ... Ry' och returnerar värdet."""
+    """
+    Hittar sista förekomsten av '!total energy = ... Ry' och returnerar värdet.
+    """
+
     matches = TOTAL_ENERGY_RE.findall(text)
     if not matches:
         raise ValueError("Ingen konvergerad totalenergi ('! total energy = ... Ry') hittades.")
@@ -90,7 +102,10 @@ def _extract_last_total_energy_ry(text: str) -> float:
 
 
 def _extract_natoms(text: str) -> int:
-    """Hämtar antalet atomer per cell från .out-filen."""
+    """
+    Hämtar antalet atomer per cell från .out-filen.
+    """
+
     match = NAT_RE.search(text)
     if not match:
         raise ValueError("Kunde inte hitta 'number of atoms/cell = ...' i .out-filen.")
@@ -98,7 +113,10 @@ def _extract_natoms(text: str) -> int:
 
 
 def _extract_last_lattice_parameter_angstrom(text: str) -> tuple[float, float]:
-    """Returnerar genomsnittlig gitterparameter i Å, från den sista CELL_PARAMETERS-blocket."""
+    """
+    Returnerar genomsnittlig gitterparameter i Å, från den sista CELL_PARAMETERS-blocket.
+    """
+
     matches = list(CELL_BLOCK_RE.finditer(text))
     if not matches:
         return np.nan, np.nan
@@ -139,7 +157,10 @@ def _extract_last_lattice_parameter_angstrom(text: str) -> tuple[float, float]:
 
 
 def parse_qe_out(path: str | Path) -> ParsedQEOutput:
-    """Läser en .out_fil och returnerar en ParsedQEOutput med data."""
+    """
+    Läser en .out_fil och returnerar en ParsedQEOutput med data.
+    """
+
     path = Path(path)
     text = path.read_text(encoding="utf-8", errors="ignore")
 
@@ -169,6 +190,7 @@ def build_enthalpy_dataframe(
     Skapar en dataframe mha parse_qe() för varje .out-fil i qe_outputs_katalogen.
     Beräknar även blandningsentalpin (eV/atom) med TiN (x=0) och Al(x=1) som referens.
     """
+
     directory = Path(directory)
     paths = sorted(directory.glob(glob_pattern))
     if not paths:
@@ -191,18 +213,32 @@ def build_enthalpy_dataframe(
 
     tin_row = df.loc[np.isclose(df["x"].to_numpy(), 0.0)]
     aln_row = df.loc[np.isclose(df["x"].to_numpy(), 1.0)]
-
-    if tin_row.empty or aln_row.empty:
-        raise ValueError(
-            "För att beräkna ΔH_mix behövs referensfiler för både x=0 (TiN) och x=1 (AlN)."
-        )
+    
+    for tin_element, aln_element in tin_row, aln_row:
+        if tin_element < 0 or aln_element < 0:
+            continue
+        if tin_element == 0 or aln_element == 0:
+            raise ValueError("För att beräkna ΔH_mix behövs referensfiler för både x=0 (TiN) och x=1 (AlN).")
+        else:
+            raise ValueError ("Energin får inte vara större än 0.")
 
     e_tin = float(tin_row["energy_eV_per_atom"].iloc[0])
     e_aln = float(aln_row["energy_eV_per_atom"].iloc[0])
 
+    for tin_energy, aln_energy in e_tin, e_aln:
+        if tin_energy < 0 or aln_energy < 0:
+            raise ValueError()
+        elif tin_energy == 0 or aln_energy == 0:
+            raise ValueError("cannot 0 fuck off")
+        else:
+            raise ValueError("Energin får inte vara större än 0.")
+
     x = df["x"].to_numpy()
     e = df["energy_eV_per_atom"].to_numpy()
     hmix = e - ((1.0 - x) * e_tin + x * e_aln)
+
+    if e >= 0:
+        raise ValueError("Energin kan inte vara större än eller lika med 0.")
 
     df["H_mix_eV_per_atom"] = hmix
     return df
@@ -213,6 +249,7 @@ def rk_basis(x: np.ndarray, order: int) -> np.ndarray:
     Bygger designmatrisen A för Redlich-Kister-basen ϕ_i(x) = x(1-x)*(2x-1)^i.
     Returnerar en array med dimension (len(x), order+1).
     """
+
     x = np.asarray(x, dtype=float)
     z = 2.0 * x - 1.0
     g = x * (1.0 - x)
@@ -225,7 +262,10 @@ def rk_basis(x: np.ndarray, order: int) -> np.ndarray:
 
 
 def rk_basis_d1(x: np.ndarray, order: int) -> np.ndarray:
-    """Beräknar blandningsentalpins första koncentrationsderivata."""
+    """
+    Beräknar blandningsentalpins första koncentrationsderivata.
+    """
+
     x = np.asarray(x, dtype=float)
     z = 2.0 * x - 1.0
     g = x * (1.0 - x)
@@ -240,7 +280,10 @@ def rk_basis_d1(x: np.ndarray, order: int) -> np.ndarray:
 
 
 def rk_basis_d2(x: np.ndarray, order: int) -> np.ndarray:
-    """Beräknar blandningsentalpins andra koncentrationsderivata."""
+    """
+    Beräknar blandningsentalpins andra koncentrationsderivata.
+    """
+    
     x = np.asarray(x, dtype=float)
     z = 2.0 * x - 1.0
     g = x * (1.0 - x)
@@ -269,12 +312,18 @@ class RedlichKisterModel:
 
     @property
     def order(self) -> int:
-        """Polynomets ordning, dvs högsta i."""
+        """
+        Polynomets ordning, dvs högsta i.
+        """
+
         return len(self.coeffs) - 1
 
     @classmethod
     def fit(cls, x: Iterable[float], hmix: Iterable[float], order: int = 3) -> "RedlichKisterModel":
-        """Anpassar modellen till givna (x, ΔH_mix)-data med minsta kvadratmetoden."""
+        """
+        Anpassar modellen till givna (x, ΔH_mix)-data med minsta kvadratmetoden.
+        """
+
         x = np.asarray(list(x), dtype=float)
         y = np.asarray(list(hmix), dtype=float)
 
@@ -296,23 +345,35 @@ class RedlichKisterModel:
         return cls(coeffs=coeffs, rmse=rmse)
 
     def hmix(self, x: Iterable[float]) -> np.ndarray:
-        """Beräknar ΔH_mix(x) från modellen."""
+        """
+        Beräknar ΔH_mix(x) från modellen.
+        """
+
         x = np.asarray(list(np.atleast_1d(x)), dtype=float)
         return rk_basis(x, self.order) @ self.coeffs
 
     def d1(self, x: Iterable[float]) -> np.ndarray:
-        """Beräknar första koncentrationsderivatan från modellen av ΔH_mix"""
+        """
+        Beräknar första koncentrationsderivatan från modellen av ΔH_mix.
+        """
+
         x = np.asarray(list(np.atleast_1d(x)), dtype=float)
         B = rk_basis_d1(x, self.order) @ self.coeffs
         return B #rk_basis_d1(x, self.order) @ self.coeffs
 
     def d2(self, x: Iterable[float]) -> np.ndarray:
-        """Andra koncentrationsderivatan från modellen av ΔH_mix"""
+        """
+        Andra koncentrationsderivatan från modellen av ΔH_mix.
+        """
+
         x = np.asarray(list(np.atleast_1d(x)), dtype=float)
         return rk_basis_d2(x, self.order) @ self.coeffs
 
 def main() -> None:
-    """Gränssnitt för terminal. Läser QE-filer, anpassar RK_modell och sparar resultat."""
+    """
+    Gränssnitt för terminal. Läser QE-filer, anpassar RK_modell och sparar resultat.
+    """
+
     parser = argparse.ArgumentParser(description="Interpolera blandningsentalpi från QE .out-filer.")
     parser.add_argument(
         "data_dir",
