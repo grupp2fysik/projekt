@@ -215,32 +215,31 @@ def build_enthalpy_dataframe(
     ).sort_values("x", kind="mergesort").reset_index(drop=True)
 
     tin_row = df.loc[np.isclose(df["x"].to_numpy(), 0.0)]
+    print(tin_row)
+    if len(tin_row) == 0:
+        raise ValueError("No data found for x=0 (TiN)")
     aln_row = df.loc[np.isclose(df["x"].to_numpy(), 1.0)]
+    print(aln_row)
+    if len(aln_row) == 0:
+        raise ValueError("No data found for x=1 (AlN)")
     
-    """for aln_element in aln_row:
-        if int(aln_element) < 0:
-            continue
-        if int(aln_element) == 0:
-            raise ValueError("För att beräkna ΔH_mix behövs referensfiler för både x=0 (TiN) och x=1 (AlN).")
-        else:
-            raise ValueError ("Energin får inte vara större än 0.")"""
+    energy_value_aln = aln_row.iloc[0]["energy_eV_per_atom"]  # or whichever column you want
+    if energy_value_aln > 0:
+        raise ValueError("Energin får inte vara större än 0.")
+    elif energy_value_aln == 0:
+        raise ValueError("För att beräkna ΔH_mix behövs referensfiler för både x=0 (TiN) och x=1 (AlN).")
 
-    """for tin_element in tin_row:
-        if int(tin_element) < 0:
-            continue
-        if int(tin_element) == 0:
-            raise ValueError("För att beräkna ΔH_mix behövs referensfiler för både x=0 (TiN) och x=1 (AlN).")
-        else:
-            raise ValueError ("Energin får inte vara större än 0.")"""
+    energy_value_tin = aln_row.iloc[0]["energy_eV_per_atom"]  # or whichever column you want
+    if energy_value_aln > 0:
+        raise ValueError("Energin får inte vara större än 0.")
+    elif energy_value_tin == 0:
+        raise ValueError("För att beräkna ΔH_mix behövs referensfiler för både x=0 (TiN) och x=1 (AlN).")
 
     e_tin = float(tin_row["energy_eV_per_atom"].iloc[0])
-    print(e_tin)
     e_aln = float(aln_row["energy_eV_per_atom"].iloc[0])
-    print(e_aln)
 
     x = df["x"].to_numpy()
     e = df["energy_eV_per_atom"].to_numpy()
-    print(e)
     hmix = e - ((1.0 - x) * e_tin + x * e_aln)
 
     for total_energy in e:
@@ -385,7 +384,7 @@ def main() -> None:
     parser.add_argument(
         "data_dir",
         nargs="?",
-        default="qe_outputs/qe_outputs1",
+        default="qe_outputs/qe_outputs0",
         help="Katalog med .out-filer. Standard: qe_outputs",
     )
     parser.add_argument(
