@@ -26,7 +26,7 @@ def main():
     plt.title("Fasdiagram")
     fig.legend()
 
-    plt.savefig("plots/phase_diagram")
+    plt.savefig("plots/phase_diagrams/phase_diagram")
 
 
 def plot_curve(df, curve_type, column1, column2):
