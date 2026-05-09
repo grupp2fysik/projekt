@@ -8,8 +8,6 @@ from build_dataframe import temps
 from find_phase_curves import columns
 
 
-
-
 def main():
 
     print( "Plottar fasdiagram.")
@@ -22,6 +20,7 @@ def main():
 
     
     plt.xlim(0, 1)
+    plt.ylim(0,)
     plt.xlabel("x")
     plt.ylabel("T [K]")
     plt.title("Fasdiagram")
@@ -32,6 +31,7 @@ def main():
 
 def plot_curve(df, curve_type, column1, column2):
     """Sätter ihop kolumnerna column1 och column2 
+    (t.ex xa och xb)
     och plottar mot temperaturen.
     df är dataframe från curves.csv
     curve_type är "spinodal" eller "binodal" """
