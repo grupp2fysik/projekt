@@ -1,0 +1,113 @@
+&control
+   calculation = 'relax',           ! Performs a self-consistent field calculation - the electronic ground state and total energy for the given structure
+   prefix = 'TiAlN',                ! Prefix for output files - used as the base name for files Quantum ESPRESSO writes
+   outdir = '../../output/',         ! Directory where output data is stored - this is where QE saves temporary calculation data
+   pseudo_dir = '../../../pseudo/',  ! Path to the folder containing pseudo-potentials - QE looks here for the .UPF files
+   restart_mode = 'from_scratch', ! Determines whether to start from scratch or use saved data - here it forces a completely new run
+   disk_io = 'none',              ! Säger till programmet att inte spara någon data till outputdata.
+   nstep = 15,
+   etot_conv_thr = 1E-5,          ! Energy convergence threshold - mainly relevant for relaxation, tells QE when the total energy is converged enough
+   forc_conv_thr = 1E-4,          ! Force convergence threshold - tells QE when atomic forces are small enough, jämför för varje atom alltså inte totalforce
+   tstress = .true.,              ! Print output stress - prints the calculated stress/pressure tensor in the output file
+   tprnfor = .true.,              ! Print output forces - prints the forces acting on each atom in the output file
+/
+&system
+   ibrav = 0,                     ! Chosen to match the Materials Project crystal structure
+   nat = 64,                       ! Number of atoms in the unit cell - taken from our primitive AlN cell
+   ntyp = 3,                      ! Number of atomic species - Al and N
+   ecutwfc = 70,                 ! Plane-wave cutoff for wavefunctions
+   ecutrho = 280,                 ! Plane-wave cutoff for charge density
+   occupations = 'smearing',      ! Specifies smearing for metallic systems - kept from lab setup, although now its isolator therefore fixed
+   smearing = 'gaussian',         ! Type of smearing - kept from lab setup
+   degauss = 0.005,               ! Width of the smearing - kept from lab setup
+/
+
+&electrons
+   diagonalization = 'david',   ! Method for matrix diagonalization - algorithm used to solve the electronic problem
+   conv_thr = 1E-8,             ! The convergence threshold for the electronic density. egentligen 1E-8 på resterande
+   mixing_mode = 'local-TF',    ! Mixing mode for the charge density - how new and old densities are combined
+   mixing_beta = 0.2,           ! Mixing parameter for the charge density - controls how much of the new density is used
+/
+&ions
+   ion_dynamics = 'bfgs',         ! Method used to relax the atomic positions
+/
+ATOMIC_SPECIES
+Al 26.982 Al.pbe-n-kjpaw_psl.1.0.0.UPF
+N 14.007 N.pbe-n-kjpaw_psl.1.0.0.UPF
+Ti 47.867 Ti.pbe-spn-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS angstrom
+8.225000000000001 0.0 0.0
+0.0 8.225000000000001 0.0
+0.0 0.0 8.225000000000001
+
+
+ATOMIC_POSITIONS (angstrom)
+Ti           -0.0275362289        0.0697546415        0.9732116252
+Al            2.1088731199       -0.0031847057       -1.0516672610
+Al            0.0684562424        2.0396868699        3.1351954613
+Al            2.1224608519        2.0094337613        1.0838211276
+N             2.1564458367        0.0241070964        1.0159095615
+N             0.0633302913       -0.0015045457        3.1261749238
+N             2.0929144598        2.0016903832       -1.0067404826
+N             0.1276997018        2.0637139656        1.1405445524
+Al           -0.0709042917       -0.0185279379        5.1185484550
+Al            2.1021699183        0.1022680076        2.9856730311
+Ti           -0.0736631126        1.9920951224        7.2715017402
+Al            2.0877886107        2.0550737330        5.1307580366
+N             2.1540673916        0.1213021752        5.1051972621
+N             0.1184234428       -0.0765260905        7.1099278136
+N             2.0842481200        2.0655819652        3.0723366367
+N             0.0801917867        2.0456165453        5.0998935753
+Ti           -0.0819312072        4.0708165578        1.0657485891
+Al            1.8030613360        3.8013693913       -0.7252845747
+Al           -0.0455437094        6.1997090356        3.0958137222
+Al            2.0686927910        6.1939516449        1.0217032892
+N             2.1509844232        4.0887866176        1.0738290621
+N             0.1185826574        4.1397392504        3.1455440891
+N             2.0398633384        6.1996566534       -0.9232425439
+N             0.0565652739        6.1733790674        1.0620049419
+Al            0.0217376857        4.2000625385        5.1215682363
+Al            2.0996974967        4.1210136232        3.0790194490
+Al            0.0146284554        6.1842427695        7.0854497515
+Al            1.9579219062        6.5751838218        4.7248041968
+N             2.0954289814        4.0100843512        5.1064830899
+N             0.0157999378        4.1814046663        7.1274017257
+N             2.1175448966        6.2026714734        2.9518474703
+N             0.1879191000        6.2056346583        5.0824900929
+Al            4.1553733316       -0.0217054117        1.0553143132
+Ti            6.2693058812        0.0986066512       -1.0443401901
+Ti            4.2647140543        2.0440481757        3.0107556657
+Ti            6.2460853728        2.0504312025        0.9844072229
+N             6.1352891946       -0.0385452490        1.0799222833
+N             4.1546500460       -0.0349504031        3.0722966515
+N             6.2018776976        2.1906602697       -1.1184244591
+N             4.0997074949        2.0686755399        1.0123321005
+Al            4.2303478499       -0.0127894752        5.1192873119
+Al            6.2261351200       -0.0684013186        3.1413791594
+Ti            4.2449891361        2.0434593783        7.2135470559
+Al            6.3089254948        2.0585647772        5.1031071084
+N             6.1936521258        0.1277834145        5.0957064671
+N             4.1180387983       -0.0209082904        7.1907244123
+N             6.2891775483        2.0220851578        3.1008751241
+N             4.1597259670        2.0608179243        5.1062203443
+Al            2.9402538580        5.1772941306       -2.0666225234
+Al            4.1438765307        4.1880399438        1.0055355413
+Al            4.2218858812        6.1844081742        3.0787267536
+Al            6.2778868717        6.1923205500        1.0337471490
+N             6.1015839759        4.1704129012        0.9256092096
+N             4.1262856234        4.1632937218        3.0402373325
+N             6.3015417460        6.1694796452       -0.9166177555
+N             4.1446752708        6.1934365443        1.0299767946
+Al            4.4471223471        3.9705803870        4.9257928400
+Ti            6.2870973573        4.1564513487        3.0156639205
+Al            4.4867331983        6.3526091362        7.3635571070
+Al            6.2451943476        4.2295756462        7.0905816652
+N             6.2776937003        4.0096456140        5.1302420631
+N             4.1394856200        4.2393255160        7.1543235014
+N             6.2110483079        6.1962114246        2.9704835870
+N             3.9337207469        6.2007958657        5.0901855968
+
+K_POINTS automatic
+2 2 2 0 0 0
+
