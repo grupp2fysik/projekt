@@ -3,6 +3,8 @@ andraderivatan av deltaG (för alla temp)
 i en csv-fil som enkelt kan läsas till en pandas dataframe med kommando
 pd.read_csv("dataframe.csv")"""
 
+import math
+import sys
 import pandas as pd
 import numpy as np
 import argparse
@@ -10,16 +12,18 @@ from enthalpy_interpolation.interpolation import RedlichKisterModel, build_entha
 from thermodynamics import entropy_per_atom
 from spinodal_functions import entropy_second_derivative
 
+alloy_name = sys.argv[1]
 columns = ["x", "deltaH", "deltaS"]
-temps = [i for i in range(0, 15001, 500)]
 num_of_inter_points = 500
-n = 2
 
 def write_file():
 
-    print("Räknar ut termodynamiska storheter. \nSkriver data till dataframe.csv")
+    print(f"Räknar ut termodynamiska storheter för {alloy_name}. \nSkriver data till dataframe.csv")
+ 
+    n, temps, _, qe_dir = find_parameters()
+   
     x_interpolation = np.linspace(0.0, 1.0, num_of_inter_points)
-    model = find_model()
+    model, x_values, y_values = find_model(qe_dir)
     H_interpolated = find_deltaH(model, x_interpolation)
 
     # skriver alla kolumner samt interpolationspunkter
@@ -73,12 +77,12 @@ def find_deltaG(T):
     deltaG = delta_H - T*delta_S
     return deltaG
 
-def find_model():
+def find_model(qe_dir):
     parser = argparse.ArgumentParser(description="Skapa dataframe.")
     parser.add_argument(
         "data_dir",
         nargs="?",
-        default="enthalpy_interpolation/qe_outputs",
+        default="enthalpy_interpolation/qe_outputs/qe_outputs0",
         help="Katalog med .out-filer. Standard: qe_outputs",
     )
     parser.add_argument(
@@ -95,12 +99,13 @@ def find_model():
 
     args = parser.parse_args()
 
-    df = build_enthalpy_dataframe(args.data_dir, glob_pattern=args.glob)
+    #df = build_enthalpy_dataframe(args.data_dir, glob_pattern=args.glob)
+    df = build_enthalpy_dataframe("enthalpy_interpolation/qe_outputs/" + qe_dir, "*x=*.out")
 
     x = df["x"].to_numpy()
     y = df["H_mix_eV_per_atom"].to_numpy()
 
-    return RedlichKisterModel.fit(x=x, hmix=y, order=args.order)
+    return RedlichKisterModel.fit(x=x, hmix=y, order=args.order), x, y
 
 def find_deltaH(model, x_interpolation):
     """Hämtar interpolerade deltaH_mix
@@ -118,6 +123,31 @@ def find_d2G(model, x_interpolation, T, n):
 
     d2deltaG = np.insert((d2deltaH - T*np.array(d2deltaS)), 0, np.nan)
     return np.append(d2deltaG, [np.nan])
+
+def find_parameters():
+    """Läser en csv-fil med materialspecifika 
+    parametrar och returnerar dessa"""
+
+    df = pd.read_csv(f"alloy_parameters/{alloy_name}.csv", header=None)
+    parameters = df[1]
+    n = int(parameters[0])
+    T_start = int(parameters[1])
+    T_end = int(parameters[2])
+    qe_dir = parameters[3].strip()
+
+    spec_temps = parameters[4]
+    spec_temps_list = spec_temps.split()
+
+    for index, temp in enumerate(spec_temps_list):
+        spec_temps_list[index] = int(temp)
+   
+    
+    temps = [i for i in range(T_start, T_end, math.ceil((T_end - T_start)/30))]
+    
+    temps += spec_temps_list
+    temps.sort()
+    return n, temps, alloy_name, qe_dir
+    
 
 if __name__ == "__main__":
     write_file()

@@ -4,13 +4,15 @@ att plotta fasdiagrammet"""
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from build_dataframe import temps
+from build_dataframe import find_parameters
 from find_phase_curves import columns
 
+_, temps, alloy_name, qe_dir = find_parameters()
 
 def main():
 
     print( "Plottar fasdiagram.")
+
     df = pd.read_csv("curves.csv")
 
     fig = plt.figure()
@@ -18,15 +20,14 @@ def main():
     plot_curve(df, "binodal", columns[1], columns[2])
     plot_curve(df, "spinodal", columns[3], columns[4])
 
-    
     plt.xlim(0, 1)
-    plt.ylim(0,)
+    plt.ylim(0, temps[-1])
     plt.xlabel("x")
     plt.ylabel("T [K]")
-    plt.title("Fasdiagram")
+    plt.title(f"Fasdiagram {alloy_name}")
     fig.legend()
 
-    plt.savefig("plots/phase_diagrams/phase_diagram")
+    plt.savefig(f"plots/phase_diagrams/{alloy_name}_phase_diagram")
 
 
 def plot_curve(df, curve_type, column1, column2):

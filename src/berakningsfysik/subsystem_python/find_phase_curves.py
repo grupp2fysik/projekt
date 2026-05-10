@@ -5,10 +5,11 @@ from scipy.spatial import ConvexHull, convex_hull_plot_2d
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from build_dataframe import temps
+from build_dataframe import find_parameters
 
 
 columns = ["T", "xa", "xb", "spinodal_xa", "spinodal_xb"]
+n, temps, alloy_name, qe_dir = find_parameters()
 
 def main():
 
@@ -153,7 +154,7 @@ def find_comps_at_temp(T, df, index):
         spinodal_xa_list.append(np.nan)
         spinodal_xb_list.append(np.nan)
 
-    plt.savefig("plots/delta_G_mix/hull/hull_deltaG_T="+str(T))
+    plt.savefig(f"plots/delta_G_mix/{alloy_name}/hull/hull_deltaG_T="+str(T))
     return xa_list, xb_list, spinodal_xa_list, spinodal_xb_list
 
 

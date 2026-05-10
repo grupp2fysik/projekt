@@ -1,14 +1,15 @@
 """Denna fil läser från "dataframe.csv"
 och plottar delta_G_mix för alla
-temperaturer. Resultaten läggs i plots/delta_G_mix"""
+temperaturer. Resultaten läggs i plots/delta_G_mix/<material</delta_G_mix"""
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from build_dataframe import temps
+from build_dataframe import find_parameters
 
 def print_deltaG_mix():
 
+    parameters = find_parameters()
     df = pd.read_csv("dataframe.csv")
 
     x_interpolated = df["x"]
@@ -24,15 +25,11 @@ def print_deltaG_mix():
         d2points = np.array(list(zip(x_interpolated, d2deltaG)))
 
         plt.plot(points[:,0], points[:,1], 'k-')
-        plt.plot(points[:,0], np.zeros(points[:,1].size), 'k--')
         
-    #for simplex in hull.simplices:
-      #  plt.plot(points[simplex, 0], points[simplex, 1], 'k-') # hämta kolumn 0/1 för värdena som ingår i simplex
-
         plt.title("delta_G_mix för T = "+str(T)+"K")
         plt.xlabel("x")
         plt.ylabel("delta_G_mix")
-        plt.savefig("plots/delta_G_mix/delta_G_mix_T="+str(T)+"K")
+        plt.savefig(f"plots/delta_G_mix/{alloy_name}/delta_G_mix/delta_G_mix_T="+str(T)+"K")
 
         plt.clf()
 
@@ -41,7 +38,7 @@ def print_deltaG_mix():
         plt.title("andraderivata delta_G_mix för T = "+str(T)+"K")
         plt.xlabel("x")
         plt.ylabel("andraderivata av delta_G_mix")
-        plt.savefig("plots/delta_G_mix/d2delta_G_mix_T="+str(T)+"K")
+        plt.savefig(f"plots/delta_G_mix/{alloy_name}/second_derivative/d2delta_G_mix_T="+str(T)+"K")
 
 def return_points(filename):
     df = pd.read_csv(filename)
