@@ -1,0 +1,106 @@
+&control
+   calculation = 'scf',             ! Performs a self-consistent field calculation - the electronic ground state and total energy for the given structure
+   prefix = 'TiAlN_x0125_scf',   ! Prefix for output files - used as the base name for files Quantum ESPRESSO writes
+   outdir = '../output/scf_sqs_all_x/tmp_x0125/',  ! Directory where output data is stored - this is where QE saves temporary calculation data
+   pseudo_dir = '../../pseudo/',    ! Path to the folder containing pseudo-potentials - QE looks here for the .UPF files
+   restart_mode = 'from_scratch',   ! Determines whether to start from scratch or use saved data - here it forces a completely new run
+   tstress = .true.,                ! Print output stress - prints the calculated stress/pressure tensor in the output file
+   tprnfor = .true.,                ! Print output forces - prints the forces acting on each atom in the output file
+/
+
+&system
+   ibrav = 0,                       ! Chosen to match the Materials Project crystal structure
+   nat = 64,                        ! Number of atoms in the unit cell
+   ntyp = 3,                        ! Number of atomic species - Ti, Al and N
+   ecutwfc = 60,                    ! Plane-wave cutoff for wavefunctions
+   ecutrho = 240,                   ! Plane-wave cutoff for charge density
+   occupations = 'smearing',        ! Specifies smearing for metallic systems - kept from lab setup
+   smearing = 'gaussian',           ! Type of smearing - kept from lab setup
+   degauss = 0.005,                 ! Width of the smearing - kept from lab setup
+/
+
+&electrons
+   diagonalization = 'david',       ! Method for matrix diagonalization - algorithm used to solve the electronic problem
+   conv_thr = 1E-8,                 ! The convergence threshold for the electronic density
+   mixing_mode = 'local-TF',        ! Mixing mode for the charge density - how new and old densities are combined
+   mixing_beta = 0.2,               ! Mixing parameter for the charge density - controls how much of the new density is used
+/
+
+ATOMIC_SPECIES
+Al 26.982 Al.pbe-n-kjpaw_psl.1.0.0.UPF
+N  14.007 N.pbe-n-kjpaw_psl.1.0.0.UPF
+Ti 47.867 Ti.pbe-spn-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS angstrom
+8.4375 0.0 0.0
+0.0 8.4375 0.0
+0.0 0.0 8.4375
+
+ATOMIC_POSITIONS (angstrom)
+Ti            0.0015677014        0.0043629709        0.0129809960
+N             2.1776172204        0.0027011253        0.0024802854
+Ti           -0.0168386136        2.1049073351        2.0935141551
+N             2.1569396451        2.1097520550        2.1748211208
+Ti            2.0693225264       -0.0132480863        2.1068961221
+N            -0.0028075317        0.0083423016        2.1005986867
+Ti            2.0881934291        2.1212980104        0.0033071216
+N             0.0087110907        2.1033893775       -0.0820333303
+Ti           -0.0121273748       -0.0266666620        4.2045519452
+N             2.1158478964        0.0613165846        4.2187449400
+Al            0.0279379282        2.1182993990        6.2929071181
+N             2.0578897617        2.1106995947        6.2615498313
+Ti            2.1136085617       -0.0176670755        6.3318313926
+N             0.0043189152        0.0669194728        6.3347016332
+Al            2.1092130558        2.1153125690        4.2181627514
+N             0.0647801072        2.1116928735        4.2666974689
+Ti            0.0075144757        4.2150721399        0.0200390678
+N             2.1126582740        4.2170775706       -0.0001244719
+Ti            0.0054116687        6.3321563162        2.1162635990
+N             2.1130648512        6.3248136465        2.1157545160
+Ti            2.1048600375        4.2291340728        2.0867768127
+N            -0.0027864204        4.2107404015        2.1095734777
+Ti            2.1019520162        6.3173413753       -0.0067593445
+N            -0.0008600764        6.3353238775       -0.0072925127
+Ti           -0.0089901496        4.2462311341        4.1990981138
+N             2.1053557263        4.1644986768        4.2185591546
+Ti            0.0039256758        6.3301028580        6.3222892149
+N             2.0998473977        6.3279546253        6.3213267909
+Ti            2.1376520332        4.2342352704        6.3520176759
+N             0.0016701335        4.1557588443        6.3254277568
+Ti            2.1212184630        6.3387068773        4.2226742308
+N             0.0042491811        6.3278259483        4.2245371918
+Al            4.2241727505        0.0116194032        0.0255064159
+N             6.2607780900       -0.0076113400        0.0022281358
+Al            4.1917516716        2.0875733368        2.1159416949
+N             6.2509575558        2.1093438600        2.1174200075
+Ti            6.3632311280        0.0147537070        2.1253037158
+N             4.2168724853        0.0536186975        2.0562706828
+Ti            6.3486580878        2.1204686582        0.0005454301
+N             4.2081860977        2.0461720315        0.0612642534
+Ti            4.2300332005       -0.0278905409        4.2317184005
+N             6.3205692727        0.0012094700        4.2192867271
+Ti            4.2426624217        2.1251543381        6.3298124262
+N             6.4111119712        2.1101688292        6.3184292501
+Ti            6.3268625854        0.0180819519        6.3127305806
+N             4.2206949549        0.0124664028        6.4060763215
+Ti            6.3189457045        2.0979585782        4.2190702644
+N             4.1489405766        2.1012076196        4.1671223936
+Ti            4.2135964019        4.2185731647       -0.0146843665
+N             6.3268287009        4.2261903538        0.0006511013
+Ti            4.2136535915        6.3164247438        2.1337594445
+N             6.3255909537        6.3245524948        2.1082596889
+Ti            6.3289131794        4.2027700222        2.1021327971
+N             4.2174254834        4.1441053409        2.1049965461
+Ti            6.3349923509        6.3178911134       -0.0039336750
+N             4.2196363587        6.3994281145        0.0084859803
+Ti            4.2288092598        4.2453931690        4.2338840406
+N             6.3324686240        4.2206321547        4.2185333989
+Ti            4.2138907785        6.3137646079        6.3041320028
+N             6.3377781068        6.3259990476        6.3296064121
+Ti            6.2998827097        4.1968802563        6.3363671132
+N             4.2203273745        4.2094748224        6.3339085541
+Ti            6.3162083980        6.3426897453        4.2204676084
+N             4.2146515675        6.3325503652        4.2128331413
+
+K_POINTS automatic
+2 2 2 0 0 0
