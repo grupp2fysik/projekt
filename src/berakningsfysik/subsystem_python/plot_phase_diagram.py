@@ -5,9 +5,10 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from build_dataframe import find_parameters
+from parameters import *
 from find_phase_curves import columns
 
-_, temps, alloy_name, qe_dir = find_parameters()
+#_, temps, alloy_name, qe_dir = find_parameters()
 
 def main():
 
@@ -20,8 +21,13 @@ def main():
     plot_curve(df, "binodal", columns[1], columns[2])
     plot_curve(df, "spinodal", columns[3], columns[4])
 
+    ticks = list(plt.yticks()[0])
+    ticks += [temps[0], temps[-1]]
+    ticks = sorted(set(ticks))
+    plt.yticks(ticks)
+
     plt.xlim(0, 1)
-    plt.ylim(0, temps[-1])
+    plt.ylim(temps[0], temps[-1])
     plt.xlabel("x")
     plt.ylabel("T [K]")
     plt.title(f"Fasdiagram {alloy_name}")

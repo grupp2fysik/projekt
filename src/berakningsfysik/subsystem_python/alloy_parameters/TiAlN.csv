@@ -1,5 +1,5 @@
 atomer per metallplats,2
-temperatur min,0
-temperatur max,10000
+temperatur min,300
+temperatur max,8000
 filväg till Quantum Espresso-filer, TiAlN
-specifika temperaturer, 5000 4000 8000
+specifika temperaturer, 5000.9 4000 8000 

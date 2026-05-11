@@ -1,5 +1,5 @@
 """Denna fil sparar interpolerad deltaH, deltaS och deltaG samt
-andraderivatan av deltaG (för alla temp)
+andraderivatan av deltaG (för alla temperaturer)
 i en csv-fil som enkelt kan läsas till en pandas dataframe med kommando
 pd.read_csv("dataframe.csv")"""
 
@@ -8,19 +8,22 @@ import sys
 import pandas as pd
 import numpy as np
 import argparse
-from enthalpy_interpolation.interpolation import RedlichKisterModel, build_enthalpy_dataframe
-from thermodynamics import entropy_per_atom
-from spinodal_functions import entropy_second_derivative
 
-alloy_name = sys.argv[1]
-columns = ["x", "deltaH", "deltaS"]
-num_of_inter_points = 500
+from enthalpy_interpolation.interpolation import RedlichKisterModel, build_enthalpy_dataframe
+from thermodynamics import entropy_per_atom, check_if_valid_T, find_temp_limits, check_if_valid_n
+from spinodal_functions import entropy_second_derivative
+from parameters import *
+
+#alloy_name = sys.argv[1]
+#columns = ["x", "deltaH", "deltaS"]
+#num_of_inter_points = 500
 
 def write_file():
 
-    print(f"Räknar ut termodynamiska storheter för {alloy_name}. \nSkriver data till dataframe.csv")
+    print(f"Räknar ut termodynamiska storheter för {alloy_name}. \nSkriver data till dataframe.csv.")
  
-    n, temps, _, qe_dir = find_parameters()
+    #n, temps, _, qe_dir = find_parameters()
+   
    
     x_interpolation = np.linspace(0.0, 1.0, num_of_inter_points)
     model, x_values, y_values = find_model(qe_dir)
@@ -29,9 +32,9 @@ def write_file():
     # skriver alla kolumner samt interpolationspunkter
     with open("dataframe.csv", "w", newline="") as file:
 
-        file.write(columns[0])
+        file.write(initial_columns[0])
 
-        for column in columns[1:]:
+        for column in initial_columns[1:]:
             file.write(","+column)
 
         for i in range(len(temps)):
@@ -59,7 +62,9 @@ def write_data(column, data_array):
     column = sträng från columns (t.ex "deltaH")
     data = vektor med data till kolumnen"""
     df = pd.read_csv("dataframe.csv")
+    #df_to_concate = pd.DataFrame({column: data_array})
     df[column] = data_array
+    #new_df = pd.concat([old_df, df_to_concate], axis=1)
     df.to_csv("dataframe.csv", index=False)
 
 def find_deltaS(n, x_interpolated):
@@ -76,6 +81,7 @@ def find_deltaG(T):
     delta_H = df["deltaH"]
     deltaG = delta_H - T*delta_S
     return deltaG
+
 
 def find_model(qe_dir):
     parser = argparse.ArgumentParser(description="Skapa dataframe.")
@@ -107,6 +113,7 @@ def find_model(qe_dir):
 
     return RedlichKisterModel.fit(x=x, hmix=y, order=args.order), x, y
 
+
 def find_deltaH(model, x_interpolation):
     """Hämtar interpolerade deltaH_mix
     x_interpolation = array med interpolationspunkter (använd np.linspace(...))"""
@@ -130,24 +137,41 @@ def find_parameters():
 
     df = pd.read_csv(f"alloy_parameters/{alloy_name}.csv", header=None)
     parameters = df[1]
-    n = int(parameters[0])
-    T_start = int(parameters[1])
-    T_end = int(parameters[2])
+    n = parameters[0]
+    T_start = parameters[1]
+    T_end = parameters[2]
+
+    T_start, T_end = find_temp_limits(T_start, T_end)
+
     qe_dir = parameters[3].strip()
 
+    #hittar temperaturer som ska analyseras
     spec_temps = parameters[4]
     spec_temps_list = spec_temps.split()
 
-    for index, temp in enumerate(spec_temps_list):
-        spec_temps_list[index] = int(temp)
-   
-    
     temps = [i for i in range(T_start, T_end, math.ceil((T_end - T_start)/30))]
-    
-    temps += spec_temps_list
+
+    if T_end not in temps:
+        temps.append(T_end)
+
+    print("spec:", spec_temps)
+    for index, temp in enumerate(spec_temps_list):
+
+        check_if_valid_T(float(temp))
+        if float(temp) not in temps:
+            temps.append(float(temp))
+    temps.append(20000)
+    temps = [x for x in temps if x <= T_end]
+
     temps.sort()
+
+    check_if_valid_n(n)
+    n = int(n)
+
+    print("temps:", temps)
     return n, temps, alloy_name, qe_dir
     
 
 if __name__ == "__main__":
+    print("spec comps", spec_comps)
     write_file()

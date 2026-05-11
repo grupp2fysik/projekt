@@ -6,10 +6,12 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from build_dataframe import find_parameters
+from thermodynamics import T_string
+from parameters import *
 
 
 columns = ["T", "xa", "xb", "spinodal_xa", "spinodal_xb"]
-n, temps, alloy_name, qe_dir = find_parameters()
+#n, temps, alloy_name, qe_dir = find_parameters()
 
 def main():
 
@@ -154,7 +156,8 @@ def find_comps_at_temp(T, df, index):
         spinodal_xa_list.append(np.nan)
         spinodal_xb_list.append(np.nan)
 
-    plt.savefig(f"plots/delta_G_mix/{alloy_name}/hull/hull_deltaG_T="+str(T))
+    print(T_string(T))
+    plt.savefig(f"test_plots/delta_G_mix/{alloy_name}/hull/hull_deltaG_T="+T_string(T))
     return xa_list, xb_list, spinodal_xa_list, spinodal_xb_list
 
 

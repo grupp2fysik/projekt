@@ -196,6 +196,7 @@ def build_enthalpy_dataframe(
 
     directory = Path(directory)
     paths = sorted(directory.glob(glob_pattern))
+   
     if not paths:
         raise FileNotFoundError(
             f"Hittade inga filer i {directory} som matchar mönstret {glob_pattern!r}"

@@ -3,6 +3,8 @@ import numpy as np
 from scipy.interpolate import interp1d
 from build_dataframe import find_parameters
 import sys
+from thermodynamics import check_if_T_in_temps
+
 
 def turn_string_to_list(string):
     """
@@ -223,12 +225,18 @@ class PhaseDiagramAnalyser:
 if __name__ == "__main__":
     n, temps, alloy_name, qe_dir = find_parameters()
     spec_temps = sys.argv[2:]
+
     data = pd.read_csv("curves.csv")
     analyzer = PhaseDiagramAnalyser("curves.csv")
     
     compositions = [0.1, 0.3, 0.5, 0.7, 0.9]
-    
+    print("temps levevrrule:", temps)
+    print("spec temps", spec_temps)
     for T in spec_temps:
+        T = int(T)
+        
+        check_if_T_in_temps(T, temps)
+
         print("="*60)
         print(f"Phase analysis at T = {T} K")
         

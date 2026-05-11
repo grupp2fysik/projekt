@@ -1,6 +1,10 @@
 #!/bin/bash
 
+set -e 
+
 alloy_name=$1
+
+#uv run enthalpy_interpolation/interpolation.py --save_model
 
 uv run build_dataframe.py "$alloy_name"
 
