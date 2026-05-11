@@ -16,14 +16,14 @@ def generate_sqs_supercell(x_al=0.5, supercell_size= (4,4,4),cubicfalsetrue=True
     # 2. Sublattices
     if(cubicfalsetrue):
         chemical_symbols = [
-        ['Ti', 'Al'],
-        ['Ti', 'Al'],
-        ['Ti', 'Al'],
-        ['Ti', 'Al'],
-        ['N'],
-        ['N'],
-        ['N'],
-        ['N']
+            ['Ti', 'Al'],  # atom 0 är Ti-plats
+            ['N'],         # atom 1 är N-plats
+            ['Ti', 'Al'],  # atom 2 är Ti-plats
+            ['N'],         # atom 3 är N-plats
+            ['Ti', 'Al'],  # atom 4 är Ti-plats
+            ['N'],         # atom 5 är N-plats
+            ['Ti', 'Al'],  # atom 6 är Ti-plats
+            ['N']          # atom 7 är N-plats
         ]
     else:
         chemical_symbols = [['Ti', 'Al'], ['N']] #säger att det är en sublattice och att det är titan och aluminium i ena och N i andra.
@@ -62,6 +62,9 @@ def cif_to_qe_input(cif_file="test_supercell.cif",  # Namnet på inputfilen (.ci
 
     # Läser in strukturen från .cif-filen och skapar ett ASE Atoms-objekt
     atoms = read(cif_file)
+
+    symbols = atoms.get_chemical_symbols()
+    unique_symbols = sorted(set(symbols))
 
     # Öppnar (eller skapar) outputfilen och skriver till den
     with open(output_file, "w") as f:
@@ -102,20 +105,29 @@ def cif_to_qe_input(cif_file="test_supercell.cif",  # Namnet på inputfilen (.ci
 
         # K-POINTS
         f.write("K_POINTS automatic\n")
-        f.write("x x x 0 0 0\n")
+        f.write("2 2 2 0 0 0\n")
 
     # Bekräftelse att filen skapats
     print(f" input skapad: {output_file}")
 
 if __name__ == "__main__":
+    x_al = 0.875
+    label = "x0875"
+
+    cif_file = f"TiAlN_{label}_sqs_64atoms.cif"
+    qe_file = f"TiAlN_{label}_sqs_64atoms_qe_structure.in"
+
     sc = generate_sqs_supercell(
-        x_al=0.875,
-        supercell_size=(2,2,2),
+        x_al=x_al,
+        supercell_size=(2, 2, 2),
         cubicfalsetrue=True,
-        filename="supercell_64atomsx05.cif"
+        filename=cif_file
     )
-    #sc = generate_tialn_sqs()
+
     print("Klar!")
     print("Antal atomer:", len(sc))
-    cif_to_qe_input("supercell_64atomsx05.cif")
-    
+
+    cif_to_qe_input(
+        cif_file=cif_file,
+        output_file=qe_file
+    )
