@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from build_dataframe import temps
-from find_phase_curves import columns
+from find_phase_curves_0 import columns
 
 
 def main():

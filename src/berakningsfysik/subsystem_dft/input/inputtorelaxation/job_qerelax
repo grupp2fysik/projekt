@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH -A liu-compute-2026-1
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=32
+#SBATCH --time=0:20:00
+#SBATCH --job-name=TiAlN_relax64atomsk2
+
+module load QuantumESPRESSO/7.1
+export OMP_NUM_THREADS=1
+
+mpprun  pw.x -nk 4 -in relaxationfixedx075finare.in > ../../output/relax/fixedvolumerelax/TiAlN_fixedrelax64atomsfinarex075.out

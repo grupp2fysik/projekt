@@ -1,0 +1,2 @@
+data_source,energy_basis,hmix_fit_col,hmix_column,atoms_per_formula_unit,order,rmse,L0,L1,L2,L3
+/home/gused247/Y3/TFYA75/projekt/src/berakningsfysik/subsystem_dft/results/final_hmix_sqs/final_fixed_sqs_hmix_results.csv,atom,H_mix_eV_per_atom,hmix_ev_per_atom,2.0,3,0.002917139326796119,0.4222514628751973,0.13138378566978193,0.14080181990521323,0.1611278355140191
