@@ -1,0 +1,33 @@
+Här skriver jag resultet från EOStest och skriver den optimala gitterparametern/volymen för olika xvärden för TiAlN.
+För att få fram en quadraticreggression användes desmos.com
+
+x=0.25:
+	Med punkterna kan man göra en quadratic regression och får:
+	E=13.94869a^{2}-234.71594a-4647.59868
+	vilket ger minimupunkt: a=8.41355
+	Det vill säga optimala gitterparametern= 8.41355 med volym: 595.576893270813875
+
+x=0.375:
+	med punkterna kan man göra en quadratic regression och får:
+	E=12.89961a^{2}-216.12444a-4152.52803, där E är Energi i Ry och a är gitterkonstanten
+	Vilket ger minimipunkt: a=8.37717
+	Det vill säga är den optimala gitterparametern =8.37717  och därmed med volym: 587.884468165080813 
+
+x=0.5:
+        med punkterna kan man göra en quadratic regression och får:
+	E= 12.58464a^{2}-209.76722a-3606.54015, där E är Energi i Ry och a är gitterkonstanten
+        Vilket ger minimipunkt: a=8.33426
+        Det vill säga är den optimala gitterparametern = 8.33426  och därmed med volym: 578.896780727832776
+
+x=0.625:
+        med punkterna kan man göra en quadratic regression och får:
+	E= 10.52139a^{2}-174.57377a-3179.41946, där E är Energi i Ry och a är gitterkonstanten
+        Vilket ger minimipunkt: a=8.29614
+        Det vill säga är den optimala gitterparametern =8.29614  och därmed med volym: 570.989624742527544
+
+x=0.75:
+        med punkterna kan man göra en quadratic regression och får:
+	E = 9.4726a^{2}-156.33538a-2681.50843, där E är Energi i Ry och a är gitterkonstanten
+        Vilket ger minimipunkt: a=8.25198
+        Det vill säga är den optimala gitterparametern =8.25198  och därmed med volym: 561.920013287662392
+

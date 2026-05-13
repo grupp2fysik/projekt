@@ -74,6 +74,7 @@ def _parse_vec(line: str) -> np.ndarray:
     """
     Omvandlar avlästa värden för en cellvektor från .out-fil till en numpy-vektor.
     """
+
     vals = [float(v) for v in line.split()]
     if len(vals) != 3:
         raise ValueError(f"Kunde inte tolka cellvektor från rad: {line!r}")
@@ -84,6 +85,7 @@ def _parse_x_from_filename(path: Path) -> float:
     """
     Läser ut sammansättningen x från filnamnet.
     """
+
     match = X_FROM_FILENAME_RE.search(path.name)
     if not match:
         raise ValueError(
@@ -100,6 +102,7 @@ def _extract_last_total_energy_ry(text: str) -> float:
     """
     Hittar sista förekomsten av '! total energy = ... Ry' och returnerar värdet.
     """
+
     matches = TOTAL_ENERGY_RE.findall(text)
     if not matches:
         raise ValueError("Ingen konvergerad totalenergi ('! total energy = ... Ry') hittades.")
@@ -110,6 +113,7 @@ def _extract_natoms(text: str) -> int:
     """
     Hämtar antalet atomer per cell från .out-filen.
     """
+
     match = NAT_RE.search(text)
     if not match:
         raise ValueError("Kunde inte hitta 'number of atoms/cell = ...' i .out-filen.")
@@ -120,6 +124,7 @@ def _extract_last_lattice_parameter_angstrom(text: str) -> tuple[float, float]:
     """
     Returnerar genomsnittlig gitterparameter i Å, från sista CELL_PARAMETERS-blocket.
     """
+
     matches = list(CELL_BLOCK_RE.finditer(text))
     if not matches:
         return np.nan, np.nan
@@ -163,6 +168,7 @@ def parse_qe_out(path: str | Path) -> ParsedQEOutput:
     """
     Läser en .out-fil och returnerar ParsedQEOutput med avläst data.
     """
+
     path = Path(path)
     text = path.read_text(encoding="utf-8", errors="ignore")
 
@@ -188,6 +194,7 @@ def _normalise_column_name(name: str) -> str:
     """
     Gör kolumnnamn robusta mot mellanslag, bindestreck och versaler.
     """
+
     return name.strip().lower().replace("-", "_").replace(" ", "_")
 
 
@@ -195,6 +202,7 @@ def _column_lookup(df: pd.DataFrame) -> dict[str, str]:
     """
     Returnerar mapping från normaliserat kolumnnamn till verkligt kolumnnamn.
     """
+
     return {_normalise_column_name(c): c for c in df.columns}
 
 
@@ -202,6 +210,7 @@ def _require_column(df: pd.DataFrame, column: str) -> str:
     """
     Hämtar verkligt kolumnnamn, case-insensitive och robust mot enkla namnvariationer.
     """
+
     lookup = _column_lookup(df)
     key = _normalise_column_name(column)
     if key not in lookup:
@@ -222,6 +231,7 @@ def _hmix_to_ev_per_atom(
     För Ti_{1-x}Al_xN är atoms_per_formula_unit = 2:
     en metallatom + en kväveatom per formelenhet.
     """
+
     if atoms_per_formula_unit <= 0:
         raise ValueError("atoms_per_formula_unit måste vara positivt.")
 
@@ -260,6 +270,7 @@ def _validate_enthalpy_dataframe(df: pd.DataFrame) -> None:
     """
     Grundläggande sanity checks för x och H_mix.
     """
+
     x = df["x"].to_numpy(dtype=float)
     h = df["H_mix_eV_per_atom"].to_numpy(dtype=float)
 
@@ -291,6 +302,7 @@ def build_enthalpy_dataframe_from_table(
     Tabellen måste minst ha kolumnen 'x' och en H_mix-kolumn.
     Funktionen returnerar alltid H_mix både som eV/atom och eV/formelenhet.
     """
+
     table_path = Path(table_path)
     if not table_path.exists():
         raise FileNotFoundError(f"Hittar inte tabellfilen: {table_path}")
@@ -328,6 +340,7 @@ def build_enthalpy_dataframe_from_qe(
     Denna gamla väg finns kvar för bakåtkompatibilitet:
     .out-filer -> totalenergi -> H_mix_eV_per_atom.
     """
+
     directory = Path(directory)
     paths = sorted(directory.glob(glob_pattern))
     if not paths:
@@ -388,6 +401,7 @@ def build_enthalpy_dataframe(
     men tillåter nu också:
         build_enthalpy_dataframe("enthalpies.csv", hmix_column="hmix_ev_per_atom")
     """
+
     data_source = Path(data_source)
 
     if data_source.is_file():
@@ -417,6 +431,7 @@ def rk_basis(x: np.ndarray, order: int) -> np.ndarray:
 
     phi_i(x) = x(1-x)*(2x-1)^i.
     """
+
     x = np.asarray(x, dtype=float)
     z = 2.0 * x - 1.0
     g = x * (1.0 - x)
@@ -432,6 +447,7 @@ def rk_basis_d1(x: np.ndarray, order: int) -> np.ndarray:
     """
     Beräknar första koncentrationsderivatan av Redlich-Kister-basen.
     """
+
     x = np.asarray(x, dtype=float)
     z = 2.0 * x - 1.0
     g = x * (1.0 - x)
@@ -449,6 +465,7 @@ def rk_basis_d2(x: np.ndarray, order: int) -> np.ndarray:
     """
     Beräknar andra koncentrationsderivatan av Redlich-Kister-basen.
     """
+
     x = np.asarray(x, dtype=float)
     z = 2.0 * x - 1.0
     g = x * (1.0 - x)
@@ -477,7 +494,10 @@ class RedlichKisterModel:
 
     @property
     def order(self) -> int:
-        """Polynomets ordning, dvs högsta i."""
+        """
+        Polynomets ordning, dvs högsta i.
+        """
+        
         return len(self.coeffs) - 1
 
     @classmethod
@@ -490,6 +510,7 @@ class RedlichKisterModel:
         """
         Anpassar modellen till givna (x, Delta H_mix)-data med minsta kvadratmetoden.
         """
+
         x = np.asarray(list(x), dtype=float)
         y = np.asarray(list(hmix), dtype=float)
 
@@ -520,6 +541,7 @@ class RedlichKisterModel:
         """
         Beräknar Delta H_mix(x) från modellen.
         """
+
         x = np.asarray(np.atleast_1d(x), dtype=float)
         return rk_basis(x, self.order) @ self.coeffs
 
@@ -527,6 +549,7 @@ class RedlichKisterModel:
         """
         Beräknar första koncentrationsderivatan av Delta H_mix.
         """
+
         x = np.asarray(np.atleast_1d(x), dtype=float)
         return rk_basis_d1(x, self.order) @ self.coeffs
 
@@ -534,6 +557,7 @@ class RedlichKisterModel:
         """
         Beräknar andra koncentrationsderivatan av Delta H_mix.
         """
+
         x = np.asarray(np.atleast_1d(x), dtype=float)
         return rk_basis_d2(x, self.order) @ self.coeffs
 
@@ -543,6 +567,7 @@ def package_root() -> Path:
     """
     Returnerar enthalpy_interpolation-mappen.
     """
+
     return Path(__file__).resolve().parent
 
 
@@ -553,7 +578,12 @@ def subsystem_root() -> Path:
     interpolation.py ligger i:
         subsystem_python/enthalpy_interpolation/interpolation
     """
+<<<<<<< HEAD
     return Path(__file__).resolve().parent.parent
+=======
+
+    return package_root().parent
+>>>>>>> a643f5610ac7ae9ea07bb7511f71a9eadcef5a30
 
 
 def default_results_root() -> Path:
@@ -561,6 +591,7 @@ def default_results_root() -> Path:
     Returnerar:
         subsystem_python/results.
     """
+
     return subsystem_root() / "results"
 
 
@@ -569,6 +600,7 @@ def default_system_dir(system: str) -> Path:
     Returnerar:
         subsystem_python/results/<system>.
     """
+
     return default_results_root() / system
 
 
@@ -577,6 +609,7 @@ def default_rk_model_dir(system: str) -> Path:
     Returnerar:
         subsystem_python/results/<system>/rk_model.
     """
+
     return default_system_dir(system) / "rk_model"
 
 
@@ -709,6 +742,7 @@ def save_rk_model(
       - rk_coeffs.npy        : endast koefficienter, för bakåtkompatibilitet
       - rk_model_summary.csv : lättläst sammanfattning
     """
+
     model_dir = Path(model_dir)
     model_dir.mkdir(parents=True, exist_ok=True)
 
@@ -753,6 +787,7 @@ def main() -> None:
     """
     Terminalgränssnitt. Läser CSV eller QE-filer, anpassar RK-modell och sparar dataset.
     """
+
     parser = argparse.ArgumentParser(
         description="Interpolera blandningsentalpi från CSV-fil eller Quantum ESPRESSO .out-filer."
     )
