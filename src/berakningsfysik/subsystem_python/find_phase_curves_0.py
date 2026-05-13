@@ -1,13 +1,17 @@
 """Denna fil hittar kompositioner som gäller vid binodal- och
-spinodal-kurvorna, och skriver dessa till en csv-fil, curves.csv."""
+spinodal-kurvorna, och skriver dessa till curves.csv."""
 
 from scipy.spatial import ConvexHull
 from pathlib import Path
 import argparse
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from build_dataframe import temps
+
+from help_functions import find_parameters
+from thermodynamics import T_string
+
 
 DEFAULT_SYSTEM = "TiAlN"
 DEFAULT_RESULTS_DIRNAME = "results"
@@ -21,72 +25,89 @@ columns = ["T", "xa", "xb", "spinodal_xa", "spinodal_xb"]
 
 
 def main():
-
     parser = argparse.ArgumentParser(
         description="Hitta binodal- och spinodalkurvor."
     )
+
     parser.add_argument(
-        "--system",
+        "alloy_name",
+        nargs="?",
         default=DEFAULT_SYSTEM,
-        help="Materialsystem. Standard: TiAlN.",
+        help="Legeringsnamn, t.ex. TiAlN. Parameterfil läses från alloy_parameters/<legering>.csv.",
     )
+
     parser.add_argument(
         "--input",
         default=None,
         help=(
             "Sökväg till dataframe.csv. "
-            "Standard: results/<system>/thermodynamics/dataframe.csv."
+            "Standard: results/<legering>/thermodynamics/dataframe.csv."
         ),
     )
+
     parser.add_argument(
         "--output",
         default=None,
         help=(
             "Sökväg till curves.csv. "
-            "Standard: results/<system>/phase_curves/curves.csv."
+            "Standard: results/<legering>/phase_curves/curves.csv."
         ),
     )
+
     parser.add_argument(
         "--gibbs-plot-dir",
         default=None,
         help=(
             "Mapp för Gibbs/common-tangent-plottar. "
-            "Standard: results/<system>/phase_curves/Gibbs_plots."
+            "Standard: results/<legering>/phase_curves/Gibbs_plots."
         ),
     )
 
     args = parser.parse_args()
 
-    input_path = Path(args.input) if args.input else default_dataframe_path(args.system)
-    output_path = Path(args.output) if args.output else default_curves_path(args.system)
+    # Läs temperaturer från alloy_parameters/<legering>.csv.
+    _, temps, alloy_name, _ = find_parameters(args.alloy_name)
+
+    input_path = (
+        Path(args.input)
+        if args.input
+        else default_dataframe_path(alloy_name)
+    )
+
+    output_path = (
+        Path(args.output)
+        if args.output
+        else default_curves_path(alloy_name)
+    )
+
     gibbs_plot_dir = (
         Path(args.gibbs_plot_dir)
         if args.gibbs_plot_dir
-        else default_gibbs_plot_dir(args.system)
+        else default_gibbs_plot_dir(alloy_name)
     )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     gibbs_plot_dir.mkdir(parents=True, exist_ok=True)
 
-    print("Letar efter binodal- och spinodalkurvor.")
+    print(f"Letar efter binodal- och spinodalkurvor för {alloy_name}.")
     print(f"Läser termodynamisk dataframe från: {input_path}")
     print(f"Sparar kurvor till: {output_path}")
     print(f"Sparar Gibbs-plottar till: {gibbs_plot_dir}")
 
     df = pd.read_csv(input_path)
-    
-    with open(output_path, "w", newline="") as file:
 
+    check_dataframe_has_temperature_columns(df, temps)
+
+    with open(output_path, "w", newline="") as file:
         file.write(columns[0])
 
         for column in columns[1:]:
-            file.write(","+column)
+            file.write("," + column)
+
         file.write("\n")
 
         for T in temps:
-            file.write(str(T)+",\n")
-
-    file.close()
+            file.write(str(T) + ",\n")
 
     xa_list = []
     xb_list = []
@@ -95,13 +116,22 @@ def main():
 
     for index, T in enumerate(temps):
         xa, xb, spinodal_xa, spinodal_xb = find_comps_at_temp(
-            T, df, index, gibbs_plot_dir
+            T=T,
+            df=df,
+            index=index,
+            plot_dir=gibbs_plot_dir,
         )
 
         xa_list.append(xa)
         xb_list.append(xb)
         spinodal_xa_list.append(spinodal_xa)
         spinodal_xb_list.append(spinodal_xb)
+
+        print(
+            f"T = {T:8}: "
+            f"binodal = ({xa}, {xb}), "
+            f"spinodal = ({spinodal_xa}, {spinodal_xb})"
+        )
 
     df_curves = pd.read_csv(output_path)
 
@@ -111,6 +141,26 @@ def main():
     df_curves["spinodal_xb"] = spinodal_xb_list
 
     df_curves.to_csv(output_path, index=False)
+
+
+def check_dataframe_has_temperature_columns(df: pd.DataFrame, temps: list) -> None:
+    """
+    Kontrollerar att dataframe.csv innehåller de deltaG- och d2deltaG-kolumner
+    som motsvarar temperaturerna från parameterfilen.
+    """
+    missing_columns = []
+
+    for i in range(len(temps)):
+        for column in [f"deltaG_T{i}", f"d2deltaG_T{i}"]:
+            if column not in df.columns:
+                missing_columns.append(column)
+
+    if missing_columns:
+        raise ValueError(
+            "dataframe.csv saknar kolumner som behövs för phase curve-beräkningen.\n"
+            f"Saknade kolumner: {missing_columns}\n"
+            "Kontrollera att build_dataframe.py kördes med samma parameterfil/temperaturer."
+        )
 
 
 def find_spinodal_points(x, d2G):
@@ -134,9 +184,11 @@ def find_spinodal_points(x, d2G):
             spinodals.append(float(x[i]))
 
         elif y0 * y1 < 0:
-            # Linjär interpolation av nollstället.
             x0 = x[i]
             x1 = x[i + 1]
+
+            # Linjär interpolation av nollstället:
+            # y = 0 mellan (x0, y0) och (x1, y1).
             x_zero = x0 - y0 * (x1 - x0) / (y1 - y0)
             spinodals.append(float(x_zero))
 
@@ -165,7 +217,7 @@ def find_lower_hull_binodal(x, deltaG, tol=1e-10):
     for simplex in hull.simplices:
         i, j = sorted(simplex)
 
-        # Intilliggande punkter är bara vanliga kurvsegment.
+        # Intilliggande punkter är bara vanliga kurvsegment, inte en tie-line.
         if j - i <= 1:
             continue
 
@@ -186,11 +238,11 @@ def find_lower_hull_binodal(x, deltaG, tol=1e-10):
         return np.nan, np.nan
 
     # Om flera kandidater finns: ta den bredaste miscibility gapen.
-    # För ett vanligt TiAlN-fall är det oftast precis en relevant kandidat.
     candidates.sort(reverse=True)
     _, xa, xb = candidates[0]
 
     return float(xa), float(xb)
+
 
 def find_comps_at_temp(T, df, index, plot_dir):
     """
@@ -228,7 +280,6 @@ def find_comps_at_temp(T, df, index, plot_dir):
     else:
         # Ingen binodal hittades.
         if len(spinodals) >= 2:
-            # Spinodal kan fortfarande finnas numeriskt i vissa fall.
             xa = np.nan
             xb = np.nan
             spinodal_xa = spinodals[0]
@@ -239,13 +290,40 @@ def find_comps_at_temp(T, df, index, plot_dir):
             spinodal_xa = np.nan
             spinodal_xb = np.nan
 
-    # Plotta gemensam tangent.
+    plot_gibbs_with_common_tangent(
+        x_interpolated=x_interpolated,
+        deltaG=deltaG,
+        T=T,
+        xa=xa,
+        xb=xb,
+        spinodal_xa=spinodal_xa,
+        spinodal_xb=spinodal_xb,
+        plot_dir=plot_dir,
+    )
+
+    return xa, xb, spinodal_xa, spinodal_xb
+
+
+def plot_gibbs_with_common_tangent(
+    x_interpolated,
+    deltaG,
+    T,
+    xa,
+    xb,
+    spinodal_xa,
+    spinodal_xb,
+    plot_dir,
+):
+    """
+    Plottar deltaG, eventuell gemensam tangent och eventuella spinodalpunkter.
+    """
     plt.clf()
     plt.plot(x_interpolated, deltaG, "b-", label=r"$\Delta G_{mix}$")
 
     if np.isfinite(xa) and np.isfinite(xb):
         g_xa = np.interp(xa, x_interpolated, deltaG)
         g_xb = np.interp(xb, x_interpolated, deltaG)
+
         plt.plot([xa, xb], [g_xa, g_xb], "k--", label="gemensam tangent")
         plt.plot([xa, xb], [g_xa, g_xb], "ko")
 
@@ -260,13 +338,11 @@ def find_comps_at_temp(T, df, index, plot_dir):
     plt.title(f"T = {T} K")
     plt.legend()
     plt.grid(True, alpha=0.3)
+
     plot_dir = Path(plot_dir)
     plot_dir.mkdir(parents=True, exist_ok=True)
-    plt.savefig(plot_dir / f"hull_deltaG_T={T}.png", dpi=200)
 
-    return xa, xb, spinodal_xa, spinodal_xb
-
-    
+    plt.savefig(plot_dir / f"hull_deltaG_T={T_string(T)}.png", dpi=200)
 
 
 def project_root() -> Path:

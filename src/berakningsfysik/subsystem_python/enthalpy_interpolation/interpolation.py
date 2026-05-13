@@ -538,6 +538,7 @@ class RedlichKisterModel:
         return rk_basis_d2(x, self.order) @ self.coeffs
 
 
+# Hjälpfunktioner för filstruktur
 def package_root() -> Path:
     """
     Returnerar enthalpy_interpolation-mappen.
@@ -548,29 +549,147 @@ def package_root() -> Path:
 def subsystem_root() -> Path:
     """
     Returnerar subsystem_python-mappen.
+
+    interpolation.py ligger i:
+        subsystem_python/enthalpy_interpolation/interpolation
     """
-    return package_root().parent
+    return Path(__file__).resolve().parent.parent
 
 
 def default_results_root() -> Path:
     """
-    Returnerar subsystem_python/results.
+    Returnerar:
+        subsystem_python/results.
     """
     return subsystem_root() / "results"
 
 
 def default_system_dir(system: str) -> Path:
     """
-    Returnerar t.ex. subsystem_python/results/TiAlN.
+    Returnerar:
+        subsystem_python/results/<system>.
     """
     return default_results_root() / system
 
 
 def default_rk_model_dir(system: str) -> Path:
     """
-    Returnerar t.ex. subsystem_python/results/TiAlN/rk_model.
+    Returnerar:
+        subsystem_python/results/<system>/rk_model.
     """
     return default_system_dir(system) / "rk_model"
+
+
+def alloy_parameter_path(alloy_name: str) -> Path:
+    """
+    Returnerar:
+        subsystem_python/alloy_parameters/<alloy_name>.csv
+    """
+    return subsystem_root() / "alloy_parameters" / f"{alloy_name}.csv"
+
+
+def is_alloy_name(value: str) -> bool:
+    """
+    Tolkar argumentet som legeringsnamn om motsvarande parameterfil finns.
+    """
+    return alloy_parameter_path(value).exists()
+
+
+def read_data_source_from_alloy_parameters(alloy_name: str) -> str:
+    """
+    Läser parameterfilen alloy_parameters/<alloy_name>.csv
+    och returnerar datakällan för entalpidata.
+
+    Datakällan kan vara antingen:
+      - en katalog med QE .out-filer
+      - en CSV-fil med färdig H_mix-data
+
+    För bakåtkompatibilitet accepterar vi fortfarande nyckeln:
+        filväg till Quantum Espresso-filer
+    """
+    param_path = alloy_parameter_path(alloy_name)
+
+    if not param_path.exists():
+        raise FileNotFoundError(f"Hittar inte parameterfilen: {param_path}")
+
+    df = pd.read_csv(param_path, header=None)
+    keys = df[0].astype(str).str.strip().str.lower()
+    values = df[1].astype(str).str.strip()
+
+    for key, value in zip(keys, values):
+        if (
+            "quantum espresso" in key
+            or "qe" in key
+            or "entalpidata" in key
+            or "hmix" in key
+        ):
+            return value
+
+    raise ValueError(
+        f"Kunde inte hitta datakälla för entalpi i {param_path}. "
+        "Förväntar mig t.ex. raden "
+        "'filväg till Quantum Espresso-filer,<sökväg>'."
+    )
+
+
+def resolve_data_source_path(data_source_value: str) -> Path:
+    """
+    Tolkar datakällan från parameterfilen.
+
+    Stödjer:
+      1. Absolut sökväg
+      2. Relativ sökväg från subsystem_python/
+      3. Gammal stil: namn på mapp under enthalpy_interpolation/qe_outputs/
+    """
+    raw_path = Path(data_source_value)
+
+    # 1. Absolut sökväg.
+    if raw_path.is_absolute():
+        return raw_path
+
+    # 2. Relativ sökväg från subsystem_python/.
+    relative_to_subsystem = subsystem_root() / raw_path
+    if relative_to_subsystem.exists():
+        return relative_to_subsystem
+
+    # 3. Gammal interface-stil:
+    #    "TiAlN" betyder enthalpy_interpolation/qe_outputs/TiAlN
+    relative_to_qe_outputs = (
+        subsystem_root()
+        / "enthalpy_interpolation"
+        / "qe_outputs"
+        / raw_path
+    )
+    if relative_to_qe_outputs.exists():
+        return relative_to_qe_outputs
+
+    raise FileNotFoundError(
+        "Kunde inte hitta datakällan.\n"
+        f"Testade:\n"
+        f"  {relative_to_subsystem}\n"
+        f"  {relative_to_qe_outputs}\n"
+        "Datakällan ska vara en CSV-fil med H_mix eller en katalog med QE .out-filer."
+    )
+
+
+def data_source_from_alloy_name(alloy_name: str) -> Path:
+    """
+    Gör om legeringsnamn till faktisk datakälla.
+
+    Exempel 1, gammal QE-mapp:
+        filväg till Quantum Espresso-filer,TiAlN
+
+    kan ge:
+        subsystem_python/enthalpy_interpolation/qe_outputs/TiAlN
+
+    Exempel 2, ny CSV-fil:
+        filväg till Quantum Espresso-filer,../subsystem_dft/results/final_hmix_sqs/final_fixed_sqs_hmix_results.csv
+
+    kan ge:
+        subsystem_dft/results/final_hmix_sqs/final_fixed_sqs_hmix_results.csv
+    """
+    data_source_value = read_data_source_from_alloy_parameters(alloy_name)
+    return resolve_data_source_path(data_source_value)
 
 
 def save_rk_model(
@@ -641,8 +760,11 @@ def main() -> None:
     parser.add_argument(
         "data_source",
         nargs="?",
-        default="qe_outputs/qe_outputs1",
-        help="CSV-fil med x och H_mix, eller katalog med QE .out-filer.",
+        default="TiAlN",
+        help=(
+            "Antingen legeringsnamn med parameterfil i alloy_parameters/, "
+            "CSV-fil med x och H_mix, eller katalog med QE .out-filer."
+        ),
     )
 
     parser.add_argument(
@@ -707,8 +829,21 @@ def main() -> None:
 
     args = parser.parse_args()
 
+    input_arg = Path(args.data_source)
+
+    if is_alloy_name(args.data_source):
+        alloy_name = args.data_source
+        data_source = data_source_from_alloy_name(alloy_name)
+
+        # Om användaren inte explicit satte --system använder vi alloy_name.
+        args.system = alloy_name
+
+    else:
+        alloy_name = args.system
+        data_source = input_arg
+
     df = build_enthalpy_dataframe(
-        args.data_source,
+        data_source,
         glob_pattern=args.glob,
         hmix_column=args.hmix_column,
         atoms_per_formula_unit=args.atoms_per_formula_unit,
@@ -724,9 +859,9 @@ def main() -> None:
         "formula_unit": "eV/formelenhet",
     }[args.energy_basis]
 
-    data_source = Path(args.data_source)
-    out_dir = data_source if data_source.is_dir() else data_source.parent
+    resolved_data_source = Path(data_source)
 
+    out_dir = resolved_data_source if resolved_data_source.is_dir() else resolved_data_source.parent
     out_csv = out_dir / "enthalpy_dataset.csv"
     df.to_csv(out_csv, index=False)
 
@@ -736,7 +871,7 @@ def main() -> None:
         order=args.order,
     )
 
-    print(f"Läste {len(df)} datapunkter från: {data_source.resolve()}")
+    print(f"Läste {len(df)} datapunkter från: {resolved_data_source.resolve()}")
     print(f"Sparade dataset till: {out_csv}")
     print(f"Anpassningen gjordes mot kolumnen: {hmix_fit_col}")
     print(f"Redlich-Kister-koefficienter L_i [{unit_label}]:")
@@ -752,7 +887,7 @@ def main() -> None:
         npz_path, npy_path, summary_path = save_rk_model(
             model=model,
             model_dir=model_dir,
-            data_source=args.data_source,
+            data_source=resolved_data_source,
             energy_basis=args.energy_basis,
             hmix_fit_col=hmix_fit_col,
             hmix_column=args.hmix_column,
