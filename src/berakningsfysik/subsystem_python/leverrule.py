@@ -1,10 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy.interpolate import interp1d
-from build_dataframe import find_parameters
-import sys
-from thermodynamics import check_if_T_in_temps
-
+from build_dataframe import temps
 
 def turn_string_to_list(string):
     """
@@ -51,6 +48,8 @@ class PhaseDiagramAnalyser:
         temperatures = []
 
         for index, row in self.data.iterrows():
+            print(index)
+            print(row)
             temperatures.append(row["T"])
             xa_lists.append(turn_string_to_list(row["xa"]))
             xb_lists.append(turn_string_to_list(row["xb"]))
@@ -87,8 +86,8 @@ class PhaseDiagramAnalyser:
             
     def get_spinodal_compositions(self, T):
         """
-        Determine the compositions of the α and β phases 
-        at the spinodal points based on temperature T.
+        Bestäm kompositionerna av α- och β-faserna vid
+        spinodala punkter baserat på temperaturen T.
         """
 
         if self.spinodal_xa_interpolated is None or self.spinodal_xb_interpolated is None:
@@ -223,20 +222,12 @@ class PhaseDiagramAnalyser:
         }
     
 if __name__ == "__main__":
-    n, temps, alloy_name, qe_dir = find_parameters()
-    spec_temps = sys.argv[2:]
-
     data = pd.read_csv("curves.csv")
     analyzer = PhaseDiagramAnalyser("curves.csv")
     
     compositions = [0.1, 0.3, 0.5, 0.7, 0.9]
-    print("temps levevrrule:", temps)
-    print("spec temps", spec_temps)
-    for T in spec_temps:
-        T = int(T)
-        
-        check_if_T_in_temps(T, temps)
-
+    
+    for T in temps:
         print("="*60)
         print(f"Phase analysis at T = {T} K")
         
