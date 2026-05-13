@@ -1,12 +1,5 @@
-<<<<<<< HEAD
 """Denna fil hittar kompositioner som gäller vid binodal- och
 spinodal-kurvorna, och skriver dessa till curves.csv."""
-=======
-"""
-Denna fil hittar kompositioner som gäller vid binodal- och
-spinodal-kurvorna, och skriver dessa till en csv-fil, curves.csv.
-"""
->>>>>>> a643f5610ac7ae9ea07bb7511f71a9eadcef5a30
 
 from scipy.spatial import ConvexHull
 from pathlib import Path
@@ -175,7 +168,6 @@ def find_spinodal_points(x, d2G):
     Hittar spinodalpunkter där d2G byter tecken.
     Använder linjär interpolation mellan gridpunkter.
     """
-    
     spinodals = []
 
     x = np.asarray(x, dtype=float)
@@ -210,7 +202,6 @@ def find_lower_hull_binodal(x, deltaG, tol=1e-10):
     Returnerar xa, xb.
     Om ingen common tangent hittas returneras np.nan, np.nan.
     """
-
     x = np.asarray(x, dtype=float)
     deltaG = np.asarray(deltaG, dtype=float)
 
@@ -262,7 +253,6 @@ def find_comps_at_temp(T, df, index, plot_dir):
 
     Alla är floats eller np.nan.
     """
-
     x_interpolated = df["x"].to_numpy(dtype=float)
     deltaG = df["deltaG_T" + str(index)].to_numpy(dtype=float)
     d2deltaG = df["d2deltaG_T" + str(index)].to_numpy(dtype=float)
@@ -352,26 +342,23 @@ def plot_gibbs_with_common_tangent(
     plot_dir = Path(plot_dir)
     plot_dir.mkdir(parents=True, exist_ok=True)
 
-<<<<<<< HEAD
     plt.savefig(plot_dir / f"hull_deltaG_T={T_string(T)}.png", dpi=200)
 
-=======
-    return xa, xb, spinodal_xa, spinodal_xb
->>>>>>> a643f5610ac7ae9ea07bb7511f71a9eadcef5a30
 
 def project_root() -> Path:
     """
     Returnerar subsystem_python-mappen.
     """
-
     return Path(__file__).resolve().parent
 
 
 def default_results_root() -> Path:
     return project_root() / DEFAULT_RESULTS_DIRNAME
 
+
 def default_system_dir(system: str) -> Path:
     return default_results_root() / system
+
 
 def default_dataframe_path(system: str) -> Path:
     return (
@@ -380,14 +367,18 @@ def default_dataframe_path(system: str) -> Path:
         / DEFAULT_DATAFRAME_NAME
     )
 
+
 def default_phase_curves_dir(system: str) -> Path:
     return default_system_dir(system) / DEFAULT_PHASE_CURVES_DIRNAME
+
 
 def default_curves_path(system: str) -> Path:
     return default_phase_curves_dir(system) / DEFAULT_CURVES_NAME
 
+
 def default_gibbs_plot_dir(system: str) -> Path:
     return default_phase_curves_dir(system) / DEFAULT_GIBBS_PLOTS_DIRNAME
+
 
 if __name__ == "__main__":
     main()

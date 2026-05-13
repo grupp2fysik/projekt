@@ -1,14 +1,5 @@
-<<<<<<< HEAD
 """Denna fil sparar interpolerad deltaH, deltaS och deltaG samt
 andraderivatan av deltaG för alla temperaturer.
-=======
-"""
-Denna fil sparar interpolerad deltaH, deltaS och deltaG samt
-andraderivatan av deltaG (för alla temp)
-i en csv-fil som enkelt kan läsas till en pandas dataframe med kommando
-pd.read_csv("dataframe.csv").
-"""
->>>>>>> a643f5610ac7ae9ea07bb7511f71a9eadcef5a30
 
 Data sparas till:
     results/<legering>/thermodynamics/dataframe.csv
@@ -92,15 +83,8 @@ def _load_default_parameters_from_argv() -> None:
 
 _load_default_parameters_from_argv()
 
-def write_file():
-<<<<<<< HEAD
-=======
-    """
-    Skapar en CSV-fil som innehåller 
-    termodynamiska data för ett materialsystem.
-    """
 
->>>>>>> a643f5610ac7ae9ea07bb7511f71a9eadcef5a30
+def write_file():
     parser = argparse.ArgumentParser(description="Skapa termodynamisk dataframe.")
     parser.add_argument(
         "alloy_name",
@@ -176,41 +160,19 @@ def write_file():
             find_d2G(model, x_interpolation, T, n_local),
         )
 
-<<<<<<< HEAD
 
 def write_data(csv_path, column, data_array):
     """Skriver datan i data_array under column i csv-filen."""
-=======
-    for i in range(len(temps)):
-        write_data(output_path, "deltaG_T" + str(i), find_deltaG(output_path, temps[i]))
-        write_data(output_path, "d2deltaG_T" + str(i), find_d2G(model, x_interpolation, temps[i], n))
-
-def write_data(csv_path, column, data_array):
-    """
-    Skriver datan i "data_array" under "column" i csv-filen.
-    column = sträng från columns (t.ex "deltaH")
-    data = vektor med data till kolumnen.
-    """
-
->>>>>>> a643f5610ac7ae9ea07bb7511f71a9eadcef5a30
     df = pd.read_csv(csv_path)
     df[column] = data_array
     df.to_csv(csv_path, index=False)
 
 
 def find_deltaS(n, x_interpolated):
-<<<<<<< HEAD
     """Hittar interpolerad deltaS_mix.
 
     n = atomer per metallplats / normaliseringsfaktor.
     """
-=======
-    """
-    Hittar interpolerad deltaS_mix 
-    n = atomer per metallplats.
-    """
-
->>>>>>> a643f5610ac7ae9ea07bb7511f71a9eadcef5a30
     deltaS = []
     for x in x_interpolated:
         deltaS.append(entropy_per_atom(x, n))
@@ -233,7 +195,6 @@ def load_saved_model(model_path):
       - rk_model.npz   där coeffs och rmse finns sparade
       - rk_coeffs.npy  där bara coeffs finns sparade
     """
-
     model_path = Path(model_path)
 
     if model_path.is_dir():
@@ -268,36 +229,18 @@ def load_saved_model(model_path):
         "Använd .npz eller .npy."
     )
 
-def find_model(model_path):
-    """
-    Hämtar interpolerad modellen.
-    """
 
+def find_model(model_path):
     return load_saved_model(model_path)
 
 
 def find_deltaH(model, x_interpolation):
-<<<<<<< HEAD
     """Hämtar interpolerade deltaH_mix."""
-=======
-    """
-    Hämtar interpolerade deltaH_mix.
-    x_interpolation = array med interpolationspunkter (använd np.linspace(...)).
-    """
-    
->>>>>>> a643f5610ac7ae9ea07bb7511f71a9eadcef5a30
     return model.hmix(x_interpolation)
 
 
 def find_d2G(model, x_interpolation, T, n):
-<<<<<<< HEAD
     """Returnerar vektor med andraderivatan av deltaG."""
-=======
-    """
-    Returnerar vektor med andraderivatan av deltaG.
-    """
-
->>>>>>> a643f5610ac7ae9ea07bb7511f71a9eadcef5a30
     d2deltaH = model.d2(x_interpolation)[1:-1]
 
     d2deltaS = []
@@ -313,7 +256,6 @@ def project_root() -> Path:
     Returnerar subsystem_python-mappen.
     build_dataframe.py ligger direkt i subsystem_python.
     """
-
     return Path(__file__).resolve().parent
 
 
@@ -321,7 +263,6 @@ def default_results_root() -> Path:
     """
     Returnerar subsystem_python/results.
     """
-
     return project_root() / DEFAULT_RESULTS_DIRNAME
 
 
@@ -329,7 +270,6 @@ def default_system_dir(system: str) -> Path:
     """
     Returnerar t.ex. subsystem_python/results/TiAlN.
     """
-
     return default_results_root() / system
 
 
@@ -337,7 +277,6 @@ def default_model_dir(system: str) -> Path:
     """
     Returnerar t.ex. subsystem_python/results/TiAlN/rk_model.
     """
-
     return default_system_dir(system) / DEFAULT_MODEL_DIRNAME
 
 
@@ -345,7 +284,6 @@ def default_dataframe_path(system: str) -> Path:
     """
     Returnerar t.ex. subsystem_python/results/TiAlN/thermodynamics/dataframe.csv.
     """
-
     return (
         default_system_dir(system)
         / DEFAULT_THERMODYNAMICS_DIRNAME
