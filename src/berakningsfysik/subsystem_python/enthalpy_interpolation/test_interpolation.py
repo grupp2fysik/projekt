@@ -25,36 +25,26 @@ def check_negative_total_energy():
         else:
             raise ValueError("\nInga negativa energier finns.")
 
-check_negative_total_energy()
+def test_check_file():
+    file_path = 'qe_outputs/qe_outputs3/enthalpy_dataset.csv'
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(f"Filen '{file_path}' hittades inte.")
+    else:
+        print(f"Filen '{file_path}' finns och är tillgänglig.")
 
-#def test_check_file():
+def test_check_directory():
+    directory_path = 'qe_outputs/qe_outputs3'
+    if not os.path.isdir(directory_path):
+        raise NotADirectoryError(f"Katalogen '{directory_path}' hittades inte.")
+    else:
+        print(f"Katalogen '{directory_path}' finns och är tillgänglig.")
+
+def test_check_distance_of_square():
     
 
 
-"""class InterpolationTests(unittest.TestCase):
-    En test för...
+#def test_check_L_coefficients():
 
-    #def test_check_file(self):
-
-    def check_energy_negative(self):
-        with open('enthalpy_dataset.csv', mode='r') as file: 
-            # Create a CSV reader object 
-            csv_reader = csv.reader(file)
-
-            # Skip the header row (if there is one) 
-            next(csv_reader, None) 
-
-            for row in csv_reader: 
-                print(row) 
-
-
-    #def test_check_directory(self):
-
-
-    #def test_check_distance_of_square(self):
-
-
-    #def test_check_L_coefficients(self):
 
         
 

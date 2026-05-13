@@ -86,8 +86,8 @@ class PhaseDiagramAnalyser:
             
     def get_spinodal_compositions(self, T):
         """
-        Determine the compositions of the α and β phases 
-        at the spinodal points based on temperature T.
+        Bestäm kompositionerna av α- och β-faserna vid
+        spinodala punkter baserat på temperaturen T.
         """
 
         if self.spinodal_xa_interpolated is None or self.spinodal_xb_interpolated is None:
