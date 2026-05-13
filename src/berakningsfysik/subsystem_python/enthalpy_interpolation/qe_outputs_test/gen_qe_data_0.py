@@ -16,25 +16,44 @@ E_ALN = -3.30
 NATOMS = 8
 
 def hmix_eva(x: float) -> float:
-    """Syntetisk blandningsentalpi i eV/atom."""
+    """
+    Syntetisk blandningsentalpi i eV/atom.
+    """
+
     z = 2.0 * x - 1.0
     return x * (1.0 - x) * (0.80 + 0.20 * z - 0.10 * z**2)
 
 
 def lattice_a(x: float) -> float:
-    """Syntetisk gitterparameter i Ångström."""
+    """
+    Syntetisk gitterparameter i Ångström.
+    Viktigt: detta ska vara en längd, inte en energi.
+    """
+
     return (1.0 - x) * E_TIN + x * E_ALN + hmix_eva(x)
 
 
 def energy_per_atom_eV(x: float) -> float:
+    """
+    Beräkna energy per atom eV
+    """
+
     return (1.0 - x) * E_TIN + x * E_ALN + hmix_eva(x)
 
 
 def total_energy_ry(x: float) -> float:
+    """
+    Beräkna totala energin i Ry.
+    """
+
     return energy_per_atom_eV(x) * NATOMS / RY_TO_EV
 
 
 def composition_counts(x: float, metal_sites: int = 8) -> tuple[int, int, int]:
+    """
+    Beräkna antalet kompositioner i titanium, aluminium och nitrid seperat.
+    """
+
     n_al = int(round(x * metal_sites))
     n_ti = metal_sites - n_al
     n_n = 4
@@ -42,6 +61,10 @@ def composition_counts(x: float, metal_sites: int = 8) -> tuple[int, int, int]:
 
 
 def make_qe_out_text(x: float) -> str:
+    """
+    Skriva ut resultatet av output.
+    """
+
     etot_ry = total_energy_ry(x)
     a = lattice_a(x)
     n_ti, n_al, n_n = composition_counts(x)

@@ -21,6 +21,7 @@ def hmix_single_peak(x: float) -> float:
     En vanlig enkelpucklig blandningsentalpi.
     Max ungefär kring x = 0.5.
     """
+
     z = 2.0 * x - 1.0
     return x * (1.0 - x) * (0.80 + 0.20 * z - 0.10 * z**2)
 
@@ -35,6 +36,7 @@ def hmix_double_peak(x: float) -> float:
     Med L2 > L0 får man två lokala maxima,
     symmetriskt placerade kring x = 0.5.
     """
+
     z = 2.0 * x - 1.0
 
     L0 = 0.18
@@ -45,8 +47,9 @@ def hmix_double_peak(x: float) -> float:
 
 def hmix_eva(x: float, peaks: int) -> float:
     """
-    Välj syntetisk blandningsentalpi.
+    Syntetisk blandningsentalpi i eV/atom.
     """
+
     if peaks == 1:
         return hmix_single_peak(x)
 
@@ -58,23 +61,35 @@ def hmix_eva(x: float, peaks: int) -> float:
 
 def lattice_a(x: float) -> float:
     """
-    Syntetisk gitterparameter i Å.
-
+    Syntetisk gitterparameter i Ångström.
     Viktigt: detta ska vara en längd, inte en energi.
     """
+
     bowing = 0.03 * x * (1.0 - x)
     return (1.0 - x) * A_TIN + x * A_ALN + bowing
 
 
 def energy_per_atom_eV(x: float, peaks: int) -> float:
+    """
+    Beräkna energy per atom eV
+    """
+
     return (1.0 - x) * E_TIN + x * E_ALN + hmix_eva(x, peaks)
 
 
 def total_energy_ry(x: float, peaks: int) -> float:
+    """
+    Beräkna totala energin i Ry.
+    """
+
     return energy_per_atom_eV(x, peaks) * NATOMS / RY_TO_EV
 
 
 def composition_counts(x: float, metal_sites: int = 4) -> tuple[int, int, int]:
+    """
+    Beräkna antalet kompositioner i titanium, aluminium och nitrid seperat.
+    """
+
     n_al = int(round(x * metal_sites))
     n_ti = metal_sites - n_al
     n_n = 4
@@ -82,6 +97,10 @@ def composition_counts(x: float, metal_sites: int = 4) -> tuple[int, int, int]:
 
 
 def make_qe_out_text(x: float, peaks: int) -> str:
+    """
+    Skriva ut resultatet av output.
+    """
+
     etot_ry = total_energy_ry(x, peaks)
     a = lattice_a(x)
     n_ti, n_al, n_n = composition_counts(x)
@@ -164,6 +183,10 @@ def make_qe_out_text(x: float, peaks: int) -> str:
 
 
 def parse_x_grid(text: str) -> list[float]:
+    """
+    Konverterar en kommaseparerad talsträng till en lista med flyttal.
+    """
+    
     return [float(v.strip()) for v in text.split(",") if v.strip()]
 
 

@@ -1,5 +1,7 @@
-"""Denna fil hittar kompositioner som gäller vid binodal- och
-spinodal-kurvorna, och skriver dessa till en csv-fil, curves.csv."""
+"""
+Denna fil hittar kompositioner som gäller vid binodal- och
+spinodal-kurvorna, och skriver dessa till en csv-fil, curves.csv.
+"""
 
 from scipy.spatial import ConvexHull
 from pathlib import Path
@@ -21,7 +23,6 @@ columns = ["T", "xa", "xb", "spinodal_xa", "spinodal_xb"]
 
 
 def main():
-
     parser = argparse.ArgumentParser(
         description="Hitta binodal- och spinodalkurvor."
     )
@@ -118,6 +119,7 @@ def find_spinodal_points(x, d2G):
     Hittar spinodalpunkter där d2G byter tecken.
     Använder linjär interpolation mellan gridpunkter.
     """
+    
     spinodals = []
 
     x = np.asarray(x, dtype=float)
@@ -150,6 +152,7 @@ def find_lower_hull_binodal(x, deltaG, tol=1e-10):
     Returnerar xa, xb.
     Om ingen common tangent hittas returneras np.nan, np.nan.
     """
+
     x = np.asarray(x, dtype=float)
     deltaG = np.asarray(deltaG, dtype=float)
 
@@ -201,6 +204,7 @@ def find_comps_at_temp(T, df, index, plot_dir):
 
     Alla är floats eller np.nan.
     """
+
     x_interpolated = df["x"].to_numpy(dtype=float)
     deltaG = df["deltaG_T" + str(index)].to_numpy(dtype=float)
     d2deltaG = df["d2deltaG_T" + str(index)].to_numpy(dtype=float)
@@ -266,23 +270,19 @@ def find_comps_at_temp(T, df, index, plot_dir):
 
     return xa, xb, spinodal_xa, spinodal_xb
 
-    
-
-
 def project_root() -> Path:
     """
     Returnerar subsystem_python-mappen.
     """
+
     return Path(__file__).resolve().parent
 
 
 def default_results_root() -> Path:
     return project_root() / DEFAULT_RESULTS_DIRNAME
 
-
 def default_system_dir(system: str) -> Path:
     return default_results_root() / system
-
 
 def default_dataframe_path(system: str) -> Path:
     return (
@@ -291,18 +291,14 @@ def default_dataframe_path(system: str) -> Path:
         / DEFAULT_DATAFRAME_NAME
     )
 
-
 def default_phase_curves_dir(system: str) -> Path:
     return default_system_dir(system) / DEFAULT_PHASE_CURVES_DIRNAME
-
 
 def default_curves_path(system: str) -> Path:
     return default_phase_curves_dir(system) / DEFAULT_CURVES_NAME
 
-
 def default_gibbs_plot_dir(system: str) -> Path:
     return default_phase_curves_dir(system) / DEFAULT_GIBBS_PLOTS_DIRNAME
-
 
 if __name__ == "__main__":
     main()

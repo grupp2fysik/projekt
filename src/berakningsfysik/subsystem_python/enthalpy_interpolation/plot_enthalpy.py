@@ -21,9 +21,9 @@ DEFAULT_DATASET_NAME = "enthalpy_dataset.csv"
 def project_root() -> Path:
     """
     Returnerar katalogen där denna fil ligger.
-    Exempel:
-        subsystem_python/enthalpy_interpolation/
+    Exempel: subsystem_python/enthalpy_interpolation/
     """
+
     return Path(__file__).resolve().parent
 
 
@@ -31,22 +31,25 @@ def subsystem_root() -> Path:
     """
     Returnerar huvudmappen subsystem_python/.
     """
+
     return project_root().parent
 
 
 def default_results_root() -> Path:
     """
     Returnerar resultatmappen:
-        subsystem_python/results/
+    Exempel: subsystem_python/results/
     """
+
     return subsystem_root() / "results"
 
 
 def default_system_dir(system: str) -> Path:
     """
-    Returnerar systemets resultatmapp, t.ex.
-        subsystem_python/results/TiAlN/
+    Returnerar systemets resultatmapp.
+    Exempel: subsystem_python/results/TiAlN/
     """
+
     return default_results_root() / system
 
 
@@ -54,6 +57,7 @@ def default_rk_model_dir(system: str) -> Path:
     """
     Returnerar standardmappen för RK-modeller.
     """
+
     return default_system_dir(system) / DEFAULT_MODEL_DIRNAME
 
 
@@ -65,6 +69,7 @@ def default_model_path(system: str) -> Path:
     """
     Standardmodellfilen.
     """
+
     return default_rk_model_dir(system) / DEFAULT_MODEL_NPZ_NAME
 
 
@@ -72,6 +77,7 @@ def _npz_scalar(npz_file, key: str, default=None):
     """
     Hämtar ett skalärt värde från en npz-fil.
     """
+
     if key not in npz_file:
         return default
 
@@ -87,12 +93,10 @@ def load_rk_model(model_path: str | Path) -> tuple[RedlichKisterModel, dict]:
     """
     Läser in en sparad Redlich-Kister-modell.
 
-    Föredrar ny .npz-fil:
-        rk_model.npz
-
-    men kan även läsa gammal .npy-fil:
-        rk_coeffs.npy
+    Föredrar ny .npz-fil: rk_model.npz
+    men kan även läsa gammal .npy-fil: rk_coeffs.npy
     """
+
     model_path = Path(model_path)
 
     if not model_path.exists():
@@ -140,7 +144,10 @@ def load_rk_model(model_path: str | Path) -> tuple[RedlichKisterModel, dict]:
 
 
 def save_dataset(df, csv_path: Path) -> None:
-    """Sparar dataframe till CSV."""
+    """
+    Sparar dataframe till CSV.
+    """
+
     df.to_csv(csv_path, index=False)
     print(f"Sparade dataset till: {csv_path}")
 
@@ -156,7 +163,10 @@ def plot_enthalpy_d1_d2(
     unit_label: str,
     save_path: Path,
 ) -> None:
-    """Plottar blandningsentalpin och koncentrationsderivatorna."""
+    """
+    Plottar blandningsentalpin och koncentrationsderivatorna.
+    """
+    
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(7, 9), sharex=True)
 
     ax1.plot(x_grid, y_grid, "k-", linewidth=2, label="RK-modell")
