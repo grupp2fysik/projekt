@@ -13,8 +13,7 @@ from parameters import *
 
 def print_deltaG_mix():
 
-    #n, temps, alloy_name, qe_dir = find_parameters()
-    df = pd.read_csv("dataframe.csv")
+    df = pd.read_csv(f"results/{alloy_name}/thermodynamics/dataframe.csv")
 
     spec_temps = sys.argv[2:]
 
@@ -46,7 +45,7 @@ def print_deltaG_mix():
         plt.title("\u0394G_mix för T = "+str(T)+f"K ({alloy_name})")
         plt.xlabel("x")
         plt.ylabel("\u0394G_mix (eV/atom)")
-        plt.savefig(f"plots/{alloy_name}/delta_G_mix/{alloy_name}delta_G_mix_T="+T_string(T)+"K")
+        plt.savefig(f"plots/{alloy_name}/delta_G_mix/{alloy_name}_delta_G_mix_T="+T_string(T)+"K")
 
         plt.clf()
 
