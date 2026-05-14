@@ -8,24 +8,20 @@ DFT-beräkningar som gjorts med mjukvaran Quantum Espresso (QE).
 OBS: Om du inte laddat ner uv, så kör de versionerna av bash-scripten som slutar med "_py.sh".
 
 --INNAN DU GÖR BERÄKNINAGR--
-Se först till att QE-output-filer för din legering finns någonstans i mappen "Enthalpy_interpolation".
-Dessa filer ska namnges efter formatet: 
-
-<legering>_x=X.out
-
-där <legeing> är legeringens namn, till exempel TiAlN, och stora X är kompositionen som använts
-vid beräkningen.
+Se först till att en csv-fil med data för beräknad blandningsentalpi finns tillgänglig. Filen bör ha
+en kolumn "x" för undersökta kompositioner, och en kolumn "hmix_ev_per_atom" för beräknad blandningsentalpi 
+vid dessa kompositioner. 
 
 Innan några beräkningar kan göras måste programmet förses med en csv-fil som innehåller 
 materialspecifika parametrar. Filen ska döpas till legeringens namn, till exempel "TiAlN.csv", 
-och placeras i undermappen "alloy_parameters".
+och placeras i undermappen "subsystem_python/alloy_parameters".
 
 Nedan följer ett exempel på hur denna fil ska se ut:
 
 atomer per metallplats, 2
 temperatur min, 0
 temperatur max, 10000
-filväg till Quantum Espresso-filer, TiAlN
+filväg till Quantum Espresso-filer, ../subsystem_dft/results/final_hmix_sqs/final_fixed_sqs_hmix_results.csv
 specifika temperaturer, 1000 5000
 
 Här kommer en förklaring av parametrarna:
@@ -36,8 +32,7 @@ temperatur min: Lägsta temperatur som kommer analyseras (anges som heltal grade
 
 temperatur max: Högsta temperatur som kommer analyseras (anges som heltal grader K).
 
-filväg till Quantum Espresso-filer: Filväg, utgående från undermappen "enthalpy_interpolation/qe_outputs", 
-                                    där output från Quantum Espresso finns.
+filväg till h_mix-fil: Filväg till csv-fil med beräknad blandningsentalpi.
 
 speciella temperaturer: Om man vill få ut information, till exempel en plott av Gibbs fria 
                         blandningsenergi, om legeringen vid en eller flera 
@@ -54,7 +49,7 @@ speciella temperaturer: Om man vill få ut information, till exempel en plott av
 där <legering> är namnet på din legering, till exempel TiAlN.
 
 Detta kommando kommer interpolera blandingsentalpin, beräkna de andra termodynamiska storheterna,
-och sedan med hjälp av dessa hitta binodal- och spinodalkurvor för att plotta fasdiagrammet. Sedan plottas 
+och sedan med hjälp av dessa hitta binodal- och spinodalkurvor för att plotta fasdiagrammet. Sedan plottas fasdiagram,
 blandingsentalpin och blandningsentropin. Figurerna läggs i undermappen "plots".
 
 2. För att ta reda på fasandelar vid en eller flera temperaturer körs följande kommando: (obs detta funkar ej just nu)
