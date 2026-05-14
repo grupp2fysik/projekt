@@ -1,11 +1,11 @@
 """Denna fil läser från "dataframe.csv"
-och plottar delta_S_mix för alla
-temperaturer. Resultaten läggs i delta_S_mix"""
+och plottar delta_S_mix. Resultaten läggs i plots/<legering>/delta_S_mix"""
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from build_dataframe import temps
+from build_dataframe import find_parameters
+from parameters import *
 
 def print_deltaS_mix():
 
@@ -18,14 +18,11 @@ def print_deltaS_mix():
     points = np.array(list(zip(x_interpolated, deltaS)))
     plt.plot(points[:,0], points[:,1], 'k-')
 
-    plt.title("delta_S_mix (oberoende av temperatur)")
+    plt.title(f"\u0394S_mix ({alloy_name})")
     plt.xlabel("x")
-    plt.ylabel("delta_S_mix")
-    plt.savefig("plots/delta_S_mix/delta_S_mix")
+    plt.ylabel("\u0394S_mix (eV/K per atom)")
+    plt.savefig(f"plots/{alloy_name}/{alloy_name}_delta_S_mix")
 
-def return_points(filename):
-    df = pd.read_csv(filename)
-    x_interpolated = df["x"]
 
 if __name__ == "__main__":
     print_deltaS_mix()
