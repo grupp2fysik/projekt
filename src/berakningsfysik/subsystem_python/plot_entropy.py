@@ -9,7 +9,7 @@ from parameters import *
 
 def print_deltaS_mix():
 
-    df = pd.read_csv("dataframe.csv")
+    df = pd.read_csv(f"results/{alloy_name}/thermodynamics/dataframe.csv")
     x_interpolated = df["x"]
     figure = plt.figure()
 
