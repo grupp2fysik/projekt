@@ -20,6 +20,7 @@ from enthalpy_interpolation.interpolation import RedlichKisterModel
 from thermodynamics import entropy_per_atom, check_if_valid_T, find_temp_limits, check_if_valid_n
 from spinodal_functions import entropy_second_derivative
 from help_functions import find_parameters
+from parameters import *
 
 
 DEFAULT_SYSTEM = "TiAlN"
@@ -29,7 +30,7 @@ DEFAULT_THERMODYNAMICS_DIRNAME = "thermodynamics"
 DEFAULT_DATAFRAME_NAME = "dataframe.csv"
 
 columns = ["x", "deltaH", "deltaS"]
-num_of_inter_points = 500
+
 
 # Defaultvärden. Dessa skrivs över när vi läser alloy_parameters/<legering>.csv.
 n = 2
