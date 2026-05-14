@@ -237,7 +237,7 @@ def find_lower_hull_binodal(x, deltaG, tol=1e-10):
     if not candidates:
         return np.nan, np.nan
 
-    # Om flera kandidater finns: ta den bredaste miscibility gapen.
+    # Om flera kandidater finns: ta den bredaste blandbarhets gapen.
     candidates.sort(reverse=True)
     _, xa, xb = candidates[0]
 
