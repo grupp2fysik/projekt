@@ -1,5 +1,5 @@
 atomer per metallplats,2
 temperatur min,300
 temperatur max,8000
-filväg till Quantum Espresso-filer, ../subsystem_dft/results/final_hmix_sqs/final_fixed_sqs_hmix_results.csv
+filväg till h_mix-fil, ../subsystem_dft/results/final_hmix_sqs/final_fixed_sqs_hmix_results.csv
 specifika temperaturer, 5000.9 4000 8000 

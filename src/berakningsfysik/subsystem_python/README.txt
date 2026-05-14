@@ -32,7 +32,7 @@ temperatur min: Lägsta temperatur som kommer analyseras (anges som heltal grade
 
 temperatur max: Högsta temperatur som kommer analyseras (anges som heltal grader K).
 
-filväg till Quantum Espresso-filer: Filväg till csv-fil med beräknad blandningsentalpi.
+filväg till h_mix-fil: Filväg till csv-fil med beräknad blandningsentalpi.
 
 speciella temperaturer: Om man vill få ut information, till exempel en plott av Gibbs fria 
                         blandningsenergi, om legeringen vid en eller flera 
