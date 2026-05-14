@@ -63,7 +63,8 @@ test_check_enthalpy_file()
 
 def test_check_enthalpy_png():
     """
-    Kontrollera att filen enthalpy_w_derivatives.png existerar.
+    Kontrollera att filen enthalpy_w_derivatives.png existerar
+    i alla qe_outputs mappar.
     """
 
     file_path0 = 'qe_outputs_test/qe_outputs0/enthalpy_w_derivatives.png'
@@ -82,7 +83,7 @@ test_check_enthalpy_png()
 
 def test_check_directory():
     """
-    Kolla på om katalogen finns.
+    Kolla på om katalogerna finns.
     """
 
     directory_path0 = 'qe_outputs_test/qe_outputs0'
@@ -101,19 +102,23 @@ test_check_directory()
 
 #def test_check_distance_of_square():
 
-
-
 def test_check_L_coefficients():
     """
     Kolla på om L koefficienter existerar.
-    Den kollar på om filen existerar för verifiering.
+    Den kollar på om filerna existerar för verifiering.
     """
 
-    file_path = 'qe_outputs_test/qe_outputs3/rk_coeffs.npy'
-    if not os.path.isfile(file_path):
-        raise ValueError("L koefficienter finns inte")
-    else:
-        print("L koefficienter finns!")
+    file_path0 = 'qe_outputs_test/qe_outputs0/rk_coeffs.npy'
+    file_path1 = 'qe_outputs_test/qe_outputs1/rk_coeffs.npy'
+    file_path2 = 'qe_outputs_test/qe_outputs2/rk_coeffs.npy'
+    file_path3 = 'qe_outputs_test/qe_outputs3/rk_coeffs.npy'
+    all_file_paths = [file_path0, file_path1, file_path2, file_path3]
+
+    for index, number in enumerate(all_file_paths):
+        if not os.path.isfile(number):
+            raise ValueError(f"Filen rk_coeffs.npy finns inte i qe_outputs{index}, därför finns det inga L koefficienter.")
+        else:
+            print(f"Filen rk_coeffs.npy finns i qe_outputs{index}, därför finns det L koefficienter!")
 
 test_check_L_coefficients()
 

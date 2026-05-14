@@ -1,0 +1,115 @@
+&control
+   calculation = 'relax',              ! Relaxerar atompositionerna men håller cellen fast
+   prefix = 'TiAlN_x05_relax',    ! Unikt prefix för detta x-värde
+   outdir = '../output/relax_sqs_all_x/tmp_x05/',  ! Temporära QE-filer
+   pseudo_dir = '../../pseudo/',       ! Pseudopotentialer relativt denna mapp
+   restart_mode = 'from_scratch',      ! Startar från början
+   disk_io = 'none',                   ! Minskar mängden sparade filer
+   nstep = 8,                         ! Max antal relaxationssteg
+   etot_conv_thr = 1E-4,               ! Energikonvergens för relaxation
+   forc_conv_thr = 1E-3,               ! Kraftkonvergens för relaxation
+   tstress = .true.,                   ! Skriver ut stress/tryck
+   tprnfor = .true.,                   ! Skriver ut krafter
+/
+
+&system
+   ibrav = 0,                          ! Cellvektorer anges explicit nedan
+   nat = 64,                           ! 64 atomer: 32 metallplatser + 32 N
+   ntyp = 3,                           ! Ti, Al och N
+   ecutwfc = 60,                       ! Våglfunktions-cutoff
+   ecutrho = 240,                      ! Laddningstäthets-cutoff
+   occupations = 'smearing',           ! Smearing används för robust konvergens
+   smearing = 'gaussian',
+   degauss = 0.005,
+/
+
+&electrons
+   diagonalization = 'david',          ! Diagonaliseringsmetod
+   conv_thr = 1E-6,                    ! Elektronisk konvergens
+   mixing_mode = 'local-TF',
+   mixing_beta = 0.2,
+/
+
+&ions
+   ion_dynamics = 'bfgs',              ! BFGS-relaxering av atompositioner
+/
+
+ATOMIC_SPECIES
+Al 26.982 Al.pbe-n-kjpaw_psl.1.0.0.UPF
+N  14.007 N.pbe-n-kjpaw_psl.1.0.0.UPF
+Ti 47.867 Ti.pbe-spn-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS angstrom
+8.31 0.0 0.0
+0.0 8.31 0.0
+0.0 0.0 8.31
+
+ATOMIC_POSITIONS angstrom
+Al 0.0 0.0 0.0
+N 2.0775 0.0 0.0
+Al 0.0 2.0775 2.0775
+N 2.0775 2.0775 2.0775
+Ti 2.0775 0.0 2.0775
+N 0.0 0.0 2.0775
+Ti 2.0775 2.0775 0.0
+N 0.0 2.0775 0.0
+Al 0.0 0.0 4.155
+N 2.0775 0.0 4.155
+Ti 0.0 2.0775 6.2325
+N 2.0775 2.0775 6.2325
+Ti 2.0775 0.0 6.2325
+N 0.0 0.0 6.2325
+Al 2.0775 2.0775 4.155
+N 0.0 2.0775 4.155
+Al 0.0 4.155 0.0
+N 2.0775 4.155 0.0
+Al 0.0 6.2325 2.0775
+N 2.0775 6.2325 2.0775
+Al 2.0775 4.155 2.0775
+N 0.0 4.155 2.0775
+Ti 2.0775 6.2325 0.0
+N 0.0 6.2325 0.0
+Ti 0.0 4.155 4.155
+N 2.0775 4.155 4.155
+Ti 0.0 6.2325 6.2325
+N 2.0775 6.2325 6.2325
+Ti 2.0775 4.155 6.2325
+N 0.0 4.155 6.2325
+Al 2.0775 6.2325 4.155
+N 0.0 6.2325 4.155
+Al 4.155 0.0 0.0
+N 6.2325 0.0 0.0
+Al 4.155 2.0775 2.0775
+N 6.2325 2.0775 2.0775
+Al 6.2325 0.0 2.0775
+N 4.155 0.0 2.0775
+Ti 6.2325 2.0775 0.0
+N 4.155 2.0775 0.0
+Ti 4.155 0.0 4.155
+N 6.2325 0.0 4.155
+Ti 4.155 2.0775 6.2325
+N 6.2325 2.0775 6.2325
+Ti 6.2325 0.0 6.2325
+N 4.155 0.0 6.2325
+Al 6.2325 2.0775 4.155
+N 4.155 2.0775 4.155
+Ti 4.155 4.155 0.0
+N 6.2325 4.155 0.0
+Al 4.155 6.2325 2.0775
+N 6.2325 6.2325 2.0775
+Al 6.2325 4.155 2.0775
+N 4.155 4.155 2.0775
+Al 6.2325 6.2325 0.0
+N 4.155 6.2325 0.0
+Ti 4.155 4.155 4.155
+N 6.2325 4.155 4.155
+Ti 4.155 6.2325 6.2325
+N 6.2325 6.2325 6.2325
+Al 6.2325 4.155 6.2325
+N 4.155 4.155 6.2325
+Ti 6.2325 6.2325 4.155
+N 4.155 6.2325 4.155
+
+
+K_POINTS automatic
+2 2 2 0 0 0
