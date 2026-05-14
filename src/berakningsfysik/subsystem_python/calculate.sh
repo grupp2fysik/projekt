@@ -15,3 +15,5 @@ uv run find_phase_curves_0.py "$alloy_name"
 uv run plot_phase_diagram_0.py "$alloy_name"
 
 uv run plot_entropy.py "$alloy_name"
+
+uv run plot_enthalpy.py "$alloy_name"
