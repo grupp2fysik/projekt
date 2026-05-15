@@ -52,7 +52,7 @@ Detta kommando kommer interpolera blandingsentalpin, beräkna de andra termodyna
 och sedan med hjälp av dessa hitta binodal- och spinodalkurvor för att plotta fasdiagrammet. Sedan plottas fasdiagram,
 blandingsentalpin och blandningsentropin. Figurerna läggs i undermappen "plots".
 
-2. För att ta reda på fasandelar vid en eller flera temperaturer körs följande kommando: (obs detta funkar ej just nu)
+2. För att ta reda på fasandelar vid en eller flera temperaturer körs följande kommando: (obs just nu görs analys för alla temperaturer)
 
 >> ./phase_analysis.sh <legering> <temp1> <temp2>
 
