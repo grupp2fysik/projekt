@@ -9,15 +9,14 @@ import matplotlib.pyplot as plt
 
 from help_functions import find_parameters
 from find_phase_curves import columns
+from parameters import *
 
 
 DEFAULT_SYSTEM = "TiAlN"
 DEFAULT_RESULTS_DIRNAME = "results"
-DEFAULT_PHASE_CURVES_DIRNAME = "phase_curves"
-DEFAULT_PHASE_DIAGRAM_DIRNAME = "phase_diagram"
-DEFAULT_CURVES_NAME = "curves.csv"
-DEFAULT_PHASE_DIAGRAM_NAME = "phase_diagram.png"
-
+DEFAULT_MODEL_DIRNAME = "rk_model"
+DEFAULT_THERMODYNAMICS_DIRNAME = "thermodynamics"
+DEFAULT_DATAFRAME_NAME = "dataframe.csv"
 
 def main():
     parser = argparse.ArgumentParser(description="Plotta fasdiagram.")
@@ -46,7 +45,7 @@ def main():
 
     args = parser.parse_args()
 
-    _, temps, alloy_name, _ = find_parameters(args.alloy_name)
+    #_, temps, alloy_name, _ = find_parameters(args.alloy_name)
 
     curves_path = (
         Path(args.input)
@@ -65,6 +64,7 @@ def main():
     print(f"Plottar fasdiagram för {alloy_name}.")
     print(f"Läser kurvor från: {curves_path}")
     print(f"Sparar fasdiagram till: {output_path}")
+    print(f"Sparar fasdiagram till: {plots_dirname}")
 
     df = pd.read_csv(curves_path)
 
@@ -87,6 +87,7 @@ def main():
 
     plt.tight_layout()
     plt.savefig(output_path, dpi=200)
+    plt.savefig(plots_dirname + f"/{alloy_name}_phase_diagram")
     plt.close(fig)
 
 
