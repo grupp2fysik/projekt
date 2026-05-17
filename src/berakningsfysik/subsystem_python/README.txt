@@ -42,7 +42,7 @@ speciella temperaturer: Om man vill få ut information, till exempel en plott av
 
 --HUR DU GÖR BERÄKNINGAR--
 
-1. Innan några annat kan köras, så ska följande kommando skrivas i teminalen:
+1. Innan några annat kan köras, så ska följande kommando skrivas i terminalen:
 
 >> ./calculate.sh <legering>
 

@@ -1,5 +1,7 @@
-"""Denna fil använder datan i curves.csv för 
-att plotta fasdiagrammet"""
+"""
+Denna fil använder datan i curves.csv för 
+att plotta fasdiagrammet.
+"""
 
 import pandas as pd
 import numpy as np
@@ -9,6 +11,9 @@ from find_phase_curves_0 import columns
 
 
 def main():
+    """
+    Plottar fasdiagrammet baserat på data i curves.csv.
+    """
 
     print( "Plottar fasdiagram.")
     df = pd.read_csv("curves.csv")
@@ -18,7 +23,6 @@ def main():
     plot_curve(df, "binodal", columns[1], columns[2])
     plot_curve(df, "spinodal", columns[3], columns[4])
 
-    
     plt.xlim(0, 1)
     plt.ylim(0,)
     plt.xlabel("x")
@@ -30,11 +34,13 @@ def main():
 
 
 def plot_curve(df, curve_type, column1, column2):
-    """Sätter ihop kolumnerna column1 och column2 
+    """
+    Sätter ihop kolumnerna column1 och column2 
     (t.ex xa och xb)
     och plottar mot temperaturen.
     df är dataframe från curves.csv
-    curve_type är "spinodal" eller "binodal" """
+    curve_type är "spinodal" eller "binodal".
+    """
 
     line_styles = {"spinodal": "r--", "binodal": "b-"}
 
@@ -64,12 +70,14 @@ def plot_curve(df, curve_type, column1, column2):
             plt.plot(x_values, y_values, line_styles[curve_type], label = curve_type)
 
 
-
 def turn_string_to_list(string):
-    """Gör en sträng från curves.csv av formen
+    """
+    Gör en sträng från curves.csv av formen
     "[2.897, 9.456]" till en lista med floats
     och returnerar denna. "nan" blir np.nan i 
-    denna lista."""
+    denna lista.
+    """
+
     new_list = []
     comps_string = string.strip("[]")
     comps_list = comps_string.split(", ")
@@ -83,11 +91,13 @@ def turn_string_to_list(string):
 
 
 def return_comps_main_list(df, column):
-    """Tar en kolumn från curves.csv, t.ex "xa",
+    """
+    Tar en kolumn från curves.csv, t.ex "xa",
     och omvandlar den från sträng till en nästlad lista
     (som ser ut som kolumnen i csv-filen). 
     Returnerar listan och längden på den av de inre
-    listorna som är längst."""
+    listorna som är längst.
+    """
 
     comps_main_list = []
     max_num_elements = 1

@@ -19,6 +19,11 @@ DEFAULT_THERMODYNAMICS_DIRNAME = "thermodynamics"
 DEFAULT_DATAFRAME_NAME = "dataframe.csv"
 
 def main():
+    """
+    Huvudfunktion som körs när man kör plot_phase_diagram.py.
+    Den läser in datan från curves.csv, plottar fasdiagrammet och sparar det som en bild.
+    """
+
     parser = argparse.ArgumentParser(description="Plotta fasdiagram.")
     parser.add_argument(
         "alloy_name",
@@ -177,7 +182,9 @@ def turn_string_to_list(value):
 
 
 def return_comps_main_list(df, column):
-    """Tar en kolumn från curves.csv och omvandlar den till en nästlad lista."""
+    """
+    Tar en kolumn från curves.csv och omvandlar den till en nästlad lista.
+    """
 
     comps_main_list = []
     max_num_elements = 1
@@ -197,30 +204,54 @@ def project_root() -> Path:
     Returnerar subsystem_python-mappen.
     plot_phase_diagram.py ligger direkt i subsystem_python.
     """
+
     return Path(__file__).resolve().parent
 
 
 def default_results_root() -> Path:
+    """
+    Returnerar sökvägen till results-mappen.
+    """
     return project_root() / DEFAULT_RESULTS_DIRNAME
 
 
 def default_system_dir(system: str) -> Path:
+    """
+    Returnerar sökvägen till systemets mapp i results, t.ex. results/TiAlN.
+    """
+
     return default_results_root() / system
 
 
 def default_phase_curves_dir(system: str) -> Path:
+    """
+    Returnerar sökvägen till systemets phase_curves-mapp, t.ex. results/TiAlN/phase_curves.
+    """
+
     return default_system_dir(system) / DEFAULT_PHASE_CURVES_DIRNAME
 
 
 def default_curves_path(system: str) -> Path:
+    """
+    Returnerar sökvägen till curves.csv, t.ex. results/TiAlN/phase_curves/curves.csv.
+    """
+
     return default_phase_curves_dir(system) / DEFAULT_CURVES_NAME
 
 
 def default_phase_diagram_dir(system: str) -> Path:
+    """
+    Returnerar sökvägen till systemets phase_diagram-mapp, t.ex. results/TiAlN/phase_curves/phase_diagram.
+    """
+
     return default_phase_curves_dir(system) / DEFAULT_PHASE_DIAGRAM_DIRNAME
 
 
 def default_phase_diagram_path(system: str) -> Path:
+    """
+    Returnerar sökvägen till systemets phase_diagram-fil, t.ex. results/TiAlN/phase_curves/phase_diagram/phase_diagram.csv.
+    """
+
     return default_phase_diagram_dir(system) / DEFAULT_PHASE_DIAGRAM_NAME
 
 

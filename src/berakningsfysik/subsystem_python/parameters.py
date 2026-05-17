@@ -16,6 +16,5 @@ DEFAULT_CURVES_NAME = "curves.csv"
 DEFAULT_PHASE_DIAGRAM_NAME = "phase_diagram.png"
 
 
-
 plots_dirname = f"plots/{alloy_name}"
 n, temps, alloy_name, qe_dir = find_parameters(alloy_name)

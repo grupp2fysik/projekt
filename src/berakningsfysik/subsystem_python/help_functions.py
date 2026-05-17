@@ -3,8 +3,10 @@ from thermodynamics import *
 
 
 def find_parameters(alloy_name):
-    """Läser en csv-fil med materialspecifika 
-    parametrar och returnerar dessa"""
+    """
+    Läser en csv-fil med materialspecifika 
+    parametrar och returnerar dessa.
+    """
 
     df = pd.read_csv(f"alloy_parameters/{alloy_name}.csv", header=None)
     parameters = df[1]

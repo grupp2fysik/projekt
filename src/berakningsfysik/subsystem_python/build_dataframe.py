@@ -1,4 +1,5 @@
-"""Denna fil sparar interpolerad deltaH, deltaS och deltaG samt
+"""
+Denna fil sparar interpolerad deltaH, deltaS och deltaG samt
 andraderivatan av deltaG för alla temperaturer.
 
 Data sparas till:

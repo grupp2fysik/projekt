@@ -1,5 +1,5 @@
 atomer per metallplats,2
-temperatur min,300
-temperatur max,8000
+temperatur min,400
+temperatur max,7000
 filväg till QE-fil, ../subsystem_dft/results/final_hmix_sqs/final_fixed_sqs_hmix_results.csv
-specifika temperaturer, 5000.9 4000 8000 
+specifika temperaturer,4000  5000  7000

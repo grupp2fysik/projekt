@@ -1,7 +1,11 @@
+import csv
+
 import pandas as pd
 import numpy as np
 from scipy.interpolate import interp1d
-from build_dataframe import temps
+import find_phase_curves_0
+import subprocess
+import sys
 
 class PhaseDiagramAnalyser:
     def __init__(self, curves_file="results/TiAlN/phase_curves/curves.csv"):
@@ -22,8 +26,8 @@ class PhaseDiagramAnalyser:
 
     def get_spinodal_compositions(self, T):
         """
-        Determine the compositions of the α and β phases 
-        at the spinodal points based on temperature T.
+        Bestäm kompositionerna av α- och β-faserna vid
+        spinodala punkter baserat på temperaturen T.
         """
 
         if self.spinodal_xa_interpolated is None or self.spinodal_xb_interpolated is None:
@@ -35,8 +39,8 @@ class PhaseDiagramAnalyser:
 
     def get_binodal_compositions(self, T):
         """
-        Determine the compositions of the α and β phases
-        at the binodal points based on temperature T.
+        Bestäm kompositionerna av α- och β-faserna vid
+        binodala punkter baserat på temperaturen T.
         """
 
         if self.xa_interpolated is None or self.xb_interpolated is None:
@@ -48,8 +52,8 @@ class PhaseDiagramAnalyser:
 
     def lever_rule(self, T, x):
         """
-        Determine the mole fractions or the mass fractions of the α and β phases 
-        based on the overall composition x and temperature T using the lever rule.
+        Bestäm molfraktionerna eller massfraktionerna av α- och β-faserna baserat på den 
+        övergripande kompositionen x och temperaturen T med hjälp av leverregeln.
         """
 
         x_alpha, x_beta = self.get_binodal_compositions(T)
@@ -68,8 +72,8 @@ class PhaseDiagramAnalyser:
         
     def get_phase_compositions(self, T, x):
         """
-        Determine the phase compositions of the α and β phases
-        based on the overall composition x and temperature T.
+        Bestäm faskompositionerna av α- och β-faserna
+        baserat på den övergripande kompositionen x och temperaturen T.
         """
 
         x_alpha, x_beta = self.get_spinodal_compositions(T)
@@ -84,7 +88,7 @@ class PhaseDiagramAnalyser:
 
     def is_spinodal_decompositions(self, T, x):
         """
-        Determine if the system is undergoing spinodal decomposition based on temperature T and composition x.
+        Bestäm om systemet genomgår spinodal dekomposition baserat på temperatur T och komposition x.
         """
 
         x_spinodal_a, x_spinodal_b = self.get_spinodal_compositions(T)
@@ -102,7 +106,7 @@ class PhaseDiagramAnalyser:
     
     def is_binodal_decompositions(self, T, x):
         """
-        Check if the system is undergoing binodal decomposition based on temperature T and composition x.
+        Kolla om systemet genomgår binodal dekomposition baserat på temperatur T och komposition x.
         """
 
         x_alpha, x_beta = self.get_binodal_compositions(T)
@@ -117,8 +121,8 @@ class PhaseDiagramAnalyser:
         
     def get_decomposition_type(self, T, x):
         """
-        Determine the type of decomposition
-        based on temperature T and composition x.
+        Bestäm vilken typ av dekomposition som sker 
+        baserat på temperatur T och komposition x.
         """
 
         x_alpha, x_beta = self.get_binodal_compositions(T)
@@ -136,8 +140,8 @@ class PhaseDiagramAnalyser:
         
     def calculate_phase_properties(self, T, x):
         """
-        Calculate the phase properties based on temperature T and composition x,
-        including phase fractions, compositions, and decomposition mechanism.
+        Bestäm fasegenskaperna baserat på temperatur T och komposition x,
+        inklusive faskvoter, kompositioner och dekompositionsmekanism.
         """
 
         fraction_alpha, fraction_beta = self.lever_rule(T, x)
@@ -153,38 +157,122 @@ class PhaseDiagramAnalyser:
             'decomposition_mechanism': mechanism,
             'spinodal_decomposition': self.is_spinodal_decompositions(T, x)
         }
-    
+
+    def get_all_temperatures(self):
+        """
+        Hämta alla temperaturer från datan.
+        """
+
+        return self.data["T"].values
+        
 if __name__ == "__main__":
     data = pd.read_csv("results/TiAlN/phase_curves/curves.csv")
     analyzer = PhaseDiagramAnalyser("results/TiAlN/phase_curves/curves.csv")
-    
-    compositions = [0.1, 0.3, 0.5, 0.7, 0.9]
-    
-    for T in temps:
-        print("="*60)
-        print(f"\nPhase analysis at T = {T} K")
-        
-        for x in compositions:
-            result = analyzer.calculate_phase_properties(T, x)
-            print(f"\nOverall composition x = {x:.2f}")
-            print(f"  Decomposition: {result['decomposition_mechanism']}")
 
-            if result['fraction_alpha'] is not None:
-                print(f"  α phase fraction: {result['fraction_alpha']:.3f}")
-            else:
-                print(f"  α phase fraction: None")    
-            if result['fraction_beta'] is not None:
-                print(f"  β phase fraction: {result['fraction_beta']:.3f}")
-            else:
-                print(f"  β phase fraction: None")
+    with open("alloy_parameters/TiAlN.csv", newline='') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=',') #Läs in data från TiAlN.csv och lagra i en lista för att kunna uppdatera specifika temperaturer
+        data = list(spamreader) #Lagra data i en lista för att kunna uppdatera specifika temperaturer
+
+    atom_input = input("Skriva in atomnummer för element A (Ti): ")
+    if not atom_input.strip().isdigit() or int(atom_input.strip()) <= 0:
+        print(f"Ogiltig värde '{atom_input}'. Ange ett positivt heltal för atomnummer.")
+        sys.exit(1) #Avsluta programmet om ogiltiga värden hittas
+
+    min_input = input("Skriva in min temperatur i Kelvin K: ")
+    if not min_input.strip().isdigit() or int(min_input.strip()) <= 0:
+        print(f"Ogiltig värde '{min_input}'. Ange ett positivt heltal för min temperatur.")
+        sys.exit(1)
+
+    max_input = input("Skriva in max temperatur i Kelvin K: ")
+    if not max_input.strip().isdigit() or int(max_input.strip()) <= 0:
+        print(f"Ogiltig värde '{max_input}'. Ange ett positivt heltal för max temperatur.")
+        sys.exit(1)
+
+    temps_input = input("Skriva in temperaturer i Kelvin K (separerat med kommatecken): ")
+    for temps in temps_input.split(","):
+        if not temps.strip().isdigit():
+            print(f"Ogiltig värde '{temps}'. Ange positiva heltal för temperaturer och/eller seperara med kommatecken.")
+        if int(temps.strip()) < int(min_input.strip()) or int(temps.strip()) > int(max_input.strip()):
+            print(f"Temperaturen måste vara mellan {min_input.strip()} K och {max_input.strip()} K. '{temps}' är utanför detta intervall.")
+            sys.exit(1)
+    
+    temperature_list = []
+    for temp in temps_input.split(","):
+        if temp.strip() >= "0":
+            temperature_list.append(temp.strip())
+    new_temps = temps_input.split(",")
+
+    for i, row in enumerate(data):
+        if row and row[0].strip() == "atomer per metallplats":
+            data[i][1] = atom_input.strip()
+        if row and row[0].strip() == "specifika temperaturer":
+            data[i][1] = " ".join(new_temps)
+        if row and row[0].strip() == "temperatur max":
+            data[i][1] = max_input.strip()
+        if row and row[0].strip() == "temperatur min":
+            data[i][1] = min_input.strip()
+    
+    with open("alloy_parameters/TiAlN.csv", 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerows(data)
+
+    print("="*60)
+    print("Kör find_phase_curves_0.py för att generera fas kurvor...")
+    print("="*60)
+
+    try:
+        result = subprocess.run([sys.executable, "find_phase_curves_0.py"], 
+                              capture_output=True, 
+                              text=True)
+        
+        if result.returncode == 0:
+            print("✅ find_phase_curves_0.py kört framgångsrikt!")
+
+        else:
+            print(f"❌ Fel vid körning av find_phase_curves_0.py (Avslutningskod: {result.returncode})")
+            print(f"Felutdata: {result.stderr}")
+            sys.exit(1)
+    except FileNotFoundError:
+        print("❌ Error: find_phase_curves_0.py inte hittad.")
+        print("Vänligen kontrollera att filen finns och är på rätt plats.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"❌ Oväntat fel: {e}")
+        sys.exit(1)
+
+    compositions = [0.1, 0.3, 0.5, 0.7, 0.9]
+    analyzer = PhaseDiagramAnalyser("results/TiAlN/phase_curves/curves.csv")
+
+    temperature_list_numeric = [int(float(temp)) for temp in temperature_list]
+
+    for T in analyzer.get_all_temperatures():
+        T_int = int(round(T))
+        if T_int in temperature_list_numeric:
+            print("="*60)
+            print(f"\nPhase analysis at T = {T} K")
             
-            if result['composition_alpha'] is not None:
-                print(f"  α phase composition: {result['composition_alpha']:.4f}")
-            else:
-                print(f"  α phase composition: None")
-            if result['composition_beta'] is not None:
-                print(f"  β phase composition: {result['composition_beta']:.4f}")
-            else:
-                print(f"  β phase composition: None")
+            for x in compositions:
+                result = analyzer.calculate_phase_properties(T, x)
+                print(f"\nOverall composition x = {x:.2f}")
+                print(f"  Decomposition: {result['decomposition_mechanism']}")
+
+                if result['fraction_alpha'] is not None:
+                    print(f"  α phase fraction: {result['fraction_alpha']:.3f}")
+                else:
+                    print(f"  α phase fraction: None")    
+                if result['fraction_beta'] is not None:
+                    print(f"  β phase fraction: {result['fraction_beta']:.3f}")
+                else:
+                    print(f"  β phase fraction: None")
+                
+                if result['composition_alpha'] is not None:
+                    print(f"  α phase composition: {result['composition_alpha']:.4f}")
+                else:
+                    print(f"  α phase composition: None")
+                if result['composition_beta'] is not None:
+                    print(f"  β phase composition: {result['composition_beta']:.4f}")
+                else:
+                    print(f"  β phase composition: None")
+            print("\n")
 
     print("="*60)

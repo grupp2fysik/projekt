@@ -1,5 +1,7 @@
-"""Denna fil hittar kompositioner som gäller vid binodal- och
-spinodal-kurvorna, och skriver dessa till en csv-fil, curves.csv."""
+"""
+Denna fil hittar kompositioner som gäller vid binodal- och
+spinodal-kurvorna, och skriver dessa till en csv-fil, curves.csv.
+"""
 
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
 import pandas as pd
@@ -54,11 +56,12 @@ def main():
 
 
 def find_comps_at_temp(T, df, index):
-    """Returnerar kompositioner for binodal
-    och spinodal-kurvor vid temp T(som lista med floats)
-    df = dataframe med data läst från 
-    dataframe.csv
     """
+    Returnerar kompositioner for binodal
+    och spinodal-kurvor vid temp T(som lista med floats)
+    df = dataframe med data läst från dataframe.csv.
+    """
+
     x_interpolated = df["x"]
     deltaG = df["deltaG_T"+str(index)]
     d2deltaG = df["d2deltaG_T"+str(index)]
