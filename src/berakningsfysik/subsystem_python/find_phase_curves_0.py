@@ -148,6 +148,7 @@ def check_dataframe_has_temperature_columns(df: pd.DataFrame, temps: list) -> No
     Kontrollerar att dataframe.csv innehåller de deltaG- och d2deltaG-kolumner
     som motsvarar temperaturerna från parameterfilen.
     """
+
     missing_columns = []
 
     for i in range(len(temps)):
@@ -168,6 +169,7 @@ def find_spinodal_points(x, d2G):
     Hittar spinodalpunkter där d2G byter tecken.
     Använder linjär interpolation mellan gridpunkter.
     """
+
     spinodals = []
 
     x = np.asarray(x, dtype=float)
@@ -202,6 +204,7 @@ def find_lower_hull_binodal(x, deltaG, tol=1e-10):
     Returnerar xa, xb.
     Om ingen common tangent hittas returneras np.nan, np.nan.
     """
+    
     x = np.asarray(x, dtype=float)
     deltaG = np.asarray(deltaG, dtype=float)
 
@@ -253,6 +256,7 @@ def find_comps_at_temp(T, df, index, plot_dir):
 
     Alla är floats eller np.nan.
     """
+
     x_interpolated = df["x"].to_numpy(dtype=float)
     deltaG = df["deltaG_T" + str(index)].to_numpy(dtype=float)
     d2deltaG = df["d2deltaG_T" + str(index)].to_numpy(dtype=float)
@@ -317,6 +321,7 @@ def plot_gibbs_with_common_tangent(
     """
     Plottar deltaG, eventuell gemensam tangent och eventuella spinodalpunkter.
     """
+
     plt.clf()
     plt.plot(x_interpolated, deltaG, "b-", label=r"$\Delta G_{mix}$")
 
@@ -349,6 +354,7 @@ def project_root() -> Path:
     """
     Returnerar subsystem_python-mappen.
     """
+
     return Path(__file__).resolve().parent
 
 
