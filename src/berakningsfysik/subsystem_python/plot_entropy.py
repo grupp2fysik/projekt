@@ -1,5 +1,7 @@
-"""Denna fil läser från "dataframe.csv"
-och plottar delta_S_mix. Resultaten läggs i plots/<legering>/delta_S_mix"""
+"""
+Denna fil läser från "dataframe.csv"
+och plottar delta_S_mix. Resultaten läggs i plots/<legering>/delta_S_mix.
+"""
 
 import pandas as pd
 import numpy as np
@@ -7,7 +9,10 @@ import matplotlib.pyplot as plt
 from build_dataframe import find_parameters
 from parameters import *
 
-def print_deltaS_mix():
+def print_delta_S_mix():
+    """
+    Plottar delta_S_mix. Resultaten läggs i plots/<legering>/delta_S_mix.
+    """
 
     df = pd.read_csv(f"results/{alloy_name}/thermodynamics/dataframe.csv")
     x_interpolated = df["x"]
@@ -25,4 +30,4 @@ def print_deltaS_mix():
 
 
 if __name__ == "__main__":
-    print_deltaS_mix()
+    print_delta_S_mix()

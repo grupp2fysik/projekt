@@ -1,6 +1,8 @@
-"""Denna fil läser från "dataframe.csv"
-och plottar delta_S_mix för alla
-temperaturer. Resultaten läggs i plots/legering/delta_H_mix"""
+"""
+Denna fil läser från "dataframe.csv"
+och plottar delta_H_mix för alla
+temperaturer. Resultaten läggs i plots/legering/delta_H_mix
+"""
 
 import pandas as pd
 import numpy as np
@@ -8,8 +10,11 @@ import matplotlib.pyplot as plt
 from build_dataframe import find_parameters, find_model
 from parameters import *
 
-def print_deltaH_mix():
-
+def print_delta_H_mix():
+    """
+    Plottar delta_H_mix för alla temperaturer. Resultaten läggs i plots/legering/delta_H_mix
+    """
+    
     print("Plottar entalpin.")
 
     qe_calc_df = pd.read_csv(qe_dir)
@@ -34,4 +39,4 @@ def print_deltaH_mix():
     plt.savefig(f"plots/{alloy_name}/{alloy_name}_delta_H_mix")
 
 if __name__ == "__main__":
-    print_deltaH_mix()
+    print_delta_H_mix()

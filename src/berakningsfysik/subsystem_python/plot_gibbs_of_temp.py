@@ -1,7 +1,9 @@
-"""Denna fil läser från "dataframe.csv"
+"""
+Denna fil läser från "dataframe.csv"
 och plottar delta_G_mix för alla
 temperaturer som givits som argument i terminalen.
-Resultaten läggs i plots/<legering>/delta_G_mix"""
+Resultaten läggs i plots/<legering>/delta_G_mix.
+"""
 
 import pandas as pd
 import numpy as np
@@ -11,7 +13,10 @@ import sys
 from thermodynamics import check_if_T_in_temps, T_string, check_if_valid_T
 from parameters import *
 
-def print_deltaG_mix():
+def print_delta_G_mix():
+    """
+    Plottar delta_G_mix för alla temperaturer som givits som argument i terminalen.
+    """
 
     df = pd.read_csv(f"results/{alloy_name}/thermodynamics/dataframe.csv")
 
@@ -33,7 +38,6 @@ def print_deltaG_mix():
         check_if_T_in_temps(T, temps)
         plt.clf()
         
-        
         index = temps.index(T)
         
         deltaG = df["deltaG_T"+str(index)]
@@ -50,4 +54,4 @@ def print_deltaG_mix():
         plt.clf()
 
 if __name__ == "__main__":
-    print_deltaG_mix()
+    print_delta_G_mix()

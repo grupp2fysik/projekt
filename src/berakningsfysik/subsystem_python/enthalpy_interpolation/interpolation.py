@@ -524,6 +524,7 @@ class RedlichKisterModel:
                 f"För få inre datapunkter för ordning {order}. "
                 f"Behöver minst {order + 1}, fick {x_fit.size}."
             )
+        # För att undvika överanpassning kräver vi minst lika många datapunkter som antalet koefficienter i modellen. Eftersom basisfunktionerna är noll vid x=0 och x=1, kan vi inte använda de punkterna för att bestämma koefficienterna, så vi måste ha tillräckligt många punkter i det öppna intervallet (0, 1).
 
         A = rk_basis(x_fit, order)
         coeffs, *_ = np.linalg.lstsq(A, y_fit, rcond=None)

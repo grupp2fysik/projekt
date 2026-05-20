@@ -1,5 +1,4 @@
 import csv
-
 import pandas as pd
 import numpy as np
 from scipy.interpolate import interp1d
@@ -91,6 +90,8 @@ class PhaseDiagramAnalyser:
         Bestäm om systemet genomgår spinodal dekomposition baserat på temperatur T och komposition x.
         """
 
+        # Spinodal dekompositioner är ett mekanism 
+
         x_spinodal_a, x_spinodal_b = self.get_spinodal_compositions(T)
         x_alpha, x_beta = self.get_binodal_compositions(T)
 
@@ -99,6 +100,7 @@ class PhaseDiagramAnalyser:
 
         if x_spinodal_a <= x <= x_spinodal_b:
             return True
+            #this is needed because the spinodal region is defined as the region between the two spinodal compositions, and if x is within this region, it indicates that the system is undergoing spinodal decomposition. The other conditions check if x is outside the binodal compositions, which would indicate a single phase (stable) region, and if x is between the binodal and spinodal compositions, which would indicate a metastable region where binodal decomposition can occur. If none of these conditions are met, it means that x is in a region where neither spinodal nor binodal decomposition occurs, which is typically a single phase (stable) region.
         elif x_alpha < x < x_spinodal_a or x_spinodal_b < x < x_beta:
             return False
         else:
