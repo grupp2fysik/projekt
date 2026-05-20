@@ -1,4 +1,5 @@
 {
   "name": "minimal",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu"
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "postCreateCommand": "curl -LsSf https://astral.sh/uv/install.sh | sh && echo 'export PATH=\"$HOME/.local/bin:$PATH\"' >> ~/.bashrc && export PATH=\"$HOME/.local/bin:$PATH\" && uv sync"
 }
