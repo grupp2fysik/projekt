@@ -56,7 +56,7 @@ blandingsentalpin och blandningsentropin. Figurerna läggs i undermappen "plots"
 
 >> ./phase_analysis.sh <legering> <temp1> <temp2>
 
-där <legering> är namnet på den legering, och <temp1> och <temp2> är de temperaturer du vill 
+där <legering> är namnet på legeringen, och <temp1> och <temp2> är de temperaturer du vill 
 ska analyseras. Du kan inkludera hur många temperaturer du vill: antingen bara en eller flera.
 Men det är viktigt att dessa temperaturer fanns inlagda som "specifika temperaturer" i din parameter-fil
 i mappen "alloy_paramters" under körningen av ./calculate.sh.
