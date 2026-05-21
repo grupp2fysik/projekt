@@ -1,0 +1,5 @@
+&BANDS
+   prefix = 'AlN_scf_ecut60_k444',
+   outdir = '../output/scf_tmp_ecut60/',
+   filband = '../output/bands/AlN_bands.dat',
+/

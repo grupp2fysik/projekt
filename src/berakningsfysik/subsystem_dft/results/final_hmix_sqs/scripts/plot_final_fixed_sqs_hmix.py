@@ -9,13 +9,16 @@ bild_fil = mapp / "final_fixed_sqs_hmix_plot.png"
 
 data = pd.read_csv(csv_fil)
 
+x = [0.0] + data["x"].tolist() + [1.0]
+hmix = [0.0] + data["hmix_ev_per_atom"].tolist() + [0.0]
+
 plt.figure()
-plt.plot(data["x"], data["hmix_ev_per_atom"], marker="o")
+plt.plot(x, hmix, marker="o")
 plt.title("Blandningsentalpi för TiAlN")
 plt.xlabel("Al-halt x")
 plt.ylabel("Delta Hmix [eV/atom]")
 plt.xlim(0.0, 1.0)
-plt.ylim(-0.10, 0.25)
+plt.ylim(0.0, 0.15)
 plt.grid(True)
 plt.tight_layout()
 plt.savefig(bild_fil, dpi=300)

@@ -1,0 +1,16 @@
+#!/bin/bash
+#SBATCH -A liu-compute-2026-1
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=32
+#SBATCH --time=01:00:00
+#SBATCH --job-name=AlN_bands
+
+set -e
+
+module load QuantumESPRESSO/7.1
+export OMP_NUM_THREADS=1
+
+mkdir -p ../output/bands
+
+mpprun pw.x -nk 4 -in AlN_bands.in > ../output/bands/AlN_bands.out
+srun -n 1 bands.x < AlN_bands_pp.in > ../output/bands/AlN_bands_pp.out
