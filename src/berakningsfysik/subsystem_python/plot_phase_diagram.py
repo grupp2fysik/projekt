@@ -70,26 +70,6 @@ def plot_curve(df, curve_type, column1, column2):
             plt.plot(x_values, y_values, line_styles[curve_type], label = curve_type)
 
 
-def turn_string_to_list(string):
-    """
-    Gör en sträng från curves.csv av formen
-    "[2.897, 9.456]" till en lista med floats
-    och returnerar denna. "nan" blir np.nan i 
-    denna lista.
-    """
-
-    new_list = []
-    comps_string = string.strip("[]")
-    comps_list = comps_string.split(", ")
-    for index, element in enumerate(comps_list):
-        if element == "nan":
-            comps_list[index] = np.nan
-        else:
-            comps_list[index] = float(element)
-    
-    return comps_list
-
-
 def return_comps_main_list(df, column):
     """
     Tar en kolumn från curves.csv, t.ex "xa",
