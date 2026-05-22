@@ -27,7 +27,6 @@ def find_parameters(alloy_name):
     if T_end not in temps:
         temps.append(T_end)
 
-    print("spec:", spec_temps)
     for index, temp in enumerate(spec_temps_list):
 
         check_if_valid_T(float(temp))
@@ -41,5 +40,4 @@ def find_parameters(alloy_name):
     check_if_valid_n(n)
     n = int(n)
 
-    print("temps:", temps)
     return n, temps, alloy_name, qe_dir
