@@ -81,23 +81,22 @@ class PhaseDiagramAnalyser:
         Bestäm faskompositionerna av α- och β-faserna
         baserat på den övergripande kompositionen x och temperaturen T.
         """
-
-        x_alpha, x_beta = self.get_spinodal_compositions(T)
-
-        if np.isnan(x_alpha) or np.isnan(x_beta):
+        x_alpha_binodal, x_beta_binodal = self.get_binodal_compositions(T)
+        
+        if np.isnan(x_alpha_binodal) or np.isnan(x_beta_binodal):
             return None, None
 
-        if x <= x_alpha:
+        if x <= x_alpha_binodal:
             return x, None
+        elif x >= x_beta_binodal:
+            return None, x
         else:
-            return x_alpha, x_beta
+            return x_alpha_binodal, x_beta_binodal
 
     def is_spinodal_decompositions(self, T, x):
         """
         Bestäm om systemet genomgår spinodal dekomposition baserat på temperatur T och komposition x.
         """
-
-        # Spinodal dekompositioner är ett mekanism 
 
         x_spinodal_a, x_spinodal_b = self.get_spinodal_compositions(T)
         x_alpha, x_beta = self.get_binodal_compositions(T)
