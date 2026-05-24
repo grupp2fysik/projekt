@@ -1,5 +1,6 @@
 import argparse
 import csv
+import os
 import pandas as pd
 import numpy as np
 from scipy.interpolate import interp1d
@@ -8,21 +9,26 @@ import subprocess
 import sys
 
 class PhaseDiagramAnalyser:
-    def __init__(self, curves_file="results/TiAlN/phase_curves/curves.csv"):
+    def __init__(self, curves_file="results/TiAlN/phase_curves/curves.csv", config_file="alloy_parameters/TiAlN.csv"):
         """
         Initialisera PhaseDiagramAnalyser med data från en CSV-fil
         som innehåller information om binodala och spinodala kurvor.
         """
 
         self.curves_file = curves_file
+        self.config_file = config_file
         self.data = pd.read_csv("results/TiAlN/phase_curves/curves.csv")
         self.df_curves = pd.read_csv(self.curves_file)
+        self.df_config = pd.read_csv(self.config_file)
 
         self.xa_interpolated = interp1d(self.data["T"], self.data["xa"], kind="linear", fill_value="extrapolate")
         self.xb_interpolated = interp1d(self.data["T"], self.data["xb"], kind="linear", fill_value="extrapolate")
 
         self.spinodal_xa_interpolated = interp1d(self.data["T"], self.data["spinodal_xa"], kind="linear", fill_value="extrapolate")
         self.spinodal_xb_interpolated = interp1d(self.data["T"], self.data["spinodal_xb"], kind="linear", fill_value="extrapolate")
+
+        self.specific_temperatures = []
+        self.get_specific_temperatures()
 
     def get_spinodal_compositions(self, T):
         """
@@ -66,10 +72,10 @@ class PhaseDiagramAnalyser:
         elif x >= x_beta:
             return 0.0, 1.0
         else:        
-            fraction_alpha = (x_beta - x) / (x_beta - x_alpha) #Cannot be zero since x is between x_alpha and x_beta or negative since x is less than x_beta
-            fraction_beta = (x - x_alpha) / (x_beta - x_alpha) #Cannot be zero since x is between x_alpha and x_beta or negative since x is greater than x_alpha
+            fraction_alpha = (x_beta - x) / (x_beta - x_alpha)
+            fraction_beta = (x - x_alpha) / (x_beta - x_alpha)
             return fraction_alpha, fraction_beta
-        
+
     def get_phase_compositions(self, T, x):
         """
         Bestäm faskompositionerna av α- och β-faserna
@@ -101,7 +107,6 @@ class PhaseDiagramAnalyser:
 
         if x_spinodal_a <= x <= x_spinodal_b:
             return True
-            #this is needed because the spinodal region is defined as the region between the two spinodal compositions, and if x is within this region, it indicates that the system is undergoing spinodal decomposition. The other conditions check if x is outside the binodal compositions, which would indicate a single phase (stable) region, and if x is between the binodal and spinodal compositions, which would indicate a metastable region where binodal decomposition can occur. If none of these conditions are met, it means that x is in a region where neither spinodal nor binodal decomposition occurs, which is typically a single phase (stable) region.
         elif x_alpha < x < x_spinodal_a or x_spinodal_b < x < x_beta:
             return False
         else:
@@ -166,21 +171,58 @@ class PhaseDiagramAnalyser:
         Hämta alla temperaturer från datan.
         """
 
-        return self.data["T"].values
+        return [float(t) for t in self.data["T"].values]  # Convert to regular float
     
+    def get_specific_temperatures(self, config_file="alloy_parameters/TiAlN.csv"):
+        """
+        Hämta specifika temperaturer från config-filen, om de finns.
+        """
+        specific_temperatures = []
+        
+        try:
+            with open(config_file, 'r') as file:
+                for line in file:
+                    if line.startswith('specifika temperaturer,'):
+                        temps_str = line.strip().split(',')[1]
+                        temps_list = [float(temp.strip()) for temp in temps_str.split()]
+                        specific_temperatures.extend(temps_list)
+                        break      
+            self.specific_temperatures = specific_temperatures
+            
+        except Exception as e:
+            print(f"Warning: Could not read specific temperatures from {config_file}: {e}")
+            self.specific_temperatures = []
+            
     def analyze_temperature_range(self, start_temp, end_temp, compositions=None):
         """
         Analysera ett temperaturintervall från start_temp till end_temp.
         """
+
         if compositions is None:
             compositions = [0.1, 0.3, 0.5, 0.7, 0.9]
-        
+
         all_temps = self.get_all_temperatures()
-        temps_in_range = [T for T in all_temps if start_temp <= T <= end_temp]
+        available_temps = set(all_temps)
+        single_temp_mode = (end_temp is None)
+    
+        if single_temp_mode:
+            if self.specific_temperatures and start_temp not in self.specific_temperatures:
+                print(f"{start_temp}K not in specific temperatures")
+                print(f"Specific temperatures: {self.specific_temperatures}")
+                return
         
-        if not temps_in_range:
-            print(f"No temperature data available in range [{start_temp}, {end_temp}] K")
-            return
+            if start_temp not in available_temps:
+                print(f"No temperature data available for {start_temp} K")
+                print(f"Available temperatures: {sorted(available_temps)}")
+                return
+            
+            end_temp = start_temp
+        else:
+            if start_temp > end_temp:
+                print(f"Start temperature ({start_temp} K) is greater than end temperature ({end_temp} K). Please provide a valid temperature range.")
+                return
+    
+        temps_in_range = [T for T in all_temps if start_temp <= T <= end_temp]
         
         for T in temps_in_range:
             print("="*60)
@@ -208,24 +250,26 @@ class PhaseDiagramAnalyser:
                     print(f"  β phase composition: {result['composition_beta']:.4f}")
                 else:
                     print(f"  β phase composition: None")
-            print("\n")
         print("="*60)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Phase diagram analysis for materials')
     parser.add_argument('material', type=str, help='Material name (e.g., TiAlN)')
-    parser.add_argument('start_temp', type=float, help='Start temperature in Kelvin')
-    parser.add_argument('end_temp', type=float, help='End temperature in Kelvin')
+    parser.add_argument('temperatures', type=float, nargs='+', help='Temperature(s) in Kelvin (one or more)')
     parser.add_argument('--compositions', type=float, nargs='+', 
                        default=[0.1, 0.3, 0.5, 0.7, 0.9],
                        help='Compositions to analyze')
     
     args = parser.parse_args()
     curves_file = f"results/{args.material}/phase_curves/curves.csv"
+    config_file = f"alloy_parameters/{args.material}.csv"
     
     try:
-        analyzer = PhaseDiagramAnalyser(curves_file)
-        analyzer.analyze_temperature_range(args.start_temp, args.end_temp, args.compositions)
+        analyzer = PhaseDiagramAnalyser(curves_file, config_file)
+        
+        for temp in args.temperatures:
+            analyzer.analyze_temperature_range(temp, None, args.compositions)
+            
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
