@@ -73,3 +73,15 @@ Men det är viktigt att dessa temperaturer fanns inlagda som "specifika temperat
 i mappen "alloy_parameters" under körningen av ./calculate.sh.
 
 Nu kommer en plot skapas för varje temperatur och läggas i undermappen "plots".
+
+--FÖRKLARING AV α OCH β FASERNA--
+
+α-fasen (alfa):
+- Den vänstra sidan av blandningsgapet (miscibility gap)
+- Lägre AlN-komposition (Al-fattig/Ti-rik fas)
+- Representeras av 'xa' och 'spinodal_xa' i leverrule.py
+
+β-fasen (beta):
+- Den högra sidan av blandningsgapet
+- Högre AlN-komposition (Al-rik/Ti-fattig fas)
+- Representeras av 'xb' och 'spinodal_xb' i leverrule.py

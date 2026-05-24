@@ -85,7 +85,7 @@ class PhaseDiagramAnalyser:
         
         if np.isnan(x_alpha_binodal) or np.isnan(x_beta_binodal):
             return None, None
-        
+
         if x <= x_alpha_binodal:
             return x, None
         elif x >= x_beta_binodal:
@@ -97,8 +97,6 @@ class PhaseDiagramAnalyser:
         """
         Bestäm om systemet genomgår spinodal dekomposition baserat på temperatur T och komposition x.
         """
-
-        # Spinodal dekompositioner är ett mekanism 
 
         x_spinodal_a, x_spinodal_b = self.get_spinodal_compositions(T)
         x_alpha, x_beta = self.get_binodal_compositions(T)
