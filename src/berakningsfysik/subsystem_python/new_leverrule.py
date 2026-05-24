@@ -82,15 +82,17 @@ class PhaseDiagramAnalyser:
         baserat på den övergripande kompositionen x och temperaturen T.
         """
 
-        x_alpha, x_beta = self.get_spinodal_compositions(T)
+        x_alpha_binodal, x_beta_binodal  = self.get_binodal_compositions(T)
 
-        if np.isnan(x_alpha) or np.isnan(x_beta):
+        if np.isnan(x_alpha_binodal) or np.isnan(x_beta_binodal):
             return None, None
 
-        if x <= x_alpha:
+        if x <= x_alpha_binodal:
             return x, None
+        elif x >= x_beta_binodal:
+            return None, x
         else:
-            return x_alpha, x_beta
+            return x_alpha_binodal, x_beta_binodal
 
     def is_spinodal_decompositions(self, T, x):
         """
@@ -192,7 +194,7 @@ class PhaseDiagramAnalyser:
         except Exception as e:
             print(f"Warning: Could not read specific temperatures from {config_file}: {e}")
             self.specific_temperatures = []
-            
+
     def analyze_temperature_range(self, start_temp, end_temp, compositions=None):
         """
         Analysera ett temperaturintervall från start_temp till end_temp.
