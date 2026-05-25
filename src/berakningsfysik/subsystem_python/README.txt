@@ -85,4 +85,3 @@ Men det är viktigt att dessa temperaturer fanns inlagda som "specifika temperat
 i mappen "alloy_parameters" under körningen av ./calculate.sh.
 
 Nu kommer en plot skapas för varje temperatur och läggas i undermappen "plots".
-

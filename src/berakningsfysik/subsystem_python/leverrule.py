@@ -193,7 +193,9 @@ class PhaseDiagramAnalyser:
             
     def analyze_temperature_range(self, start_temp, end_temp, compositions=None):
         """
-        Analysera ett temperaturintervall från start_temp till end_temp.
+        Analysera faserna över ett intervall av temperaturer och kompositioner
+        baserad på specifika temperaturer i TiAlN.csv och skriv ut resultaten
+        i ett läsbart format i terminalen.
         """
 
         if compositions is None:
@@ -251,6 +253,12 @@ class PhaseDiagramAnalyser:
         print("="*60)
 
 if __name__ == "__main__":
+    """
+    Huvudfunktion som hanterar argument från kommandoraden och initierar analysen
+    av fasdiagrammet för det angivna materialet och temperaturerna.
+    Användaren kan specificera en eller flera temperaturer och kompositioner att analysera.
+    """
+
     parser = argparse.ArgumentParser(description='Phase diagram analysis for materials')
     parser.add_argument('material', type=str, help='Material name (e.g., TiAlN)')
     parser.add_argument('temperatures', type=float, nargs='+', help='Temperature(s) in Kelvin (one or more)')
