@@ -4,7 +4,6 @@ import os
 import pandas as pd
 import numpy as np
 from scipy.interpolate import interp1d
-import find_phase_curves
 import subprocess
 import sys
 
