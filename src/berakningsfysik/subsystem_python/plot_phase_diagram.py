@@ -91,6 +91,7 @@ def main():
     plt.ylabel("T [K]")
     plt.title(f"Fasdiagram {alloy_name}")
     fig.legend()
+    plt.grid(True)
 
     plt.tight_layout()
     plt.savefig(output_path, dpi=200)
