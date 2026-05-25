@@ -10,7 +10,7 @@ uv run enthalpy_interpolation/interpolation.py "$alloy_name" \
 
 uv run build_dataframe.py "$alloy_name"
 
-uv run find_phase_curves_0.py "$alloy_name"
+uv run find_phase_curves.py "$alloy_name"
 
 uv run plot_phase_diagram.py "$alloy_name"
 

@@ -63,17 +63,6 @@ i mappen "alloy_paramters" under körningen av ./calculate.sh.
 
 Nu kommer en fasanalys att skrivas ut i terminalen för dina valda temperaturer. 
 
-3. För att plotta Gibbs fria blandningsenergi för en specifik temperatur körs följande kommando i terminalen:
-
->> ./plot_gibbs.sh <legering> <temp1> <temp2>
-
-där <legering> är namnet på den legering, och <temp1> och <temp2> är de temperaturer du vill 
-ska analyseras. Du kan inkludera hur många temperaturer du vill: antingen bara en eller flera.
-Men det är viktigt att dessa temperaturer fanns inlagda som "specifika temperaturer" i din parameter-fil
-i mappen "alloy_parameters" under körningen av ./calculate.sh.
-
-Nu kommer en plot skapas för varje temperatur och läggas i undermappen "plots".
-
 --FÖRKLARING AV α OCH β FASERNA--
 
 α-fasen (alfa):
@@ -85,3 +74,14 @@ Nu kommer en plot skapas för varje temperatur och läggas i undermappen "plots"
 - Den högra sidan av blandningsgapet
 - Högre AlN-komposition (Al-rik/Ti-fattig fas)
 - Representeras av 'xb' och 'spinodal_xb' i leverrule.py
+
+3. För att plotta Gibbs fria blandningsenergi för en specifik temperatur körs följande kommando i terminalen:
+
+>> ./plot_gibbs.sh <legering> <temp1> <temp2>
+
+där <legering> är namnet på den legering, och <temp1> och <temp2> är de temperaturer du vill 
+ska analyseras. Du kan inkludera hur många temperaturer du vill: antingen bara en eller flera.
+Men det är viktigt att dessa temperaturer fanns inlagda som "specifika temperaturer" i din parameter-fil
+i mappen "alloy_parameters" under körningen av ./calculate.sh.
+
+Nu kommer en plot skapas för varje temperatur och läggas i undermappen "plots".

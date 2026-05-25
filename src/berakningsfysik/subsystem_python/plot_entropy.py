@@ -14,6 +14,8 @@ def print_delta_S_mix():
     Plottar delta_S_mix. Resultaten läggs i plots/<legering>/delta_S_mix.
     """
 
+    print("Plottar entropin.")
+
     df = pd.read_csv(f"results/{alloy_name}/thermodynamics/dataframe.csv")
     x_interpolated = df["x"]
     figure = plt.figure()

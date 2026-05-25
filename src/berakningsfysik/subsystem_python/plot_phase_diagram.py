@@ -91,6 +91,7 @@ def main():
     plt.ylabel("T [K]")
     plt.title(f"Fasdiagram {alloy_name}")
     fig.legend()
+    plt.grid(True)
 
     plt.tight_layout()
     plt.savefig(output_path, dpi=200)
@@ -255,7 +256,7 @@ def default_phase_diagram_path(system: str) -> Path:
     """
 
     return default_phase_diagram_dir(system) / DEFAULT_PHASE_DIAGRAM_NAME
-
+W
 
 if __name__ == "__main__":
     main()
