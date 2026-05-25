@@ -127,11 +127,6 @@ def main():
         spinodal_xa_list.append(spinodal_xa)
         spinodal_xb_list.append(spinodal_xb)
 
-        print(
-            f"T = {T:8}: "
-            f"binodal = ({xa}, {xb}), "
-            f"spinodal = ({spinodal_xa}, {spinodal_xb})"
-        )
 
     df_curves = pd.read_csv(output_path)
 
