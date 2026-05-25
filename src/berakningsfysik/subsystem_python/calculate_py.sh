@@ -12,7 +12,7 @@ python3 build_dataframe.py "$alloy_name"
 
 python3 find_phase_curves_0.py "$alloy_name"
 
-python3 plot_phase_diagram_0.py "$alloy_name"
+python3 plot_phase_diagram.py "$alloy_name"
 
 python3 plot_entropy.py "$alloy_name"
 
