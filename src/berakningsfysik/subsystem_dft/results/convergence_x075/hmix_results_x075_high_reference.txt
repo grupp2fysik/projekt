@@ -1,0 +1,10 @@
+high-reference setup
+ecutwfc = 100 Ry
+TiAlN k = 4 4 4
+TiN/AlN k = 8 8 8
+x = 0.75
+E_TiN per formula unit   = -212.1709825900 Ry
+E_AlN per formula unit   = -67.9033240075 Ry
+E_TiAlN per formula unit = -103.9350069659 Ry
+Delta H_mix              = 0.479352 eV/formula unit
+Delta H_mix              = 479.352 meV/formula unit

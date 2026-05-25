@@ -1,0 +1,16 @@
+k_test = low
+x = 0.75
+E_TiN per formula unit   = -212.1697493325 Ry
+E_AlN per formula unit   = -67.9026902250 Ry
+E_TiAlN per formula unit = -103.9341011381 Ry
+Delta H_mix              = 0.481014 eV/formula unit
+Delta H_mix              = 481.014 meV/formula unit
+
+k_test = high
+x = 0.75
+E_TiN per formula unit   = -212.1690951900 Ry
+E_AlN per formula unit   = -67.9027281775 Ry
+E_TiAlN per formula unit = -103.9340854975 Ry
+Delta H_mix              = 0.479389 eV/formula unit
+Delta H_mix              = 479.389 meV/formula unit
+
