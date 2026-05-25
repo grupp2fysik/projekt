@@ -11,7 +11,6 @@ from help_functions import find_parameters
 from find_phase_curves import columns
 from parameters import *
 
-
 DEFAULT_SYSTEM = "TiAlN"
 DEFAULT_RESULTS_DIRNAME = "results"
 DEFAULT_MODEL_DIRNAME = "rk_model"
@@ -255,7 +254,6 @@ def default_phase_diagram_path(system: str) -> Path:
     """
 
     return default_phase_diagram_dir(system) / DEFAULT_PHASE_DIAGRAM_NAME
-W
 
 if __name__ == "__main__":
     main()
