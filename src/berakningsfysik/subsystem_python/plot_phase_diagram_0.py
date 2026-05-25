@@ -83,6 +83,8 @@ def main():
     ticks = sorted(set(ticks))
     plt.yticks(ticks)
 
+    plt.xticks([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1])
+
     plt.xlim(0, 1)
     plt.ylim(temps[0], temps[-1])
     plt.xlabel("x")
