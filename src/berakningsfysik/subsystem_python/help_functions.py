@@ -8,6 +8,8 @@ def find_parameters(alloy_name):
     parametrar och returnerar dessa.
     """
 
+    num_of_temps = 70 # antal temperaturer, exkluderat de speciella, som beräkningar ska göras för
+
     df = pd.read_csv(f"alloy_parameters/{alloy_name}.csv", header=None)
     parameters = df[1]
     n = parameters[0]
@@ -22,12 +24,11 @@ def find_parameters(alloy_name):
     spec_temps = parameters[4]
     spec_temps_list = spec_temps.split()
 
-    temps = [i for i in range(T_start, T_end, math.ceil((T_end - T_start)/30))]
+    temps = [i for i in range(T_start, T_end, math.ceil((T_end - T_start)/num_of_temps))]
 
     if T_end not in temps:
         temps.append(T_end)
 
-    print("spec:", spec_temps)
     for index, temp in enumerate(spec_temps_list):
 
         check_if_valid_T(float(temp))
@@ -41,5 +42,4 @@ def find_parameters(alloy_name):
     check_if_valid_n(n)
     n = int(n)
 
-    print("temps:", temps)
     return n, temps, alloy_name, qe_dir

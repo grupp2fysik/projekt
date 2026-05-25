@@ -59,8 +59,7 @@ def check_if_T_in_temps(T:int, temps:list):
     Kastar undantag om T inte är i temps.
     """
 
-    print("T", T)
-    print("temps", temps)
+
     if T not in temps:
         raise Exception(f"Den specifika temperaturen {T}K finns inte definierad i din parameterfil.\
 \nKan inte göra analys av temperaturer som inte finns definierade där.")

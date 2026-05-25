@@ -143,31 +143,40 @@ def write_file():
         for column in columns[1:]:
             file.write("," + column)
 
-        for i in range(len(temps_local)):
-            file.write(",deltaG_T" + str(i))
-
         file.write("\n")
 
         for x in x_interpolation:
             file.write(str(x) + ",\n")
 
-    write_data(output_path, "deltaH", H_interpolated)
-    write_data(output_path, "deltaS", find_deltaS(n_local, x_interpolation))
+    # hämtar csv-filen dataframe.csv som ska innehålla termodynamiska storheter till dataframe df
+    df = pd.read_csv(output_path)
 
+    add_data(df, "deltaH", H_interpolated)
+    add_data(df, "deltaS", find_deltaS(n_local, x_interpolation))
+
+    # dictionary för att samla Gibbs fria blandningsenergi samt dess derivata
+    # dicten läggs senare till i df
+    gibbs_dict = {}
+
+    # denna loop itererar över alla temperaturer för att lägga till Gibbs fria 
+    # blandningsenergi samt dess andraderivata i gibbs_dict
     for i, T in enumerate(temps_local):
-        write_data(output_path, "deltaG_T" + str(i), find_deltaG(output_path, T))
-        write_data(
-            output_path,
-            "d2deltaG_T" + str(i),
-            find_d2G(model, x_interpolation, T, n_local),
-        )
+        gibbs_dict["deltaG_T" + str(i)] = find_deltaG(df, T)
+        gibbs_dict["d2deltaG_T" + str(i)] = find_d2G(model, x_interpolation, T, n_local)
+
+    # gör dict med alla Gibbs blandningsenergi och andraderivator 
+    # till ny dataframe och lägger sedan till i dataframe df
+    gibbs_df = pd.DataFrame(gibbs_dict)
+    df = pd.concat([df, gibbs_df], axis=1)
 
 
-def write_data(csv_path, column, data_array):
-    """Skriver datan i data_array under column i csv-filen."""
-    df = pd.read_csv(csv_path)
+    # skriver innehåll i dataframe till dataframe.csv
+    df.to_csv(output_path, index=False)
+
+
+def add_data(df, column, data_array):
+    """Lägger datan i data_array under column i dataframe df ."""
     df[column] = data_array
-    df.to_csv(csv_path, index=False)
 
 
 def find_deltaS(n, x_interpolated):
@@ -181,8 +190,7 @@ def find_deltaS(n, x_interpolated):
     return np.array(deltaS)
 
 
-def find_deltaG(csv_path, T):
-    df = pd.read_csv(csv_path)
+def find_deltaG(df, T):
     delta_S = df["deltaS"]
     delta_H = df["deltaH"]
     deltaG = delta_H - T * delta_S
