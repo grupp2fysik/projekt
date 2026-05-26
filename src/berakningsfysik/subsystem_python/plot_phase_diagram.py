@@ -8,28 +8,35 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from help_functions import find_parameters
-from find_phase_curves import columns
-from parameters import *
+#from find_phase_curves import columns
+#from parameters import *
 
 DEFAULT_SYSTEM = "TiAlN"
 DEFAULT_RESULTS_DIRNAME = "results"
 DEFAULT_MODEL_DIRNAME = "rk_model"
 DEFAULT_THERMODYNAMICS_DIRNAME = "thermodynamics"
 DEFAULT_DATAFRAME_NAME = "dataframe.csv"
+DEFAULT_PHASE_CURVES_DIRNAME = "phase_curves"
+DEFAULT_PHASE_DIAGRAM_DIRNAME = "phase_diagram"
+DEFAULT_CURVES_NAME = "curves.csv"
+DEFAULT_PHASE_DIAGRAM_NAME = "phase_diagram.png"
+
+columns = ["T", "xa", "xb", "spinodal_xa", "spinodal_xb"]
 
 def main():
     """
-    Huvudfunktion som körs när man kör plot_phase_diagram.py.
-    Den läser in datan från curves.csv, plottar fasdiagrammet och sparar det som en bild.
+    Läser curves.csv, plottar fasdiagrammet och sparar figuren.
     """
 
     parser = argparse.ArgumentParser(description="Plotta fasdiagram.")
+
     parser.add_argument(
         "alloy_name",
         nargs="?",
         default=DEFAULT_SYSTEM,
-        help="Legeringsnamn, t.ex. TiAlN. Parameterfil läses från alloy_parameters/<legering>.csv.",
+        help="Legeringsnamn, t.ex. TiAlN.",
     )
+
     parser.add_argument(
         "--input",
         default=None,
@@ -38,6 +45,7 @@ def main():
             "Standard: results/<legering>/phase_curves/curves.csv."
         ),
     )
+
     parser.add_argument(
         "--output",
         default=None,
@@ -48,8 +56,7 @@ def main():
     )
 
     args = parser.parse_args()
-
-    #_, temps, alloy_name, _ = find_parameters(args.alloy_name)
+    alloy_name = args.alloy_name
 
     curves_path = (
         Path(args.input)
@@ -68,9 +75,9 @@ def main():
     print(f"Plottar fasdiagram för {alloy_name}.")
     print(f"Läser kurvor från: {curves_path}")
     print(f"Sparar fasdiagram till: {output_path}")
-    print(f"Sparar fasdiagram till: {plots_dirname}")
 
     df = pd.read_csv(curves_path)
+    temps = df["T"].to_numpy(dtype=float)
 
     fig = plt.figure()
 
@@ -89,13 +96,18 @@ def main():
     plt.xlabel("x")
     plt.ylabel("T [K]")
     plt.title(f"Fasdiagram {alloy_name}")
-    fig.legend()
-    plt.grid(True)
 
+    # Undvik många duplicerade labels.
+    handles, labels = plt.gca().get_legend_handles_labels()
+    unique = dict(zip(labels, handles))
+    plt.legend(unique.values(), unique.keys())
+
+    plt.grid(True)
     plt.tight_layout()
     plt.savefig(output_path, dpi=200)
-    plt.savefig(plots_dirname + f"/{alloy_name}_phase_diagram")
     plt.close(fig)
+
+    print(f"Sparade fasdiagram till: {output_path}")
 
 
 def plot_curve(df, temps, curve_type, column1, column2):

@@ -1,0 +1,2 @@
+data_source,energy_basis,hmix_fit_col,hmix_column,atoms_per_formula_unit,order,rmse,L0,L1,L2,L3,L4,L5
+/home/gused247/Y3/TFYA75/projekt/src/berakningsfysik/subsystem_python/validation/data/TiAlN_ours.csv,atom,H_mix_eV_per_atom,hmix_ev_per_atom,2.0,5,0.001567564945579063,0.433469102890892,0.10065539047619049,-0.07389472405622838,0.4182536126984116,0.4152805279729201,-0.3755966984126962
