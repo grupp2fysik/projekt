@@ -25,6 +25,8 @@ def print_delta_S_mix():
     points = np.array(list(zip(x_interpolated, deltaS)))
     plt.plot(points[:,0], points[:,1], 'k-')
 
+    plt.xlim(0, 1)
+
     plt.title(f"\u0394S_mix ({alloy_name})")
     plt.xlabel("x")
     plt.ylabel("\u0394S_mix (eV/K per atom)")
