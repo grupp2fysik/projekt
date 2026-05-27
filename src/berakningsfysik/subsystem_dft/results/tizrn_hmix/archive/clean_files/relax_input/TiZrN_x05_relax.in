@@ -1,0 +1,114 @@
+&control
+   calculation = 'relax',              ! Relaxerar atompositionerna men håller cellen fast
+   prefix = 'TiZrN_x05_relax',         ! Unikt prefix för detta x-värde
+   outdir = '../output/relax/tmp_x05/', ! Temporära QE-filer
+   pseudo_dir = '../../pseudo/',       ! Pseudopotentialer relativt denna mapp
+   restart_mode = 'from_scratch',      ! Startar från början
+   disk_io = 'none',                   ! Minskar mängden sparade filer
+   nstep = 8,                          ! Max antal relaxationssteg
+   etot_conv_thr = 1E-4,               ! Energikonvergens för relaxation
+   forc_conv_thr = 1E-3,               ! Kraftkonvergens för relaxation
+   tstress = .true.,                   ! Skriver ut stress/tryck
+   tprnfor = .true.,                   ! Skriver ut krafter
+/
+
+&system
+   ibrav = 0,                          ! Cellvektorer anges explicit nedan
+   nat = 64,                           ! 64 atomer: 32 metallplatser + 32 N
+   ntyp = 3,                           ! Ti, Zr och N
+   ecutwfc = 60,                       ! Våglfunktions-cutoff
+   ecutrho = 240,                      ! Laddningstäthets-cutoff
+   occupations = 'smearing',           ! Smearing används för robust konvergens
+   smearing = 'gaussian',
+   degauss = 0.005,
+/
+
+&electrons
+   diagonalization = 'david',          ! Diagonaliseringsmetod
+   conv_thr = 1E-6,                    ! Elektronisk konvergens
+   mixing_mode = 'local-TF',
+   mixing_beta = 0.2,
+/
+
+&ions
+   ion_dynamics = 'bfgs',              ! BFGS-relaxering av atompositioner
+/
+
+ATOMIC_SPECIES
+N 14.007 N.pbe-n-kjpaw_psl.1.0.0.UPF
+Ti 47.867 Ti.pbe-spn-kjpaw_psl.1.0.0.UPF
+Zr 91.224 Zr.pbe-spn-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS angstrom
+8.83 0.0 0.0
+0.0 8.83 0.0
+0.0 0.0 8.83
+
+ATOMIC_POSITIONS angstrom
+Ti 0.0 0.0 0.0
+N 2.2075 0.0 0.0
+Zr 0.0 2.2075 2.2075
+N 2.2075 2.2075 2.2075
+Zr 2.2075 0.0 2.2075
+N 0.0 0.0 2.2075
+Zr 2.2075 2.2075 0.0
+N 0.0 2.2075 0.0
+Zr 0.0 0.0 4.415
+N 2.2075 0.0 4.415
+Zr 0.0 2.2075 6.6225000000000005
+N 2.2075 2.2075 6.6225000000000005
+Zr 2.2075 0.0 6.6225000000000005
+N 0.0 0.0 6.6225000000000005
+Zr 2.2075 2.2075 4.415
+N 0.0 2.2075 4.415
+Ti 0.0 4.415 0.0
+N 2.2075 4.415 0.0
+Zr 0.0 6.6225000000000005 2.2075
+N 2.2075 6.6225000000000005 2.2075
+Ti 2.2075 4.415 2.2075
+N 0.0 4.415 2.2075
+Zr 2.2075 6.6225000000000005 0.0
+N 0.0 6.6225000000000005 0.0
+Zr 0.0 4.415 4.415
+N 2.2075 4.415 4.415
+Ti 0.0 6.6225000000000005 6.6225000000000005
+N 2.2075 6.6225000000000005 6.6225000000000005
+Zr 2.2075 4.415 6.6225000000000005
+N 0.0 4.415 6.6225000000000005
+Ti 2.2075 6.6225000000000005 4.415
+N 0.0 6.6225000000000005 4.415
+Ti 4.415 0.0 0.0
+N 6.6225000000000005 0.0 0.0
+Zr 4.415 2.2075 2.2075
+N 6.6225000000000005 2.2075 2.2075
+Ti 6.6225000000000005 0.0 2.2075
+N 4.415 0.0 2.2075
+Zr 6.6225000000000005 2.2075 0.0
+N 4.415 2.2075 0.0
+Zr 4.415 0.0 4.415
+N 6.6225000000000005 0.0 4.415
+Ti 4.415 2.2075 6.6225000000000005
+N 6.6225000000000005 2.2075 6.6225000000000005
+Ti 6.6225000000000005 0.0 6.6225000000000005
+N 4.415 0.0 6.6225000000000005
+Ti 6.6225000000000005 2.2075 4.415
+N 4.415 2.2075 4.415
+Ti 4.415 4.415 0.0
+N 6.6225000000000005 4.415 0.0
+Ti 4.415 6.6225000000000005 2.2075
+N 6.6225000000000005 6.6225000000000005 2.2075
+Zr 6.6225000000000005 4.415 2.2075
+N 4.415 4.415 2.2075
+Ti 6.6225000000000005 6.6225000000000005 0.0
+N 4.415 6.6225000000000005 0.0
+Zr 4.415 4.415 4.415
+N 6.6225000000000005 4.415 4.415
+Ti 4.415 6.6225000000000005 6.6225000000000005
+N 6.6225000000000005 6.6225000000000005 6.6225000000000005
+Ti 6.6225000000000005 4.415 6.6225000000000005
+N 4.415 4.415 6.6225000000000005
+Ti 6.6225000000000005 6.6225000000000005 4.415
+N 4.415 6.6225000000000005 4.415
+
+K_POINTS automatic
+2 2 2 0 0 0

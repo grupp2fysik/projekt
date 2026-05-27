@@ -1,0 +1,49 @@
+&control
+   calculation = 'scf',
+   prefix = 'ZrN_scf_ecut60_k444',
+   outdir = '../output/zrn_scf_tmp_ecut60/',
+   pseudo_dir = '../../pseudo/',
+   restart_mode = 'from_scratch',
+   tstress = .true.,
+   tprnfor = .true.,
+/
+
+&system
+   ibrav = 0,
+   nat = 8,
+   ntyp = 2,
+   ecutwfc = 60,
+   ecutrho = 240,
+   occupations = 'smearing',
+   smearing = 'gaussian',
+   degauss = 0.005,
+/
+
+&electrons
+   diagonalization = 'david',
+   conv_thr = 1E-8,
+   mixing_mode = 'local-TF',
+   mixing_beta = 0.2,
+/
+
+ATOMIC_SPECIES
+Zr 91.224 Zr.pbe-spn-kjpaw_psl.1.0.0.UPF
+N  14.007 N.pbe-n-kjpaw_psl.1.0.0.UPF
+
+CELL_PARAMETERS angstrom
+4.5900000000 0.0000000000 0.0000000000
+0.0000000000 4.5900000000 0.0000000000
+0.0000000000 0.0000000000 4.5900000000
+
+ATOMIC_POSITIONS (crystal)
+Zr            0.0000000000        0.0000000000        0.0000000000
+Zr            0.0000000000        0.5000000000        0.5000000000
+Zr            0.5000000000        0.0000000000        0.5000000000
+Zr            0.5000000000        0.5000000000        0.0000000000
+N             0.5000000000        0.0000000000        0.0000000000
+N             0.0000000000        0.5000000000        0.0000000000
+N             0.0000000000        0.0000000000        0.5000000000
+N             0.5000000000        0.5000000000        0.5000000000
+
+K_POINTS automatic
+4 4 4 0 0 0

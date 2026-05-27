@@ -27,19 +27,19 @@ x=0.5:
 
 x=0.625:
         med punkterna kan man göra en quadratic regression och får:
-	E= 10.52139b^{2}-174.57377b-3179.41946, där E är Energi i Ry och b är gitterkonstanten*2
-        Vilket ger minimipunkt: b=8.29614
-        Det vill säga är den optimala gitterparametern =4.14807  och därmed med totala volym: 570.989624742527544
+	E= 11.8309b^{2}-196.25772b-3089.66718, där E är Energi i Ry och b är gitterkonstanten*2
+        Vilket ger minimipunkt: b=8.29429
+        Det vill säga är den optimala gitterparametern =4.147145  och därmed med totala volym: 570.607725955920589
 
 x=0.75:
         med punkterna kan man göra en quadratic regression och får:
-	E = 9.4726b^{2}-156.33538b-2681.50843, där E är Energi i Ry och b är gitterkonstanten*2
-        Vilket ger minimipunkt: b=8.25198
-        Det vill säga är den optimala gitterparametern =4.12599  och därmed med totala volym: 561.920013287662392
+	E = 10.1844b^{2}-168.08315b-2633.04646, där E är Energi i Ry och b är gitterkonstanten*2
+        Vilket ger minimipunkt: b=8.25199
+        Det vill säga är den optimala gitterparametern =4.125995  och därmed med totala volym: 561.922056145355599
 
 x=0.875:
         med punkterna kan man göra en quadratic regression och får:
-        E = 11.06674x^{2}-181.44705x-2005.86327, där E är Energi i Ry och b är gitterkonstanten*2
+        E = 11.06674b^{2}-181.44705b-2005.86327, där E är Energi i Ry och b är gitterkonstanten*2
         Vilket ger minimipunkt: b=8.19785
         Det vill säga är den optimala gitterparametern =4.098925  och därmed med totala volym: 550.934415703561625
 

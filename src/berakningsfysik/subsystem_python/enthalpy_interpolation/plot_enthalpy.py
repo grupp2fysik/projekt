@@ -62,6 +62,10 @@ def default_rk_model_dir(system: str) -> Path:
 
 
 def default_interpolation_plot_dir(system: str) -> Path:
+    """
+    Returnerar standardmappen för interpolationsplotten.
+    """
+
     return default_system_dir(system) / DEFAULT_PLOT_DIRNAME
 
 
@@ -163,6 +167,7 @@ def plot_enthalpy_d1_d2(
     unit_label: str,
     save_path: Path,
 ) -> None:
+    
     """
     Plottar blandningsentalpin och koncentrationsderivatorna.
     """
@@ -360,7 +365,6 @@ def main() -> None:
         unit_label=unit_label,
         save_path=fig_path,
     )
-
 
 if __name__ == "__main__":
     main()

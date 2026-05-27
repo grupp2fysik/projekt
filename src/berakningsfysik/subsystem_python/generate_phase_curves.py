@@ -1,6 +1,8 @@
-"""Denna fil används endast för att generera spindodal- och
+"""
+Denna fil används endast för att generera spindodal- och
 binodalgränser, för att testa plot_phase_diagram.py.
-Kompositioenrna skrivs till generated_curves.csv"""
+Kompositioenrna skrivs till generated_curves.csv.
+"""
 
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
 import pandas as pd

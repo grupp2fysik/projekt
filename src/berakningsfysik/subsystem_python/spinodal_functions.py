@@ -1,4 +1,6 @@
-"""Hjälpfunktioner för att hitta spinodalkurvan"""
+"""
+Hjälpfunktioner för att hitta spinodalkurvan.
+"""
 
 from thermodynamics import check_if_valid_x
 from thermodynamics import check_if_valid_n
@@ -7,6 +9,10 @@ from thermodynamics import entropy_at_endpoint
 #from berakningsfysik.subsystem1.thermodynamics import entropy_at_endpoint
 
 def entropy_second_derivative(x, n):
+    """
+    Returnerar den andra derivatan av entropin per metallplats med avseende på x.
+    """
+
     check_if_valid_x(x)
     if entropy_at_endpoint == 0:
         raise Exception("Derivative not defined at endpoints.")

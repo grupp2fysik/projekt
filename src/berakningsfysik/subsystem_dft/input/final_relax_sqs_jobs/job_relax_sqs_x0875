@@ -1,0 +1,15 @@
+#!/bin/bash
+#SBATCH -A liu-compute-2026-1
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=32
+#SBATCH --time=01:00:00
+#SBATCH --job-name=TiAlN_x0875_relax
+
+set -e
+
+module load QuantumESPRESSO/7.1
+export OMP_NUM_THREADS=1
+
+mkdir -p ../output/relax_sqs_all_x/tmp_x0875
+
+mpprun pw.x -nk 4 -in relax_sqs_x0875.in > ../output/relax_sqs_all_x/relax_sqs_x0875.out

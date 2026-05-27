@@ -1,0 +1,15 @@
+#!/bin/bash
+#SBATCH -A liu-compute-2026-1
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=32
+#SBATCH --time=01:00:00
+#SBATCH --job-name=TiAlN_x025_scf
+
+set -e
+
+module load QuantumESPRESSO/7.1
+export OMP_NUM_THREADS=1
+
+mkdir -p ../output/scf_sqs_all_x/tmp_x025
+
+mpprun pw.x -nk 4 -in scf_sqs_x025.in > ../output/scf_sqs_all_x/scf_sqs_x025.out
