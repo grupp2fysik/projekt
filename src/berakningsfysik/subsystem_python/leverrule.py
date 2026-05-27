@@ -6,6 +6,8 @@ import numpy as np
 from scipy.interpolate import interp1d
 import subprocess
 import sys
+from thermodynamics import check_if_T_in_temps, check_if_valid_T
+
 
 class PhaseDiagramAnalyser:
     def __init__(self, curves_file="results/TiAlN/phase_curves/curves.csv", config_file="alloy_parameters/TiAlN.csv"):
@@ -269,7 +271,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     curves_file = f"results/{args.material}/phase_curves/curves.csv"
     config_file = f"alloy_parameters/{args.material}.csv"
-    
+
     try:
         analyzer = PhaseDiagramAnalyser(curves_file, config_file)
         

@@ -45,6 +45,8 @@ def print_delta_G_mix():
         points = np.array(list(zip(x_interpolated, deltaG)))
         
         plt.plot(points[:,0], points[:,1], 'k-')
+
+        plt.xlim(0, 1)
         
         plt.title("\u0394G_mix för T = "+str(T)+f"K ({alloy_name})")
         plt.xlabel("x")
