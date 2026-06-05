@@ -1,4 +1,0 @@
-
-ecutwfc = 200
-ecutrho = 800
-K_POINTS = 16 16 16 0 0 0
