@@ -49,8 +49,6 @@ def main():
 
     args = parser.parse_args()
 
-    #_, temps, alloy_name, _ = find_parameters(args.alloy_name)
-
     curves_path = (
         Path(args.input)
         if args.input
@@ -133,6 +131,7 @@ def plot_curve(df, temps, curve_type, column1, column2):
                     y_values.append(temps[-index - 1])
 
         plt.plot(x_values, y_values, line_styles[curve_type], label=curve_type)
+
 
 
 def turn_string_to_list(value):
