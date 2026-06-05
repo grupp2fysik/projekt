@@ -1,0 +1,79 @@
+# Projekt i beräkningsfysik Grupp 2
+
+Detta repo innehåller kod, indata och resultat för projektet om oordnade legeringars termodynamik.
+
+För detaljerad användning, se användarhandledningen.
+
+## Struktur
+
+- src/ - Pythonkod och DFT-underlag
+- tests/ - tester
+- pyproject.toml och uv.lock - Pythonmiljö och beroenden
+
+## Pythonmiljö
+
+Projektet använder uv för att hantera Pythonmiljö och beroenden.
+
+Installera beroenden med:
+
+> uv sync
+
+Kör tester med:
+
+> uv run pytest
+
+## Python-delen
+
+Python-delen finns i:
+
+src/berakningsfysik/subsystem_python/
+
+Den används för att läsa in materialdata, interpolera blandningsentalpi, beräkna termodynamiska storheter och skapa fasdiagram.
+
+De viktigaste körfilerna är:
+
+- calculate.sh
+- phase_analysis.sh
+- plot_gibbs.sh
+
+Mer detaljerade instruktioner finns i användarhandledningen.
+
+## DFT-underlag
+
+DFT-underlaget finns i:
+
+src/berakningsfysik/subsystem_dft/
+
+Mappen innehåller två huvuddelar:
+
+- input/
+- results/
+
+input/ innehåller SQS-strukturer, Quantum ESPRESSO-inputfiler och jobbfiler för TiAlN-beräkningarna.
+
+results/ innehåller outputfiler, sammanställda energier, blandningsentalpier, figurer samt kompletterande resultat för bandstruktur, DOS och TiZrN.
+
+De slutliga TiAlN-resultaten finns i:
+
+src/berakningsfysik/subsystem_dft/results/final_hmix_sqs/
+
+De viktigaste filerna är:
+
+- final_fixed_sqs_scf_energies.csv
+- final_fixed_sqs_hmix_results.csv
+- final_fixed_sqs_hmix_plot.png
+- final_fixed_sqs_hmix_with_reference.png
+
+Konvergenstesterna för DFT-parametrarna finns i:
+
+src/berakningsfysik/subsystem_dft/results/convergence_x075/
+
+## Kodkvalitet
+
+Kodkontroll kan köras med:
+
+> uv run ruff check .
+
+Testtäckning kan köras med:
+
+> uv run pytest --cov=src
