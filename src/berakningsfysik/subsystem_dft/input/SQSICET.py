@@ -6,7 +6,6 @@ from icet.tools.structure_generation import (generate_sqs,
                                              generate_target_structure)
 from ase.io import write
 from ase.io import read
-from icet.tools.structure_generation import compare_cluster_vectors
 
 def generate_sqs_supercell(x_al=0.5, supercell_size= (4,4,4),cubicfalsetrue=True, filename = "sqs_supercell.cif"):
     #Uträkning av a:
@@ -15,7 +14,7 @@ def generate_sqs_supercell(x_al=0.5, supercell_size= (4,4,4),cubicfalsetrue=True
     structure = bulk('TiN', crystalstructure='rocksalt', a=a,cubic= cubicfalsetrue) #säger strukturen hos det vi ska skapa. I detta fall är det rocksalt och är TiN-struktur.
     # 2. Sublattices
     if(cubicfalsetrue):
-        chemical_symbols = [
+        chemical_symbols = [ #för konvenntionell struktur, säger vad det är för atom på de olika platserna
             ['Ti', 'Al'],  # atom 0 är Ti-plats
             ['N'],         # atom 1 är N-plats
             ['Ti', 'Al'],  # atom 2 är Ti-plats
@@ -26,7 +25,7 @@ def generate_sqs_supercell(x_al=0.5, supercell_size= (4,4,4),cubicfalsetrue=True
             ['N']          # atom 7 är N-plats
         ]
     else:
-        chemical_symbols = [['Ti', 'Al'], ['N']] #säger att det är en sublattice och att det är titan och aluminium i ena och N i andra.
+        chemical_symbols = [['Ti', 'Al'], ['N']] #säger att det är en sublattice och att det är titan och aluminium i ena och N i andra, för primitiv struktur .
     
 
     # 3. Cluster space
@@ -45,11 +44,6 @@ def generate_sqs_supercell(x_al=0.5, supercell_size= (4,4,4),cubicfalsetrue=True
                                    supercells=supercells,
                                    n_steps=160000,
                                    target_concentrations=target_concentrations)
-
-    cv_sqs = cs.get_cluster_vector(sqs_supercell)
-
-    print("Cluster vector för SQS:")
-    print(cv_sqs)
     
     write(filename, sqs_supercell)
 
