@@ -1,2 +1,2 @@
 data_source,energy_basis,hmix_fit_col,hmix_column,atoms_per_formula_unit,order,rmse,L0,L1,L2
-/home/gused247/Y3/TFYA75/projekt/src/berakningsfysik/subsystem_python/validation/data/TiAlN_ours.csv,atom,H_mix_eV_per_atom,hmix_ev_per_atom,2.0,2,0.003666908239527542,0.4222514628751973,0.18407142028985518,0.14080181990521323
+/home/gused247/Y3/TFYA75/projekt/src/berakningsfysik/subsystem_python/validation/data/TiAlN_ours.csv,formula_unit,H_mix_eV_per_formula_unit,hmix_ev_per_formula_unit,2.0,2,0.00733401551730042,0.8445025247738039,0.3681412946859907,0.2816060479678291

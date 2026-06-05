@@ -107,7 +107,7 @@ def main():
     plt.savefig(output_path, dpi=200)
     plt.close(fig)
 
-    print(f"Sparade fasdiagram till: {output_path}")
+    print(f"Sparade fasdiagram till: {output_path}\n")
 
 
 def plot_curve(df, temps, curve_type, column1, column2):

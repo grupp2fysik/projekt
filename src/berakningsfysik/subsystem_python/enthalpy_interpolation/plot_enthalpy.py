@@ -343,9 +343,9 @@ def main() -> None:
     print(f"Plottar energibas: {hmix_column} ({unit_label})")
 
     if metadata.get("energy_basis") is not None:
-        print(f"Modellen sparades med energy_basis: {metadata['energy_basis']}")
+        print(f"Modellen sparades med energy_basis: {metadata['energy_basis']}\n")
     else:
-        print("OBS: modellfilen innehåller ingen metadata om energibas.")
+        print("OBS: modellfilen innehåller ingen metadata om energibas.\n")
 
     print(f"Redlich-Kister-ordning: {model.order}")
     print(f"RMSE = {model.rmse:.6e} {unit_label}")

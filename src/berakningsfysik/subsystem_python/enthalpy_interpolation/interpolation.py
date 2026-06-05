@@ -901,7 +901,7 @@ def main() -> None:
         order=args.order,
     )
 
-    print(f"Läste {len(df)} datapunkter från: {resolved_data_source.resolve()}")
+    print(f"\nLäste {len(df)} datapunkter från: {resolved_data_source.resolve()}")
     print(f"Sparade dataset till: {out_csv}")
     print(f"Anpassningen gjordes mot kolumnen: {hmix_fit_col}")
     print(f"Redlich-Kister-koefficienter L_i [{unit_label}]:")
@@ -926,7 +926,7 @@ def main() -> None:
 
         print(f"Sparade RK-modell till: {npz_path}")
         print(f"Sparade koefficienter till: {npy_path}")
-        print(f"Sparade modellsammanfattning till: {summary_path}")
+        print(f"Sparade modellsammanfattning till: {summary_path}\n")
     else:
         print(
             "\n* För att spara modellen skriv: "

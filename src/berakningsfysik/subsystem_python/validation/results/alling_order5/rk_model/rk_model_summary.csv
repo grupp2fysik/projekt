@@ -1,2 +1,2 @@
 data_source,energy_basis,hmix_fit_col,hmix_column,atoms_per_formula_unit,order,rmse,L0,L1,L2,L3,L4,L5
-/home/gused247/Y3/TFYA75/projekt/src/berakningsfysik/subsystem_python/validation/data/alling_emto_cpa_ism.csv,atom,H_mix_eV_per_atom,hmix_ev_per_atom,2.0,5,0.0009758339842162066,0.43239032764089175,0.2839590611463707,0.11380385104568914,-0.04102071661732244,0.15434223894519342,0.25689137010860413
+/home/gused247/Y3/TFYA75/projekt/src/berakningsfysik/subsystem_python/validation/data/alling_random_alloy_fu.csv,formula_unit,H_mix_eV_per_formula_unit,hmix_ev_per_formula_unit,2.0,5,0.00039714766805360314,0.8774723750370839,0.5413184621364305,0.35301093024715935,0.15323240996308235,0.06314381725090815,0.0967641975442611

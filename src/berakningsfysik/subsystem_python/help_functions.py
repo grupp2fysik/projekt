@@ -8,7 +8,7 @@ def find_parameters(alloy_name):
     parametrar och returnerar dessa.
     """
 
-    num_of_temps = 70 # antal temperaturer, exkluderat de speciella, som beräkningar ska göras för
+    num_of_temps = 200 # antal temperaturer, exkluderat de speciella, som beräkningar ska göras för
 
     df = pd.read_csv(f"alloy_parameters/{alloy_name}.csv", header=None)
     parameters = df[1]

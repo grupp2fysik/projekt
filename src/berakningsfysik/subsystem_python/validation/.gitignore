@@ -1,0 +1,6 @@
+# Validation gibbs plots
+results/*/phase_curves/Gibbs_plots/
+
+# Python cache
+__pycache__/
+*.pyc

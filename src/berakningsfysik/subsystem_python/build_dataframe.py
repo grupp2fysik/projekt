@@ -111,6 +111,16 @@ def write_file():
         ),
     )
 
+    parser.add_argument(
+        "--energy-basis",
+        choices=["atom", "formula_unit"],
+        default="atom",
+        help=(
+            "Energibas för termodynamiska storheter. "
+            "'atom' ger eV/atom och 'formula_unit' ger eV/formelenhet."
+        ),
+    )
+
     args = parser.parse_args()
 
     n_local, temps_local, alloy_name_local, _ = find_parameters(args.alloy_name)
@@ -152,7 +162,7 @@ def write_file():
     df = pd.read_csv(output_path)
 
     add_data(df, "deltaH", H_interpolated)
-    add_data(df, "deltaS", find_deltaS(n_local, x_interpolation))
+    add_data(df, "deltaS", find_deltaS(n_local, x_interpolation, args.energy_basis))
 
     # dictionary för att samla Gibbs fria blandningsenergi samt dess derivata
     # dicten läggs senare till i df
@@ -162,7 +172,13 @@ def write_file():
     # blandningsenergi samt dess andraderivata i gibbs_dict
     for i, T in enumerate(temps_local):
         gibbs_dict["deltaG_T" + str(i)] = find_deltaG(df, T)
-        gibbs_dict["d2deltaG_T" + str(i)] = find_d2G(model, x_interpolation, T, n_local)
+        gibbs_dict["d2deltaG_T" + str(i)] = find_d2G(
+            model,
+            x_interpolation,
+            T,
+            n_local,
+            args.energy_basis,
+        )
 
     # gör dict med alla Gibbs blandningsenergi och andraderivator 
     # till ny dataframe och lägger sedan till i dataframe df
@@ -179,14 +195,38 @@ def add_data(df, column, data_array):
     df[column] = data_array
 
 
-def find_deltaS(n, x_interpolated):
-    """Hittar interpolerad deltaS_mix.
+def find_deltaS(n, x_interpolated, energy_basis="atom"):
+    """
+    Hittar interpolerad deltaS_mix.
 
-    n = atomer per metallplats / normaliseringsfaktor.
+    energy_basis="atom":
+        returnerar eV/(atom K)
+
+    energy_basis="formula_unit":
+        returnerar eV/(formelenhet K)
+
+    För Ti_{1-x}Al_xN finns en blandande metallplats per formelenhet.
+    Därför är entropin per formelenhet:
+        -kB [x ln x + (1-x) ln(1-x)]
+
+    Entropin per atom blir detta delat med n=2.
     """
     deltaS = []
+
     for x in x_interpolated:
-        deltaS.append(entropy_per_atom(x, n))
+        if x == 0 or x == 1:
+            S_fu = 0.0
+        else:
+            KB = 8.6173e-5
+            S_fu = -KB * (x * np.log(x) + (1.0 - x) * np.log(1.0 - x))
+
+        if energy_basis == "formula_unit":
+            deltaS.append(S_fu)
+        elif energy_basis == "atom":
+            deltaS.append(S_fu / n)
+        else:
+            raise ValueError(f"Okänd energy_basis: {energy_basis}")
+
     return np.array(deltaS)
 
 
@@ -249,13 +289,24 @@ def find_deltaH(model, x_interpolation):
     return model.hmix(x_interpolation)
 
 
-def find_d2G(model, x_interpolation, T, n):
+def find_d2G(model, x_interpolation, T, n, energy_basis="atom"):
     """Returnerar vektor med andraderivatan av deltaG."""
     d2deltaH = model.d2(x_interpolation)[1:-1]
 
     d2deltaS = []
+
+    KB = 8.6173e-5
+
     for x in x_interpolation[1:-1]:
-        d2deltaS.append(entropy_second_derivative(x, n))
+        # d2S/dx2 per formelenhet
+        d2S_fu = -KB / (x * (1.0 - x))
+
+        if energy_basis == "formula_unit":
+            d2deltaS.append(d2S_fu)
+        elif energy_basis == "atom":
+            d2deltaS.append(d2S_fu / n)
+        else:
+            raise ValueError(f"Okänd energy_basis: {energy_basis}")
 
     d2deltaG = np.insert((d2deltaH - T * np.array(d2deltaS)), 0, np.nan)
     return np.append(d2deltaG, [np.nan])
